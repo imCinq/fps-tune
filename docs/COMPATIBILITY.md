@@ -34,6 +34,7 @@ FPS Tune is not a server mod and does not need to be installed on a server. It s
 | FPS Tune disabled | Verified | This is the default and leaves the render controllers inactive. |
 | FPS Tune with particle admission enabled | Verified | Covered by deterministic budget tests and client smoke coverage. |
 | FPS Tune with weather rendering disabled | Verified | The controller is independently gated by the master switch. |
+| FPS Tune with Adaptive mode enabled | Unit-tested; graphical verification required | Uses the target-specific HUD bridge for local frame-time sampling and changes only the particle budget. |
 
 ## Companion mods
 
@@ -56,4 +57,4 @@ FPS Tune does not modify:
 - entity behavior, farms, or automation;
 - anti-cheat checks or client-integrity reporting.
 
-Its supported changes are local particle admission and the optional local weather render pass. Visual trade-offs are opt-in through the master switch and settings.
+Its supported changes are local particle admission, optional Adaptive particle budgeting, and the optional local weather render pass. Visual trade-offs are opt-in through the master switch and settings.

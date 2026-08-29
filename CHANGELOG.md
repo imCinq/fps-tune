@@ -1,7 +1,14 @@
 # Changelog
 
-## Unreleased
+## 1.1 - 2026-08-29
 
+- Added optional nearby-particle prioritization with a reserved portion of the existing admission budget.
+- Added an opt-in local diagnostics HUD with current-tick admission counters and controller status.
+- Added Advanced Mod Menu controls for nearby priority, reserve, distance, diagnostics visibility, and automatic particle-limit adjustment.
+- Added optional Adaptive particle budgeting with bounded frame-time feedback and cooldowns.
+- Simplified the Mod Menu into a profile-first screen with plain-language labels and an optional Advanced settings screen.
+- Added a long-form Mod Menu details description explaining the workload trade-off, dynamic adjustment, setup, and client-only boundaries.
+- Made the settings screen compact and safe at Minecraft's minimum automatic GUI height.
 - Added player-facing configuration, compatibility, and benchmarking references.
 - Improved the README install/configuration flow and bug-report triage fields.
 - Added separate build profiles and artifacts for Minecraft 1.21.11 and 26.2.
