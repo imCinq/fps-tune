@@ -36,14 +36,14 @@ The listing must also state:
 
 ### Measured before/after results for the listing
 
-These real local stress-test results may be included in the project description:
+These real local stress-test results may be included in the project description. The simplest summary is average FPS before and after:
 
-| Minecraft | FPS Tune off | FPS Tune on | Average change | Off → on median p95 frame time |
-| --- | ---: | ---: | ---: | ---: |
-| 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% | 6.65 ms → 5.63 ms (-15.3%) |
-| 26.2 | 78.69 FPS | 102.78 FPS | +30.6% | 17.61 ms → 14.39 ms (-18.3%) |
+| Minecraft | Before | After | Change |
+| --- | ---: | ---: | ---: |
+| 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% |
+| 26.2 | 78.69 FPS | 102.78 FPS | +30.6% |
 
-Test method: Apple M2, macOS 26.6.2, Java 25, OpenGL/Metal compatibility driver, Fancy graphics, render distance 16, simulation distance 12, fullscreen off, VSync off, 240 FPS cap, no shaders/resource packs/companion mods. A fixed peaceful creative world (seed `123456789`) received one burst of 10,000 long-lived `FLAME` particles. Four phases ran in one client process (off/on/off/on), with 120 warm-up frames and 600 measured render-loop intervals per phase; enabled phases used the default 300-particle admission budget. These results are machine- and workload-specific, and the enabled case intentionally shows fewer particles. Full conditions and interpretation are in [docs/BENCHMARKING.md](BENCHMARKING.md).
+Before means FPS Tune was off; after means it was on. Test method: Apple M2, macOS 26.6.2, Java 25, OpenGL/Metal compatibility driver, Fancy graphics, render distance 16, simulation distance 12, fullscreen off, VSync off, 240 FPS cap, no shaders/resource packs/companion mods. A fixed peaceful creative world (seed `123456789`) received one burst of 10,000 long-lived `FLAME` particles. Four phases ran in one client process (off/on/off/on), with 120 warm-up frames and 600 measured render-loop intervals per phase; enabled phases used the default 300-particle admission budget. As a secondary stability result, p95 frame time changed from 6.65 ms to 5.63 ms on 1.21.11 (-15.3%) and from 17.61 ms to 14.39 ms on 26.2 (-18.3%). These results are machine- and workload-specific, and the enabled case intentionally shows fewer particles. Full conditions and interpretation are in [docs/BENCHMARKING.md](BENCHMARKING.md).
 
 Do not publish placeholder numbers, call these results a universal FPS guarantee, or transfer results from one Minecraft version to the other.
 
