@@ -1,5 +1,7 @@
 # Distribution plan
 
+![FPS Tune logo](../src/main/resources/assets/fpstune/icon.png)
+
 ## Recommended order
 
 1. **GitHub Releases** — canonical source, audit history, signed tag workflow, source JAR, binary JAR, and SHA-256 checksums.
@@ -23,6 +25,8 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 - Source and issue tracker: the canonical GitHub repository, with visibility controlled by the owner
 
 ## Required description
+
+Use the FPS Tune logo above as the listing image. Upload the repository asset at `src/main/resources/assets/fpstune/icon.png` to each platform rather than linking to a private raw-file URL.
 
 FPS Tune is a client-side Fabric FPS and frame-time stability toolkit that applies opt-in controls to optional local rendering workloads. Its current controllers limit particle admission and can disable the weather render pass during extreme visual scenes, helping reduce stutter during heavy visual workloads. It starts disabled, uses a configurable default limit of 300 particles per tick, changes only local rendering, and does not modify packets, movement, combat, inventory, targeting, or clicks. The release provides separate artifacts for Minecraft 1.21.11 and 26.2; players must install the artifact matching their game version.
 
