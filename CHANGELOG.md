@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added player-facing configuration, compatibility, and benchmarking references.
+- Improved the README install/configuration flow and bug-report triage fields.
+
 ## 1.0.0 - 2026-08-29
 
 - Added independent particle-admission and weather-render controllers behind the disabled-by-default master switch.

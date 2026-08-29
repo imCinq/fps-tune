@@ -12,6 +12,20 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: category
+    attributes:
+      label: Problem category
+      options:
+        - Crash or startup failure
+        - Visual regression
+        - Performance or frame-time regression
+        - Configuration or Mod Menu
+        - Compatibility with another mod
+        - Other
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
@@ -30,6 +44,31 @@ body:
         3. Observe...
     validations:
       required: true
+
+  - type: textarea
+    id: mods
+    attributes:
+      label: Relevant mod list
+      description: Include FPS Tune, Fabric API, Mod Menu, and any rendering or performance mods involved. A pasted launcher export is useful.
+      placeholder: |
+        fps-tune-1.0.0.jar
+        fabric-api-...jar
+        modmenu-...jar
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: FPS Tune configuration
+      description: Paste the relevant config values. Remove private paths, server addresses, coordinates, and personal information.
+      render: properties
+
+  - type: textarea
+    id: performance
+    attributes:
+      label: Performance context
+      description: For performance reports, include the scenario, render distance, shaders/resource packs, measurement method, and before/after numbers if available.
 
   - type: textarea
     id: logs
