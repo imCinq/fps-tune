@@ -43,6 +43,17 @@ Test environment: Apple M2, 8 cores, 16 GB RAM, macOS 26.6.2, arm64, OpenGL thro
 
 This is a deliberately extreme admission/render stress test, not a normal-gameplay promise. The enabled case visibly renders fewer particles by design, and the result is specific to this machine, driver, client build, and workload. It must not be presented as a universal FPS multiplier. The logged per-phase results are retained in the local client log used for the release review.
 
+## Manual Minecraft 26.2 smoke test
+
+A separate manual check was performed on 2026-08-29 using Minecraft 26.2, Fabric, an Apple M2, and Java 25.0.1. A repeating command block emitted 4,000 `minecraft:flame` particles per activation using the same local stress command for both states. The paired captures showed:
+
+| FPS Tune state | F3 reading | Visual result |
+| --- | ---: | --- |
+| Disabled | 38 FPS | Dense flame field |
+| Enabled | 58 FPS | Fewer admitted particles |
+
+The enabled capture therefore showed an approximately 53% higher instantaneous FPS reading in that scene. This is a graphical smoke test, not a timed benchmark: the F3 value is not an average, and no p95 frame time, 1% low, or hitch count was recorded. The result confirms the expected local trade-off—FPS Tune admits fewer particles under the extreme workload—but is specific to that capture and must not be presented as a universal FPS guarantee.
+
 ## Suggested scenarios
 
 | Scenario | Baseline | Enabled case |

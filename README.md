@@ -85,6 +85,15 @@ In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/re
 
 Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
 
+A separate manual smoke test on Minecraft 26.2 used a repeating command block to emit 4,000 `minecraft:flame` particles per activation on an Apple M2 with Java 25.0.1. In the paired captures, the disabled case showed 38 FPS with a dense flame field, while the enabled case showed 58 FPS with materially fewer visible particles:
+
+| FPS Tune state | F3 reading | Visual result |
+| --- | ---: | --- |
+| Disabled | 38 FPS | Dense flame field |
+| Enabled | 58 FPS | Fewer admitted particles |
+
+That is an approximately 53% higher instantaneous FPS reading in the enabled capture, but it is not an average-FPS or p95 measurement. The two captures are useful confirmation that the controller visibly reduces this extreme local particle workload; they should not be treated as a universal performance guarantee. See [docs/BENCHMARKING.md](docs/BENCHMARKING.md) for the full methodology and limitations.
+
 ## Build and test
 
 ```sh
