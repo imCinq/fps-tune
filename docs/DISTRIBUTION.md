@@ -17,14 +17,14 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 - License: MIT
 - Loader: Fabric
 - Environment: Client required; server unsupported
-- Minecraft version: 26.2
-- Java version: 25
-- Required dependency: Fabric API
+- Minecraft versions: 1.21.11 and 26.2, with one matching JAR per version
+- Java versions: 21 for 1.21.11 and 25 for 26.2
+- Required dependency: the matching Fabric API release
 - Source and issue tracker: the canonical GitHub repository, with visibility controlled by the owner
 
 ## Required description
 
-FPS Tune is a client-side Fabric FPS and frame-time stability toolkit that applies opt-in controls to optional local rendering workloads. Its current controllers limit particle admission and can disable the weather render pass during extreme visual scenes, helping reduce stutter during heavy visual workloads. It starts disabled, uses a configurable default limit of 300 particles per tick, changes only local rendering, and does not modify packets, movement, combat, inventory, targeting, or clicks.
+FPS Tune is a client-side Fabric FPS and frame-time stability toolkit that applies opt-in controls to optional local rendering workloads. Its current controllers limit particle admission and can disable the weather render pass during extreme visual scenes, helping reduce stutter during heavy visual workloads. It starts disabled, uses a configurable default limit of 300 particles per tick, changes only local rendering, and does not modify packets, movement, combat, inventory, targeting, or clicks. The release provides separate artifacts for Minecraft 1.21.11 and 26.2; players must install the artifact matching their game version.
 
 The listing must also state:
 
@@ -33,6 +33,19 @@ The listing must also state:
 - There is no telemetry, update checker, or custom networking.
 - Server permission is not guaranteed; players must check current server rules.
 - The project is not affiliated with Mojang, Microsoft, DonutSMP, or any server.
+
+### Measured before/after results for the listing
+
+These real local stress-test results may be included in the project description:
+
+| Minecraft | FPS Tune off | FPS Tune on | Average change | Off → on median p95 frame time |
+| --- | ---: | ---: | ---: | ---: |
+| 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% | 6.65 ms → 5.63 ms (-15.3%) |
+| 26.2 | 78.69 FPS | 102.78 FPS | +30.6% | 17.61 ms → 14.39 ms (-18.3%) |
+
+Test method: Apple M2, macOS 26.6.2, Java 25, OpenGL/Metal compatibility driver, Fancy graphics, render distance 16, simulation distance 12, fullscreen off, VSync off, 240 FPS cap, no shaders/resource packs/companion mods. A fixed peaceful creative world (seed `123456789`) received one burst of 10,000 long-lived `FLAME` particles. Four phases ran in one client process (off/on/off/on), with 120 warm-up frames and 600 measured render-loop intervals per phase; enabled phases used the default 300-particle admission budget. These results are machine- and workload-specific, and the enabled case intentionally shows fewer particles. Full conditions and interpretation are in [docs/BENCHMARKING.md](BENCHMARKING.md).
+
+Do not publish placeholder numbers, call these results a universal FPS guarantee, or transfer results from one Minecraft version to the other.
 
 Do not advertise FPS Tune as an anti-cheat bypass, a DonutSMP-approved mod, a competitive advantage, or a guaranteed FPS increase.
 
@@ -51,7 +64,7 @@ FPS Tune appears compatible with Modrinth's content rules because its disclosed 
 
 - Use a unique project name and icon, English summary, complete English description, correct Mod category, Optimization category, and MIT license.
 - Upload the same tested JAR used for GitHub and Modrinth.
-- Tag only Fabric and Minecraft 26.2 unless additional combinations are actually tested.
+- Tag only Fabric and Minecraft 1.21.11 and 26.2 after each exact artifact has passed the project verification checklist.
 - Keep screenshots and explanatory media on the project page rather than inside the mod JAR.
 - Expect project and file moderation; answer requests accurately and do not claim server approval.
 

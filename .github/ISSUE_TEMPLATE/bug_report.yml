@@ -8,7 +8,7 @@ body:
     attributes:
       label: Versions
       description: Include Minecraft, Fabric Loader, Fabric API, Java, and mod versions.
-      placeholder: Minecraft 26.2, Fabric Loader 0.19.3, Java 25, mod 1.0.0
+      placeholder: Minecraft 1.21.11 or 26.2, matching Fabric Loader/API, Java, and FPS Tune version
     validations:
       required: true
 
@@ -51,7 +51,7 @@ body:
       label: Relevant mod list
       description: Include FPS Tune, Fabric API, Mod Menu, and any rendering or performance mods involved. A pasted launcher export is useful.
       placeholder: |
-        fps-tune-1.0.0.jar
+        fps-tune-mc1.21.11-<version>.jar or fps-tune-<version>.jar
         fabric-api-...jar
         modmenu-...jar
     validations:

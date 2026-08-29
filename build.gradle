@@ -4,7 +4,10 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath "net.fabricmc:fabric-loom:${project.loom_version}"
+		def target = project.findProperty("mc_target") ?: "26.2"
+		def profile = new Properties()
+		file("gradle/versions/${target}.properties").withInputStream { profile.load(it) }
+		classpath "net.fabricmc:fabric-loom:${profile.getProperty("loom_version")}"
 	}
 }
 
@@ -12,13 +15,26 @@ plugins {
 	id "maven-publish"
 }
 
-apply plugin: "net.fabricmc.fabric-loom"
+def targetMinecraft = providers.gradleProperty("mc_target").orElse("26.2").get()
+apply plugin: targetMinecraft.startsWith("1.")
+		? "net.fabricmc.fabric-loom-remap"
+		: "net.fabricmc.fabric-loom"
+
+def targetProfile = new Properties()
+def targetProfileFile = file("gradle/versions/${targetMinecraft}.properties")
+if (!targetProfileFile.isFile()) {
+	throw new GradleException("Unsupported mc_target '${targetMinecraft}'. Expected a profile in gradle/versions/.")
+}
+targetProfileFile.withInputStream { targetProfile.load(it) }
+def targetProperty = { String name -> targetProfile.getProperty(name) }
+def javaLevel = targetProperty("java_version").toInteger()
+def usesLegacyModConfigurations = targetProperty("uses_legacy_mod_configurations").toBoolean()
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+	archivesName = "${project.archives_base_name}${targetProperty("archive_suffix")}"
 }
 
 repositories {
@@ -30,14 +46,44 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-	runtimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	minecraft "com.mojang:minecraft:${targetProperty("minecraft_version")}"
+	if (usesLegacyModConfigurations) {
+		mappings loom.officialMojangMappings()
+		modImplementation "net.fabricmc:fabric-loader:${targetProperty("loader_version")}"
+		modImplementation "net.fabricmc.fabric-api:fabric-api:${targetProperty("fabric_api_version")}"
+		modCompileOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+		modRuntimeOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+	} else {
+		implementation "net.fabricmc:fabric-loader:${targetProperty("loader_version")}"
+		implementation "net.fabricmc.fabric-api:fabric-api:${targetProperty("fabric_api_version")}"
+		compileOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+		runtimeOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+	}
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
 	testImplementation "org.junit.jupiter:junit-jupiter"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ["src/main/java"]
+			def targetJavaDirectory = targetProperty("source_directory") + "/java"
+			if (targetJavaDirectory != "src/main/java") {
+				srcDir targetJavaDirectory
+			}
+			targetProperty("excluded_root_java_sources").split(",").findAll { !it.isBlank() }.each {
+				exclude it
+			}
+		}
+		resources {
+			def targetResourceDirectory = targetProperty("source_directory") + "/resources"
+			srcDirs = ["src/main/resources", targetResourceDirectory]
+			targetProperty("excluded_root_resources").split(",").findAll { !it.isBlank() }.each {
+				exclude it
+			}
+		}
+	}
 }
 
 processResources {
@@ -49,14 +95,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
+	it.options.release = javaLevel
 	it.options.encoding = "UTF-8"
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+	sourceCompatibility = JavaVersion.toVersion(javaLevel)
+	targetCompatibility = JavaVersion.toVersion(javaLevel)
 }
 
 tasks.named("test") {

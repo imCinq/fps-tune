@@ -1,6 +1,6 @@
 # FPS Tune
 
-FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
+FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 1.21.11 and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
 
 It is designed to protect the floor of the frame-time graph during particle storms and weather-heavy scenes, not to promise a universal FPS increase or replace broad rendering optimizers.
 
@@ -8,10 +8,10 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 26.2 |
-| Loader | Fabric Loader 0.19.3+ |
+| Minecraft | 1.21.11 and 26.2; separate JAR per version |
+| Loader | 1.21.11: 0.18.6+; 26.2: 0.19.3+ |
 | Environment | Client only |
-| Java | 25+ |
+| Java | 21+ for 1.21.11; 25+ for 26.2 |
 | Required dependency | Fabric API |
 | Optional integration | Mod Menu |
 | License | MIT |
@@ -32,11 +32,18 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install Minecraft 26.2 with Fabric Loader 0.19.3 or newer.
-2. Install Fabric API for Minecraft 26.2.
-3. Download `fps-tune-1.0.0.jar` from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases).
+1. Install either Minecraft 1.21.11 with Fabric Loader 0.18.6 or newer, or Minecraft 26.2 with Fabric Loader 0.19.3 or newer.
+2. Install the Fabric API build matching that Minecraft version.
+3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
+
+   | Minecraft | Matching artifact |
+   | --- | --- |
+   | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
+   | 26.2 | `fps-tune-<version>.jar` |
+
+   Do not install both target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
-5. Press `F6` to toggle the master switch, or install Mod Menu and choose FPS Tune → Configure.
+5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune → Configure.
 
 The default particle budget is 300 admitted particles per client tick. Weather rendering remains enabled unless you explicitly disable it in the settings.
 
@@ -65,15 +72,26 @@ FPS Tune is not affiliated with Mojang, Microsoft, or any server. Client-only do
 
 FPS Tune should be evaluated using repeatable frame-time measurements, not a single FPS screenshot. [docs/BENCHMARKING.md](docs/BENCHMARKING.md) defines fair comparisons using average FPS, 1% lows, long-tail frame time, hitch counts, and explicit visual trade-offs.
 
+In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/resource packs/companion mods, Fancy graphics, render distance 16, simulation distance 12, VSync off, 240 FPS cap), a fixed 10,000-particle burst produced these paired medians:
+
+| Target | Disabled | Enabled | Median p95 frame time |
+| --- | ---: | ---: | ---: |
+| 1.21.11 | 210.10 FPS | 215.17 FPS (+2.4%) | 6.65 ms → 5.63 ms (-15.3%) |
+| 26.2 | 78.69 FPS | 102.78 FPS (+30.6%) | 17.61 ms → 14.39 ms (-18.3%) |
+
+The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
+
 ## Build and test
 
 ```sh
-./gradlew clean build
-./scripts/audit-client-only.sh
+for target in 1.21.11 26.2; do
+  ./gradlew clean build -Pmc_target="$target"
+  ./scripts/audit-client-only.sh "$target"
+done
 ./scripts/audit-repository.sh
 ```
 
-The build output is written to `build/libs/`. Tests cover configuration recovery, atomic writes, copy-on-edit settings behavior, budget boundaries, disabled behavior, independent render controllers, and a 100,000-particle admission simulation.
+The build output is written to `build/libs/`; the selected target controls the artifact suffix. Tests cover configuration recovery, atomic writes, copy-on-edit settings behavior, budget boundaries, disabled behavior, independent render controllers, and a 100,000-particle admission simulation. The CI matrix runs the same build on Java 21 for 1.21.11 and Java 25 for 26.2.
 
 For the full development and release procedures, see [docs/TESTING.md](docs/TESTING.md), [docs/MAINTENANCE.md](docs/MAINTENANCE.md), [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md), and [REPOSITORY_SETUP.md](REPOSITORY_SETUP.md).
 
