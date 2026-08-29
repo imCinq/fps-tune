@@ -47,18 +47,20 @@ FPS Tune starts disabled. Press `F6` to toggle the master switch, or open `FPS T
 
 Settings are stored locally in `config/fpstune.properties`. The master switch, particle admission, and weather rendering controls are independent, so you can keep weather visible while limiting particles or choose to suppress weather during an especially heavy scene.
 
-## Performance results
+## Measured results
 
-These are real measurements from one controlled local stress test, not a universal FPS guarantee. The test used an Apple M2, macOS 26.6.2, Java 25, no shaders, resource packs, Sodium, or other companion mods, Fancy graphics, render distance 16, simulation distance 12, VSync off, and a 240 FPS cap. A fixed peaceful creative world received one burst of 10,000 long-lived `FLAME` particles. Each target alternated FPS Tune off/on/off/on in one client process, with 120 warm-up frames and 600 measured render-loop intervals per phase. Enabled phases used the default 300-particle budget.
+These are real measurements from one controlled local stress test, not a universal FPS guarantee. “Disabled” means FPS Tune was off; “enabled” means it was on.
 
-| Minecraft | Avg FPS before | Avg FPS after | FPS change | p95 frame time before | p95 frame time after | p95 change |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1.21.11 | 210.10 | 215.17 | +2.4% | 6.65 ms | 5.63 ms | -15.3% |
-| 26.2 | 78.69 | 102.78 | +30.6% | 17.61 ms | 14.39 ms | -18.3% |
+| Minecraft | Disabled average FPS | Enabled average FPS | Median p95 frame time |
+| --- | ---: | ---: | ---: |
+| 1.21.11 | 210.10 FPS | 215.17 FPS (+2.4%) | 6.65 ms → 5.63 ms (-15.3%) |
+| 26.2 | 78.69 FPS | 102.78 FPS (+30.6%) | 17.61 ms → 14.39 ms (-18.3%) |
 
-Before means FPS Tune was off; after means it was on. Average FPS is useful, but p95 frame time is the metric most directly related to perceived smoothness: it describes the longer frames at the tail of the run. In this stress test, p95 improved by 15.3% and 18.3%, meaning those longer frames were substantially less severe and motion could look noticeably smoother even when the average-FPS gain was smaller. The enabled case intentionally renders fewer particles.
+Test context: Apple M2, macOS 26.6.2, Java 25, no shaders, resource packs, Sodium, Iris, or other companion mods; Fancy graphics; render distance 16; simulation distance 12; VSync off; 240 FPS cap; and a fixed peaceful creative world with seed `123456789`. The world received one burst of 10,000 long-lived `FLAME` particles. Four alternating disabled/enabled phases ran in one client process, with 120 warm-up frames and 600 measured render-loop intervals per phase. Enabled phases used the default 300-particle-per-tick admission budget.
 
-Results depend on hardware, drivers, Minecraft version, companion mods, and workload. Do not treat them as a guaranteed multiplier or transfer one version's result to another.
+The enabled case intentionally renders fewer particles, so this is a frame-time stability measurement under a controlled heavy workload with a visible workload trade-off—not a universal FPS multiplier. Results vary with hardware, drivers, Minecraft version, companion mods, and workload; do not transfer one version's result to another or treat it as a guarantee. No 1% lows, 0.1% lows, or hitch counts are claimed here because they were not recorded in this run.
+
+p95 frame time is the smoothness-oriented metric: lower p95 means the long frames at the tail of the run were less severe. The measured 15.3% and 18.3% reductions are a meaningful visual improvement in this stress scene, so the motion can look noticeably smoother even when the average-FPS change is smaller.
 
 ## Compatibility
 
