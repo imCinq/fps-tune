@@ -44,7 +44,7 @@ jobs:
       - name: Prepare release files
         run: |
           mkdir -p release
-          cp build/libs/core-tune-*.jar release/
+          cp build/libs/fps-tune-*.jar release/
           cd release
           sha256sum *.jar > SHA256SUMS.txt
 

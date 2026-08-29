@@ -48,14 +48,14 @@ jobs:
       - name: Prepare verified artifacts
         run: |
           mkdir -p ci-artifacts
-          cp build/libs/core-tune-*.jar ci-artifacts/
+          cp build/libs/fps-tune-*.jar ci-artifacts/
           cd ci-artifacts
           sha256sum *.jar > SHA256SUMS.txt
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: coretune-minecraft-26.2
+          name: fps-tune-minecraft-26.2
           path: ci-artifacts/
           if-no-files-found: error
           retention-days: 14

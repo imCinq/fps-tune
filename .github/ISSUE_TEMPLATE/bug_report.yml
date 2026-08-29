@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem in CoreTune.
+description: Report a reproducible problem in FPS Tune.
 title: '[Bug] '
 labels: [bug]
 body:

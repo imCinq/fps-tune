@@ -10,6 +10,7 @@ if grep -RInE "$prohibited_pattern" src/main; then
 fi
 
 jq -e '.environment == "client"' src/main/resources/fabric.mod.json >/dev/null
-jq -e '.required == true and .client == ["ParticleEngineMixin"]' src/main/resources/coretune.mixins.json >/dev/null
+jq -e '(.contact.homepage | type) == "string" and (.contact.homepage | startswith("https://")) and (.contact.issues | type) == "string" and (.contact.issues | startswith("https://")) and (.contact.sources | type) == "string" and (.contact.sources | startswith("https://"))' src/main/resources/fabric.mod.json >/dev/null
+jq -e '.required == true and (.client | type == "array") and (.client | length >= 1) and (.client | all(.[]; endswith("Mixin")))' src/main/resources/fpstune.mixins.json >/dev/null
 
 echo "Client-only source audit passed."

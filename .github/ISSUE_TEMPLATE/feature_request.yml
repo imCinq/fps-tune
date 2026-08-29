@@ -8,8 +8,7 @@ body:
     attributes:
       label: Target mod
       options:
-        - Mac Metrics
-        - CoreTune
+        - FPS Tune
         - Repository or build tooling
     validations:
       required: true

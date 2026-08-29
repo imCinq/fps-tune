@@ -1,27 +1,38 @@
 {
   "schemaVersion": 1,
-  "id": "coretune",
+  "id": "fpstune",
   "version": "${version}",
-  "name": "CoreTune",
-  "description": "A narrow client-side mixin optimization that limits particle-engine admission during particle storms.",
+  "name": "FPS Tune",
+  "description": "A client-side FPS and render stability toolkit with opt-in controls for extreme visual workloads.",
+  "contact": {
+    "homepage": "https://github.com/imCinq/fps-tune",
+    "issues": "https://github.com/imCinq/fps-tune/issues",
+    "sources": "https://github.com/imCinq/fps-tune"
+  },
   "authors": [
     "Cinq"
   ],
   "license": "MIT",
-  "icon": "assets/coretune/icon.png",
+  "icon": "assets/fpstune/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "dev.coretune.CoreTuneClient"
+      "dev.fpstune.FPSTuneClient"
+    ],
+    "modmenu": [
+      "dev.fpstune.integration.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "coretune.mixins.json"
+    "fpstune.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.19.3",
     "minecraft": "26.2",
     "java": ">=25",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": ">=20.0.0-beta.4"
   }
 }

@@ -1,6 +1,13 @@
 # Changelog
 
-## 1.0.0
+## 1.0.0 - 2026-08-29
+
+- Added independent particle-admission and weather-render controllers behind the disabled-by-default master switch.
+- Added an optional Mod Menu settings screen for the master switch, controller toggles, and particle budget.
+- Added clickable homepage, source, and issue-tracker links to the Mod Menu details page.
+- Added versioned configuration persistence with safe legacy defaults.
+- Renamed the public mod identity to FPS Tune and added a non-destructive configuration-path migration.
+- Generalized client-only auditing and documentation around optional local render workloads.
 
 - Added a configurable per-tick particle-admission budget.
 - Kept optimization disabled by default.

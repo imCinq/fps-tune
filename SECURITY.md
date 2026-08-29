@@ -8,4 +8,4 @@ Do not include tokens, cookies, private server addresses, coordinates, or unreda
 
 Relevant concerns include unexpected file or network access, unsafe configuration handling, behavior outside local particle rendering, and release artifacts that do not match tagged source.
 
-Server-rule approval is a policy decision, not a security guarantee. CoreTune remains disabled by default.
+Server-rule approval is a policy decision, not a security guarantee. FPS Tune remains disabled by default.

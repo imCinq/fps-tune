@@ -1,4 +1,4 @@
-# CoreTune testing
+# FPS Tune testing
 
 ## Fast deterministic checks
 
@@ -10,19 +10,32 @@ Run the complete local checklist from the repository root:
 ./scripts/audit-repository.sh
 ```
 
-The Gradle build compiles the mod and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, enabled/disabled behavior, budget boundaries, and a 100,000-particle admission simulation.
+The Gradle build compiles the mod and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, budget boundaries, and a 100,000-particle admission simulation.
+
+The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
 ## Mixin verification
 
 Mixin changes require more than unit tests:
 
 1. Inspect the target Minecraft bytecode.
-2. Confirm the expected `ParticleEngine.add` method shape and queue insertion points.
+2. Confirm the expected `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` method shapes and render boundaries.
 3. Update the mixin and tests together.
-4. Run a graphical `runClient` smoke test.
+4. Run graphical `runClient` smoke tests for FPS Tune disabled, particle admission enabled, and weather rendering disabled as separate configuration cases.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
 
-If bytecode structure changes, stop and redesign the injection rather than forcing a stale hook.
+## Mod Menu settings screen
+
+When Mod Menu is present:
+
+1. Open the Mods screen, select FPS Tune, and open Configure.
+2. Confirm the master switch, particle admission switch, weather-rendering switch, and particle budget reflect `config/fpstune.properties`.
+3. Change values, close with Cancel or Escape, and confirm the file and runtime settings are unchanged.
+4. Change values, close with Done, and confirm the file is updated and the new values apply without restarting the client.
+
+Also launch the built FPS Tune JAR without Mod Menu to confirm the optional entrypoint does not affect normal client startup.
+
+If bytecode structure changes, stop and redesign the injection rather than forcing a stale hook. Never gate a worker queue in a way that can leave pending render work permanently unscheduled.
 
 ## Repository audits
 

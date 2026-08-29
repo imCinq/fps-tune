@@ -1,0 +1,15 @@
+{
+  "key.category.fpstune.controls": "FPS Tune",
+  "key.fpstune.toggle": "Toggle FPS Tune render controls",
+  "screen.fpstune.title": "FPS Tune Settings",
+  "screen.fpstune.description": "Optional local render controls. Changes are saved only when you press Done.",
+  "option.fpstune.enabled": "Enable FPS Tune render controls",
+  "option.fpstune.enabled.tooltip": "Master switch. FPS Tune is disabled by default and changes only local rendering.",
+  "option.fpstune.particle_admission": "Limit particle admission",
+  "option.fpstune.particle_admission.tooltip": "Limit particles admitted to the client particle engine when FPS Tune is enabled.",
+  "option.fpstune.weather_rendering": "Render weather effects",
+  "option.fpstune.weather_rendering.tooltip": "Keep vanilla weather rendering enabled while FPS Tune is enabled.",
+  "option.fpstune.max_particles": "Particle budget",
+  "option.fpstune.max_particles.tooltip": "Maximum particles admitted per client tick when particle limiting is enabled.",
+  "option.fpstune.max_particles.value": "%s particles/tick"
+}
