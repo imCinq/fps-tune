@@ -28,6 +28,19 @@ Record the following for every run:
 
 Keep FPS Tune installed for both baselines. Compare it disabled with `F6` against the same configuration enabled, rather than comparing unrelated instances.
 
+## Observed local before/after run
+
+The following measurements were captured on 2026-08-29 with a temporary local harness. The harness created a fixed peaceful creative overworld with seed `123456789`, warmed up the client, injected one burst of 10,000 long-lived `FLAME` particles into the client particle engine, and alternated four phases in one process: disabled, enabled, disabled, enabled. Each phase discarded 120 render frames, then measured 600 render-loop frame-start intervals. The enabled phases used the default `maxParticlesPerTick=300`; the disabled phases admitted the full burst. The table reports the median of the two phases for each state.
+
+| Target | FPS Tune off: average FPS | FPS Tune on: average FPS | Average change | Off: median p95 frame time | On: median p95 frame time | p95 change |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Minecraft 1.21.11 | 210.10 | 215.17 | +2.4% | 6.65 ms | 5.63 ms | -15.3% |
+| Minecraft 26.2 | 78.69 | 102.78 | +30.6% | 17.61 ms | 14.39 ms | -18.3% |
+
+Test environment: Apple M2, 8 cores, 16 GB RAM, macOS 26.6.2, arm64, OpenGL through the Metal compatibility driver, Java 25, no shaders, no resource packs, no Sodium/Iris or other companion mods, Fancy graphics, render distance 16, simulation distance 12, fullscreen off, VSync off, 240 FPS cap. The 1.21.11 run used Fabric Loader 0.18.6, Fabric API 0.141.6+1.21.11, and Mod Menu 17.0.0. The 26.2 run used Fabric Loader 0.19.3, Fabric API 0.158.0+26.2, and Mod Menu 20.0.0-beta.4.
+
+This is a deliberately extreme admission/render stress test, not a normal-gameplay promise. The enabled case visibly renders fewer particles by design, and the result is specific to this machine, driver, client build, and workload. It must not be presented as a universal FPS multiplier. The logged per-phase results are retained in the local client log used for the release review.
+
 ## Suggested scenarios
 
 | Scenario | Baseline | Enabled case |

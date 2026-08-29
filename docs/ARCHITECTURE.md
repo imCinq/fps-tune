@@ -18,6 +18,12 @@ FPS Tune is a client-only Fabric mod. The runtime path is intentionally limited 
 | `ModMenuIntegration` | Exposes the optional in-game configuration entrypoint without adding runtime behavior outside the client. |
 | `FPSTuneConfigScreen` | Edits a copied configuration with native Minecraft widgets and persists it only after an explicit Done action. |
 
+## Versioned build layout
+
+The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; the 1.21.11 target currently provides its older keybinding/chat bridge, while 26.2 uses the newer client APIs. Each target also owns its `fabric.mod.json` and `fpstune.mixins.json` under `src/<minecraft-version>/resources`.
+
+`gradle/versions/<minecraft-version>.properties` is the build profile source of truth. The selected `mc_target` chooses the Minecraft dependency, loader, Fabric API, Java release level, Loom plugin, source directory, resource directory, and artifact suffix. A release therefore contains separate JARs; a player must install the JAR matching their Minecraft version.
+
 ## Runtime flow
 
 1. Fabric invokes `FPSTuneClient` on the client.
@@ -38,11 +44,11 @@ Mod Menu is an optional client-side integration. Its entrypoint opens `FPSTuneCo
 
 ## Mixin boundary
 
-The mixins are client-only and explicitly listed in `src/main/resources/fpstune.mixins.json`. Their targets are version-sensitive. Before changing them, inspect the target Minecraft bytecode and verify the exact shape of `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass`. Prefer narrow head cancellation and explicit admission accounting over broad redirects or ordinal-only assumptions. A controller must not stall worker queues or alter world simulation.
+The mixins are client-only and explicitly listed in the selected target's `src/<minecraft-version>/resources/fpstune.mixins.json`. Their targets are version-sensitive. Before changing them, inspect the target Minecraft bytecode and verify the exact shape of `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass`. Prefer narrow head cancellation and explicit admission accounting over broad redirects or ordinal-only assumptions. A controller must not stall worker queues or alter world simulation.
 
 ## Packaging
 
-The Fabric metadata, icon, language resource, mixin configuration, compiled classes, and tests are built from the Gradle project. `gradle.properties` and `fabric.mod.json` remain the machine-readable compatibility sources.
+The Fabric metadata, icon, language resource, mixin configuration, compiled classes, and tests are built from the Gradle project. The selected profile in `gradle/versions/` and its target metadata are the machine-readable compatibility sources.
 
 ## Change guidance
 

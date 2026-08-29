@@ -25,11 +25,13 @@ Use `Cinq` as the public author name and GitHub's no-reply identity for commit m
 
 2. Make the smallest change that solves the issue. Keep FPS Tune client-only, disabled by default, and limited to optional local rendering workloads or render scheduling.
 3. Add or update deterministic tests for the behavior.
-4. Run the full local verification checklist:
+4. Run the full local verification checklist for both supported targets:
 
    ```sh
-   ./gradlew clean build
-   ./scripts/audit-client-only.sh
+   for target in 1.21.11 26.2; do
+     ./gradlew clean build --no-daemon -Pmc_target="$target"
+     ./scripts/audit-client-only.sh "$target"
+   done
    ./scripts/audit-repository.sh
    ```
 
@@ -46,7 +48,7 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 
 ## Release flow
 
-1. Update the version in `gradle.properties` and `src/main/resources/fabric.mod.json` together.
+1. Update `mod_version` in `gradle.properties`; the target metadata files in `src/1.21.11/resources/` and `src/26.2/resources/` use the expanded version placeholder.
 2. Update `CHANGELOG.md` and run the complete verification checklist.
 3. Merge the release pull request into `main`.
 4. Create and push an annotated tag matching the project version:
@@ -56,7 +58,7 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
    git push origin vX.Y.Z
    ```
 
-5. The release workflow rebuilds the project, reruns the audits, checks that the tag matches the project version, and creates the GitHub Release. Use that verified JAR for any later manual Modrinth or CurseForge submission.
+5. The release workflow rebuilds both target profiles, reruns the audits, checks that the tag matches the project version, and creates a GitHub Release containing one binary and one sources JAR per Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
 
 ## Repository safeguards
 

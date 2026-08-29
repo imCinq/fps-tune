@@ -2,15 +2,17 @@
 
 ## Fast deterministic checks
 
-Run the complete local checklist from the repository root:
+Run the complete local checklist from the repository root for every supported target:
 
 ```sh
-./gradlew clean build
-./scripts/audit-client-only.sh
+for target in 1.21.11 26.2; do
+  ./gradlew clean build -Pmc_target="$target"
+  ./scripts/audit-client-only.sh "$target"
+done
 ./scripts/audit-repository.sh
 ```
 
-The Gradle build compiles the mod and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, budget boundaries, and a 100,000-particle admission simulation.
+The Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, budget boundaries, and a 100,000-particle admission simulation. The hosted CI matrix repeats this build with Java 21 for 1.21.11 and Java 25 for 26.2.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
@@ -19,14 +21,14 @@ The compile also verifies the optional Mod Menu API integration. The settings sc
 Mixin changes require more than unit tests:
 
 1. Inspect the target Minecraft bytecode.
-2. Confirm the expected `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` method shapes and render boundaries.
+2. Confirm the expected `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` method shapes and render boundaries for the selected target.
 3. Update the mixin and tests together.
-4. Run graphical `runClient` smoke tests for FPS Tune disabled, particle admission enabled, and weather rendering disabled as separate configuration cases.
+4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, and weather rendering disabled as separate configuration cases.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
 
 ## Mod Menu settings screen
 
-When Mod Menu is present:
+When Mod Menu is present, repeat the click-through on each supported target's matching Mod Menu version:
 
 1. Open the Mods screen, select FPS Tune, and open Configure.
 2. Confirm the master switch, particle admission switch, weather-rendering switch, and particle budget reflect `config/fpstune.properties`.

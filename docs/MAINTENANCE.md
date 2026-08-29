@@ -3,7 +3,7 @@
 ## Routine dependency update
 
 1. Review the upstream release notes and compatibility requirements.
-2. Change only the relevant version in `gradle.properties`. The pinned Mod Menu version must remain compatible with the supported Minecraft version and is reviewed like every other dependency; do not auto-merge its Dependabot update.
+2. Change only the relevant value in `gradle/versions/<minecraft-version>.properties`. The pinned Mod Menu version must remain compatible with that target and is reviewed like every other dependency; do not auto-merge its Dependabot update.
    For Gradle itself, regenerate the official Wrapper and verify both published checksums.
 3. Run a clean build and all tests.
 4. Run both repository audit scripts.
@@ -17,15 +17,16 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 
 Update Minecraft compatibility in a dedicated branch and pull request:
 
-1. Update Minecraft, Fabric Loader, Fabric API, Loom, and Java only to versions documented as compatible by their official projects.
-2. Regenerate mappings through a clean Loom build.
-3. Compile before changing mixins so mapping or signature failures are visible.
-4. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` when applicable.
-5. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
-6. Add tests for any changed admission behavior.
-7. Run a graphical client with FPS Tune disabled and enabled.
-8. Test a controlled particle storm and optional weather-render reduction, then verify that normal particles, menus, world loading, disconnects, and shutdown remain stable.
-9. Update `fabric.mod.json`, `README.md`, `AGENTS.md`, and `CHANGELOG.md`. Recheck the optional Mod Menu settings screen when its API or Minecraft compatibility changes.
+1. Add or update `gradle/versions/<minecraft-version>.properties` with Minecraft, Fabric Loader, Fabric API, Loom, Java, mappings, and artifact settings documented as compatible by their official projects.
+2. Select the correct Loom plugin: remapping Loom for Minecraft 1.21.11 and older, non-remapping Loom for Minecraft 26.1 and newer.
+3. Regenerate mappings through a clean Loom build for the selected target.
+4. Compile before changing mixins so mapping or signature failures are visible.
+5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` when applicable.
+6. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
+7. Add tests for any changed admission behavior and build every supported target.
+8. Run a graphical client with FPS Tune disabled and enabled for the new target.
+9. Test a controlled particle storm and optional weather-render reduction, then verify that normal particles, menus, world loading, disconnects, and shutdown remain stable.
+10. Update the target `fabric.mod.json`, `README.md`, `AGENTS.md`, `docs/COMPATIBILITY.md`, `docs/DISTRIBUTION.md`, and `CHANGELOG.md`. Recheck the optional Mod Menu settings screen when its API or Minecraft compatibility changes.
 
 Do not claim support for a Minecraft version based only on compilation.
 

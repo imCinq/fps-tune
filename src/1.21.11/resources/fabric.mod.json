@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "fpstune",
+  "version": "${version}",
+  "name": "FPS Tune",
+  "description": "A client-side FPS and render stability toolkit with opt-in controls for extreme visual workloads.",
+  "contact": {
+    "homepage": "https://github.com/imCinq/fps-tune",
+    "issues": "https://github.com/imCinq/fps-tune/issues",
+    "sources": "https://github.com/imCinq/fps-tune"
+  },
+  "authors": [
+    "Cinq"
+  ],
+  "license": "MIT",
+  "icon": "assets/fpstune/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.fpstune.FPSTuneClient"
+    ],
+    "modmenu": [
+      "dev.fpstune.integration.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "fpstune.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.6",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": ">=17.0.0"
+  }
+}

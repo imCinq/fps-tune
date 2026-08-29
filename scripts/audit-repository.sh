@@ -13,6 +13,10 @@ search_repository() {
 		--exclude-dir=.gradle \
 		--exclude-dir=.gradle-local \
 		--exclude-dir=build \
+		--exclude-dir=release \
+		--exclude-dir=run \
+		--exclude-dir=ci-artifacts \
+		--exclude=.git \
 		--exclude=audit-repository.sh \
 		-e "$pattern" .
 }

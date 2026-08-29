@@ -1,10 +1,15 @@
 # FPS Tune
 
-FPS Tune is a focused, client-side Fabric performance mod for Minecraft 26.2. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
+FPS Tune is a focused, client-side Fabric performance mod for Minecraft 1.21.11 and 26.2. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
 
 ## Platform posture
 
-FPS Tune targets Minecraft 26.2 with Java 25, Fabric Loader 0.19.3 or newer, and Fabric API `0.158.0+26.2`. The compatibility baseline is declared in `gradle.properties` and `src/main/resources/fabric.mod.json`.
+FPS Tune has versioned targets rather than one universal JAR:
+
+- Minecraft 1.21.11 uses Java 21, Fabric Loader 0.18.6, Fabric API `0.141.6+1.21.11`, and the remapping Loom plugin.
+- Minecraft 26.2 uses Java 25, Fabric Loader 0.19.3, Fabric API `0.158.0+26.2`, and the non-remapping Loom plugin.
+
+The compatibility profiles are declared in `gradle/versions/`, with matching metadata in `src/1.21.11/resources/` and `src/26.2/resources/`.
 
 - Prefer narrow, measurable changes over broad rendering rewrites.
 - Keep the mod client-only and disabled by default.
@@ -18,10 +23,10 @@ FPS Tune targets Minecraft 26.2 with Java 25, Fabric Loader 0.19.3 or newer, and
 | --- | --- |
 | change runtime wiring, configuration, render controllers, mixins, or packaging | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | build, test, package, or verify the mod | [docs/TESTING.md](docs/TESTING.md) and [README.md](README.md) |
-| change a Minecraft, Fabric, Java, Gradle, or Action version | [docs/MAINTENANCE.md](docs/MAINTENANCE.md) and [gradle.properties](gradle.properties) |
+| change a Minecraft, Fabric, Java, Gradle, or Action version | [docs/MAINTENANCE.md](docs/MAINTENANCE.md) and the matching profile in [gradle/versions](gradle/versions) |
 | change the distribution or release surface | [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) and [REPOSITORY_SETUP.md](REPOSITORY_SETUP.md) |
 | add or change regression coverage | [src/test](src/test) and [docs/TESTING.md](docs/TESTING.md) |
-| work on a mixin target | [src/main/java/dev/fpstune/mixin](src/main/java/dev/fpstune/mixin) and [src/main/resources/fpstune.mixins.json](src/main/resources/fpstune.mixins.json) |
+| work on a mixin target | [src/main/java/dev/fpstune/mixin](src/main/java/dev/fpstune/mixin) and the matching file in `src/<minecraft-version>/resources/` |
 
 ## Further information
 
@@ -40,8 +45,10 @@ Committed tests should cover critical behavior, compatibility-sensitive logic, a
 Use the repository's standard checks for every meaningful change:
 
 ```sh
-./gradlew clean build
-./scripts/audit-client-only.sh
+./gradlew clean build -Pmc_target=1.21.11
+./scripts/audit-client-only.sh 1.21.11
+./gradlew clean build -Pmc_target=26.2
+./scripts/audit-client-only.sh 26.2
 ./scripts/audit-repository.sh
 ```
 

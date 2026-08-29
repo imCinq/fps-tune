@@ -4,6 +4,8 @@
 
 - Added player-facing configuration, compatibility, and benchmarking references.
 - Improved the README install/configuration flow and bug-report triage fields.
+- Added separate build profiles and artifacts for Minecraft 1.21.11 and 26.2.
+- Ported the client keybinding/chat bridge for Minecraft 1.21.11 while keeping the render controllers shared.
 
 ## 1.0.0 - 2026-08-29
 
