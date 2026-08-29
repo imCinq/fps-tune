@@ -39,11 +39,51 @@ public final class ConfigStore {
 				config.enabled = getBoolean(properties, "enabled", config.enabled);
 				config.maxParticlesPerTick = getInt(properties, "maxParticlesPerTick", config.maxParticlesPerTick);
 				int configVersion = getInt(properties, "configVersion", 0);
-				if (configVersion == 0 || configVersion == FPSTuneConfig.CURRENT_CONFIG_VERSION) {
+				if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION) {
 					config.particleAdmissionEnabled = getBoolean(
 							properties,
 							"particleAdmissionEnabled",
 							config.particleAdmissionEnabled
+					);
+					config.prioritizeNearbyParticles = getBoolean(
+							properties,
+							"prioritizeNearbyParticles",
+							config.prioritizeNearbyParticles
+					);
+					config.nearbyParticleReserve = getInt(
+							properties,
+							"nearbyParticleReserve",
+							config.nearbyParticleReserve
+					);
+					config.nearbyParticleDistance = getInt(
+							properties,
+							"nearbyParticleDistance",
+							config.nearbyParticleDistance
+					);
+					config.diagnosticsHudEnabled = getBoolean(
+							properties,
+							"diagnosticsHudEnabled",
+							config.diagnosticsHudEnabled
+					);
+					config.adaptiveParticleBudgetEnabled = getBoolean(
+							properties,
+							"adaptiveParticleBudgetEnabled",
+							config.adaptiveParticleBudgetEnabled
+					);
+					config.adaptiveTargetFps = getInt(
+							properties,
+							"adaptiveTargetFps",
+							config.adaptiveTargetFps
+					);
+					config.adaptiveMinParticlesPerTick = getInt(
+							properties,
+							"adaptiveMinParticlesPerTick",
+							config.adaptiveMinParticlesPerTick
+					);
+					config.adaptiveMaxParticlesPerTick = getInt(
+							properties,
+							"adaptiveMaxParticlesPerTick",
+							config.adaptiveMaxParticlesPerTick
 					);
 					config.weatherRenderingEnabled = getBoolean(
 							properties,
@@ -73,6 +113,14 @@ public final class ConfigStore {
 		properties.setProperty("enabled", Boolean.toString(config.enabled));
 		properties.setProperty("particleAdmissionEnabled", Boolean.toString(config.particleAdmissionEnabled));
 		properties.setProperty("maxParticlesPerTick", Integer.toString(config.maxParticlesPerTick));
+		properties.setProperty("prioritizeNearbyParticles", Boolean.toString(config.prioritizeNearbyParticles));
+		properties.setProperty("nearbyParticleReserve", Integer.toString(config.nearbyParticleReserve));
+		properties.setProperty("nearbyParticleDistance", Integer.toString(config.nearbyParticleDistance));
+		properties.setProperty("diagnosticsHudEnabled", Boolean.toString(config.diagnosticsHudEnabled));
+		properties.setProperty("adaptiveParticleBudgetEnabled", Boolean.toString(config.adaptiveParticleBudgetEnabled));
+		properties.setProperty("adaptiveTargetFps", Integer.toString(config.adaptiveTargetFps));
+		properties.setProperty("adaptiveMinParticlesPerTick", Integer.toString(config.adaptiveMinParticlesPerTick));
+		properties.setProperty("adaptiveMaxParticlesPerTick", Integer.toString(config.adaptiveMaxParticlesPerTick));
 		properties.setProperty("weatherRenderingEnabled", Boolean.toString(config.weatherRenderingEnabled));
 
 		try {

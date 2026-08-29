@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public final class FPSTuneClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		Minecraft client = Minecraft.getInstance();
 		config = ConfigStore.load(client.gameDirectory.toPath());
+		AdaptiveParticleBudgetController.reset(config);
+		FPSTuneHud.register();
 
 		KeyMapping.Category category = KeyMapping.Category.register(
 				Identifier.fromNamespaceAndPath(MOD_ID, "controls")
@@ -44,6 +47,7 @@ public final class FPSTuneClient implements ClientModInitializer {
 	private void onClientTick(Minecraft client) {
 		while (toggleKey.consumeClick()) {
 			config.enabled = !config.enabled;
+			AdaptiveParticleBudgetController.reset(config);
 			ConfigStore.save(client.gameDirectory.toPath(), config);
 			if (client.gui != null) {
 				client.gui.getChat().addMessage(Component.literal(
@@ -57,12 +61,26 @@ public final class FPSTuneClient implements ClientModInitializer {
 		return config;
 	}
 
+	public static boolean isNearbyParticle(Particle particle) {
+		if (particle == null || config == null || !config.prioritizeNearbyParticles || config.nearbyParticleDistance <= 0) {
+			return false;
+		}
+		Minecraft client = Minecraft.getInstance();
+		if (client.player == null) {
+			return false;
+		}
+
+		double radius = config.nearbyParticleDistance;
+		return client.player.distanceToSqr(particle.getBoundingBox().getCenter()) <= radius * radius;
+	}
+
 	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
 		if (updatedConfig == null) {
 			return;
 		}
 		updatedConfig.clamp();
 		config = updatedConfig;
+		AdaptiveParticleBudgetController.reset(config);
 		ConfigStore.save(runDirectory, config);
 	}
 }

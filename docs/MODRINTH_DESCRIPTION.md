@@ -7,7 +7,10 @@ FPS Tune is disabled by default. It changes only what your client renders; it do
 ## What it does
 
 - Limits new particle admissions per client tick when enabled. The default budget is 300 particles per client tick.
+- Can reserve part of that budget for particles near the player, so distant cosmetic particles are rejected first during a storm.
+- Can optionally adapt that particle budget to recent local frame times, lowering it when frames stay slow and raising it slowly when performance recovers.
 - Can disable the local rain and snow render pass when you explicitly choose that visual trade-off.
+- Can show an opt-in local diagnostics HUD with current-tick admission counters.
 - Provides a vanilla settings screen through the optional Mod Menu integration.
 - Provides `F6` as a quick toggle for the master switch.
 
@@ -43,15 +46,22 @@ FPS Tune starts disabled. Press `F6` to toggle the master switch, or open `FPS T
 | Master switch | Off | Enables or disables FPS Tune's local render controls. |
 | Particle admission | On | Applies the particle budget while the master switch is on. |
 | Particle budget | 300 | Maximum new particles admitted per client tick, clamped to `0..10000`. |
+| Nearby priority | On | Protects a portion of the existing budget for particles near the player. |
+| Nearby reserve | 100 | Admissions reserved for nearby particles per client tick. |
+| Nearby distance | 16 blocks | Radius used to classify nearby particles. |
+| Diagnostics HUD | Off | Shows local current-tick counters and controller status. |
+| Automatic particle limit | Off | Slowly adjusts the particle limit toward your target FPS. |
+| Adaptive target | 120 FPS | Target used by Adaptive mode. |
+| Adaptive range | 100–2,000 | Minimum and maximum particle budgets used by Adaptive mode. |
 | Weather rendering | On | Keeps the vanilla rain and snow render pass enabled. |
 
-Settings are stored locally in `config/fpstune.properties`. The master switch, particle admission, and weather rendering controls are independent, so you can keep weather visible while limiting particles or choose to suppress weather during an especially heavy scene.
+Settings are stored locally in `config/fpstune.properties`. The master switch gates all render changes; particle reduction, nearby-particle protection, and the automatic particle limit work together, while the performance overlay and rain/snow display are separate controls. You can keep weather visible while limiting particles, protect nearby particles during a storm, or suppress weather during an especially heavy scene.
 
 ## Measured results
 
 These are real measurements from one controlled local stress test, not a universal FPS guarantee. “Disabled” means FPS Tune was off; “enabled” means it was on.
 
-| Minecraft | Disabled average FPS | Enabled average FPS | Median p95 frame time |
+| Minecraft | Disabled average FPS | Enabled average FPS | p95 frame time |
 | --- | ---: | ---: | ---: |
 | 1.21.11 | 210.10 FPS | 215.17 FPS (+2.4%) | 6.65 ms → 5.63 ms (-15.3%) |
 | 26.2 | 78.69 FPS | 102.78 FPS (+30.6%) | 17.61 ms → 14.39 ms (-18.3%) |

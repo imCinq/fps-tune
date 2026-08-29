@@ -40,7 +40,7 @@ The compatibility profiles are declared in `gradle/versions/`, with matching met
 
 ## Tests
 
-Committed tests should cover critical behavior, compatibility-sensitive logic, and high-value regressions. Current coverage includes admission-budget boundaries, independently disabled controllers, configuration recovery, atomic writes, legacy configuration defaults, render-policy behavior, and a large-particle admission simulation.
+Committed tests should cover critical behavior, compatibility-sensitive logic, and high-value regressions. Current coverage includes admission-budget boundaries, nearby-priority behavior, bounded Adaptive streaks and cooldowns, diagnostics metrics, independently disabled controllers, configuration recovery, atomic writes, legacy configuration defaults, render-policy behavior, and a large-particle admission simulation.
 
 Use the repository's standard checks for every meaningful change:
 

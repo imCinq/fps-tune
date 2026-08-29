@@ -17,13 +17,18 @@ final class ConfigStoreTest {
 		Path configDirectory = runDirectory.resolve("config");
 		Files.createDirectories(configDirectory);
 		Files.writeString(configDirectory.resolve("fpstune.properties"),
-				"configVersion=1\nenabled=maybe\nparticleAdmissionEnabled=maybe\nmaxParticlesPerTick=999999\nweatherRenderingEnabled=maybe\n");
+				"configVersion=1\nenabled=maybe\nparticleAdmissionEnabled=maybe\nmaxParticlesPerTick=999999\n"
+						+ "adaptiveTargetFps=10\nadaptiveMinParticlesPerTick=2000\nadaptiveMaxParticlesPerTick=100\n"
+						+ "weatherRenderingEnabled=maybe\n");
 
 		FPSTuneConfig config = ConfigStore.load(runDirectory);
 
 		assertFalse(config.enabled);
 		assertTrue(config.particleAdmissionEnabled);
 		assertEquals(10_000, config.maxParticlesPerTick);
+		assertEquals(30, config.adaptiveTargetFps);
+		assertEquals(2_000, config.adaptiveMinParticlesPerTick);
+		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
 		assertTrue(config.weatherRenderingEnabled);
 	}
 
@@ -33,6 +38,14 @@ final class ConfigStoreTest {
 		original.enabled = true;
 		original.particleAdmissionEnabled = false;
 		original.maxParticlesPerTick = 512;
+		original.prioritizeNearbyParticles = false;
+		original.nearbyParticleReserve = 180;
+		original.nearbyParticleDistance = 24;
+		original.diagnosticsHudEnabled = true;
+		original.adaptiveParticleBudgetEnabled = true;
+		original.adaptiveTargetFps = 144;
+		original.adaptiveMinParticlesPerTick = 80;
+		original.adaptiveMaxParticlesPerTick = 1_800;
 		original.weatherRenderingEnabled = false;
 
 		ConfigStore.save(runDirectory, original);
@@ -41,13 +54,29 @@ final class ConfigStoreTest {
 		assertTrue(reloaded.enabled);
 		assertFalse(reloaded.particleAdmissionEnabled);
 		assertEquals(512, reloaded.maxParticlesPerTick);
+		assertFalse(reloaded.prioritizeNearbyParticles);
+		assertEquals(180, reloaded.nearbyParticleReserve);
+		assertEquals(24, reloaded.nearbyParticleDistance);
+		assertTrue(reloaded.diagnosticsHudEnabled);
+		assertTrue(reloaded.adaptiveParticleBudgetEnabled);
+		assertEquals(144, reloaded.adaptiveTargetFps);
+		assertEquals(80, reloaded.adaptiveMinParticlesPerTick);
+		assertEquals(1_800, reloaded.adaptiveMaxParticlesPerTick);
 		assertFalse(reloaded.weatherRenderingEnabled);
 
 		Properties persisted = new Properties();
 		try (var input = Files.newInputStream(runDirectory.resolve("config").resolve("fpstune.properties"))) {
 			persisted.load(input);
 		}
-		assertEquals("1", persisted.getProperty("configVersion"));
+		assertEquals("3", persisted.getProperty("configVersion"));
+		assertEquals("false", persisted.getProperty("prioritizeNearbyParticles"));
+		assertEquals("180", persisted.getProperty("nearbyParticleReserve"));
+		assertEquals("24", persisted.getProperty("nearbyParticleDistance"));
+		assertEquals("true", persisted.getProperty("diagnosticsHudEnabled"));
+		assertEquals("true", persisted.getProperty("adaptiveParticleBudgetEnabled"));
+		assertEquals("144", persisted.getProperty("adaptiveTargetFps"));
+		assertEquals("80", persisted.getProperty("adaptiveMinParticlesPerTick"));
+		assertEquals("1800", persisted.getProperty("adaptiveMaxParticlesPerTick"));
 		assertFalse(Files.exists(runDirectory.resolve("config").resolve("fpstune.properties.tmp")));
 	}
 
@@ -63,6 +92,14 @@ final class ConfigStoreTest {
 		assertTrue(config.enabled);
 		assertTrue(config.particleAdmissionEnabled);
 		assertEquals(256, config.maxParticlesPerTick);
+		assertTrue(config.prioritizeNearbyParticles);
+		assertEquals(100, config.nearbyParticleReserve);
+		assertEquals(16, config.nearbyParticleDistance);
+		assertFalse(config.diagnosticsHudEnabled);
+		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertEquals(120, config.adaptiveTargetFps);
+		assertEquals(100, config.adaptiveMinParticlesPerTick);
+		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
 		assertTrue(config.weatherRenderingEnabled);
 	}
 
@@ -78,6 +115,14 @@ final class ConfigStoreTest {
 		assertTrue(config.enabled);
 		assertFalse(config.particleAdmissionEnabled);
 		assertEquals(512, config.maxParticlesPerTick);
+		assertTrue(config.prioritizeNearbyParticles);
+		assertEquals(100, config.nearbyParticleReserve);
+		assertEquals(16, config.nearbyParticleDistance);
+		assertFalse(config.diagnosticsHudEnabled);
+		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertEquals(120, config.adaptiveTargetFps);
+		assertEquals(100, config.adaptiveMinParticlesPerTick);
+		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
 		assertFalse(config.weatherRenderingEnabled);
 		assertTrue(Files.exists(configDirectory.resolve("coretune.properties")));
 		assertTrue(Files.exists(configDirectory.resolve("fpstune.properties")));
@@ -89,6 +134,14 @@ final class ConfigStoreTest {
 		assertEquals("true", migrated.getProperty("enabled"));
 		assertEquals("false", migrated.getProperty("particleAdmissionEnabled"));
 		assertEquals("512", migrated.getProperty("maxParticlesPerTick"));
+		assertEquals("true", migrated.getProperty("prioritizeNearbyParticles"));
+		assertEquals("100", migrated.getProperty("nearbyParticleReserve"));
+		assertEquals("16", migrated.getProperty("nearbyParticleDistance"));
+		assertEquals("false", migrated.getProperty("diagnosticsHudEnabled"));
+		assertEquals("false", migrated.getProperty("adaptiveParticleBudgetEnabled"));
+		assertEquals("120", migrated.getProperty("adaptiveTargetFps"));
+		assertEquals("100", migrated.getProperty("adaptiveMinParticlesPerTick"));
+		assertEquals("2000", migrated.getProperty("adaptiveMaxParticlesPerTick"));
 		assertEquals("false", migrated.getProperty("weatherRenderingEnabled"));
 	}
 
@@ -110,7 +163,7 @@ final class ConfigStoreTest {
 		Path configDirectory = runDirectory.resolve("config");
 		Files.createDirectories(configDirectory);
 		Files.writeString(configDirectory.resolve("fpstune.properties"),
-				"configVersion=2\nenabled=true\nparticleAdmissionEnabled=false\nweatherRenderingEnabled=false\n");
+				"configVersion=4\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
 
 		FPSTuneConfig config = ConfigStore.load(runDirectory);
 

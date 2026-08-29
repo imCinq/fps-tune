@@ -32,14 +32,14 @@ Use the FPS Tune logo as the listing icon and upload a human-created gallery ima
 
 ## Modrinth version upload plan
 
-Create one Modrinth version for each exact Minecraft target. Keep the internal mod version at `1.0.0`, but use unique SemVer-compatible Modrinth version numbers so the two files can coexist in one project:
+Create one Modrinth version for each exact Minecraft target. Keep the internal mod version at `1.1.0`, but use unique SemVer-compatible Modrinth version numbers so the two files can coexist in one project:
 
 | Minecraft | Modrinth version number | Primary file | Loader | Environment |
 | --- | --- | --- | --- | --- |
-| 1.21.11 | `1.0.0+mc1.21.11` | `fps-tune-mc1.21.11-1.0.0.jar` | Fabric | Client |
-| 26.2 | `1.0.0+mc26.2` | `fps-tune-1.0.0.jar` | Fabric | Client |
+| 1.21.11 | `1.1.0+mc1.21.11` | `fps-tune-mc1.21.11-1.1.0.jar` | Fabric | Client |
+| 26.2 | `1.1.0+mc26.2` | `fps-tune-1.1.0.jar` | Fabric | Client |
 
-For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle/weather controls without implying a universal FPS increase.
+For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle, Adaptive, and weather controls without implying a universal FPS increase.
 
 Because the GitHub repository is public, verify that source, issue, license, release, and changelog links work without authentication before submitting the listing. Do not link to temporary raw-file URLs or private-only support pages.
 

@@ -12,13 +12,15 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class FPSTuneConfigScreen extends Screen {
-	private static final int CONTENT_WIDTH = 320;
-	private static final int BUTTON_WIDTH = 120;
-	private static final List<Integer> PARTICLE_BUDGET_PRESETS = List.of(0, 100, 300, 600, 1_200, 10_000);
+	private static final List<PerformanceProfile> PROFILE_OPTIONS = List.of(
+			PerformanceProfile.BALANCED,
+			PerformanceProfile.SMOOTHER_FRAMES,
+			PerformanceProfile.MORE_PARTICLES,
+			PerformanceProfile.CUSTOM
+	);
 
 	private final Screen parent;
 	private final FPSTuneConfig draftConfig;
@@ -33,78 +35,115 @@ public final class FPSTuneConfigScreen extends Screen {
 
 	@Override
 	protected void init() {
-		int contentWidth = Math.min(CONTENT_WIDTH, Math.max(160, width - 40));
-		int left = (width - contentWidth) / 2;
+		FPSTuneConfigLayout.BasicLayout layout = FPSTuneConfigLayout.calculateBasic(width, height);
+		int contentWidth = layout.contentWidth();
+		int left = layout.left();
 
-		int titleWidth = font.width(getTitle());
 		addRenderableOnly(new StringWidget(
-				(width - titleWidth) / 2,
-				16,
-				titleWidth,
+				(width - font.width(getTitle())) / 2,
+				4,
+				font.width(getTitle()),
 				12,
 				getTitle(),
 				font
 		));
-
-		MultiLineTextWidget description = new MultiLineTextWidget(
+		addRenderableOnly(new MultiLineTextWidget(
 				left,
-				34,
+				FPSTuneConfigLayout.descriptionY(),
 				Component.translatable("screen.fpstune.description"),
 				font
-		).setMaxWidth(contentWidth).setCentered(true);
-		addRenderableOnly(description);
+		).setMaxWidth(contentWidth).setCentered(true));
 
-		int y = 72;
 		Checkbox enabled = addRenderableWidget(Checkbox.builder(
 				Component.translatable("option.fpstune.enabled"),
 				font
-		).pos(left, y).maxWidth(contentWidth).selected(draftConfig.enabled).onValueChange(
+		).pos(left, layout.enabledY()).maxWidth(contentWidth).selected(draftConfig.enabled).onValueChange(
 				(checkbox, value) -> draftConfig.enabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.enabled.tooltip"))).build());
 
-		y += 26;
-		addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.particle_admission"),
-				font
-		).pos(left, y).maxWidth(contentWidth).selected(draftConfig.particleAdmissionEnabled).onValueChange(
-				(checkbox, value) -> draftConfig.particleAdmissionEnabled = value
-		).tooltip(Tooltip.create(Component.translatable("option.fpstune.particle_admission.tooltip"))).build());
+		PerformanceProfile currentProfile = profileFor(draftConfig);
+		addRenderableWidget(CycleButton.<PerformanceProfile>builder(
+				FPSTuneConfigScreen::formatProfile,
+				currentProfile
+		).withValues(PROFILE_OPTIONS).create(
+				left,
+				layout.profileY(),
+				contentWidth,
+				20,
+				Component.translatable("option.fpstune.profile"),
+				(button, value) -> applyProfile(draftConfig, value)
+		));
 
-		y += 26;
+		addRenderableOnly(new MultiLineTextWidget(
+				left,
+				layout.profileHelpY(),
+				Component.translatable("option.fpstune.profile.help"),
+				font
+		).setMaxWidth(contentWidth).setCentered(true));
+
 		addRenderableWidget(Checkbox.builder(
 				Component.translatable("option.fpstune.weather_rendering"),
 				font
-		).pos(left, y).maxWidth(contentWidth).selected(draftConfig.weatherRenderingEnabled).onValueChange(
+		).pos(left, layout.weatherY()).maxWidth(contentWidth).selected(draftConfig.weatherRenderingEnabled).onValueChange(
 				(checkbox, value) -> draftConfig.weatherRenderingEnabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.weather_rendering.tooltip"))).build());
 
-		y += 28;
-		List<Integer> budgetValues = new ArrayList<>(PARTICLE_BUDGET_PRESETS);
-		if (!budgetValues.contains(draftConfig.maxParticlesPerTick)) {
-			budgetValues.add(draftConfig.maxParticlesPerTick);
-			budgetValues.sort(Integer::compareTo);
-		}
-		addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneConfigScreen::formatParticleBudget,
-				draftConfig.maxParticlesPerTick
-		).withValues(budgetValues).create(
-				left,
-				y,
-				contentWidth,
-				20,
-				Component.translatable("option.fpstune.max_particles"),
-				(button, value) -> draftConfig.maxParticlesPerTick = value
-		));
+		addRenderableWidget(Checkbox.builder(
+				Component.translatable("option.fpstune.diagnostics_hud"),
+				font
+		).pos(left, layout.diagnosticsY()).maxWidth(contentWidth).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
+				(checkbox, value) -> draftConfig.diagnosticsHudEnabled = value
+		).tooltip(Tooltip.create(Component.translatable("option.fpstune.diagnostics_hud.tooltip"))).build());
 
-		int buttonY = height - 28;
+		addRenderableWidget(Button.builder(
+				Component.translatable("button.fpstune.advanced"),
+				button -> openAdvanced()
+		).bounds(left, layout.advancedY(), contentWidth, 20)
+				.tooltip(Tooltip.create(Component.translatable("button.fpstune.advanced.tooltip")))
+				.build());
+
 		addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> closeWithoutSaving())
-				.bounds(left, buttonY, BUTTON_WIDTH, 20)
+				.bounds(left, layout.buttonY(), layout.actionButtonWidth(), 20)
 				.build());
 		addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> saveAndClose())
-				.bounds(width - left - BUTTON_WIDTH, buttonY, BUTTON_WIDTH, 20)
+				.bounds(layout.doneButtonX(), layout.buttonY(), layout.actionButtonWidth(), 20)
 				.build());
 
 		setInitialFocus(enabled);
+	}
+
+	private void openAdvanced() {
+		minecraft.setScreenAndShow(new FPSTuneAdvancedConfigScreen(this, draftConfig));
+	}
+
+	static void applyProfile(FPSTuneConfig config, PerformanceProfile profile) {
+		if (profile == PerformanceProfile.CUSTOM) {
+			return;
+		}
+
+		config.particleAdmissionEnabled = profile.particleAdmissionEnabled;
+		config.maxParticlesPerTick = profile.maxParticlesPerTick;
+		config.prioritizeNearbyParticles = profile.prioritizeNearbyParticles;
+		config.nearbyParticleReserve = profile.nearbyParticleReserve;
+		config.nearbyParticleDistance = profile.nearbyParticleDistance;
+		config.adaptiveParticleBudgetEnabled = profile.adaptiveParticleBudgetEnabled;
+		config.adaptiveTargetFps = profile.adaptiveTargetFps;
+		config.adaptiveMinParticlesPerTick = profile.adaptiveMinParticlesPerTick;
+		config.adaptiveMaxParticlesPerTick = profile.adaptiveMaxParticlesPerTick;
+		config.clamp();
+	}
+
+	static PerformanceProfile profileFor(FPSTuneConfig config) {
+		for (PerformanceProfile profile : PROFILE_OPTIONS) {
+			if (profile != PerformanceProfile.CUSTOM && profile.matches(config)) {
+				return profile;
+			}
+		}
+		return PerformanceProfile.CUSTOM;
+	}
+
+	private static Component formatProfile(PerformanceProfile profile) {
+		return Component.translatable("option.fpstune.profile.value", Component.translatable(profile.translationKey));
 	}
 
 	@Override
@@ -121,7 +160,101 @@ public final class FPSTuneConfigScreen extends Screen {
 		minecraft.setScreenAndShow(parent);
 	}
 
-	private static Component formatParticleBudget(Integer budget) {
-		return Component.translatable("option.fpstune.max_particles.value", budget);
+	enum PerformanceProfile {
+		BALANCED(
+				"option.fpstune.profile.balanced",
+				true,
+				300,
+				true,
+				100,
+				16,
+				false,
+				120,
+				100,
+				2_000
+		),
+		SMOOTHER_FRAMES(
+				"option.fpstune.profile.smoother_frames",
+				true,
+				150,
+				true,
+				100,
+				16,
+				true,
+				120,
+				100,
+				300
+		),
+		MORE_PARTICLES(
+				"option.fpstune.profile.more_particles",
+				true,
+				600,
+				true,
+				100,
+				16,
+				false,
+				120,
+				100,
+				2_000
+		),
+		CUSTOM(
+				"option.fpstune.profile.custom",
+				false,
+				0,
+				false,
+				0,
+				0,
+				false,
+				120,
+				0,
+				0
+		);
+
+		private final String translationKey;
+		private final boolean particleAdmissionEnabled;
+		private final int maxParticlesPerTick;
+		private final boolean prioritizeNearbyParticles;
+		private final int nearbyParticleReserve;
+		private final int nearbyParticleDistance;
+		private final boolean adaptiveParticleBudgetEnabled;
+		private final int adaptiveTargetFps;
+		private final int adaptiveMinParticlesPerTick;
+		private final int adaptiveMaxParticlesPerTick;
+
+		PerformanceProfile(
+				String translationKey,
+				boolean particleAdmissionEnabled,
+				int maxParticlesPerTick,
+				boolean prioritizeNearbyParticles,
+				int nearbyParticleReserve,
+				int nearbyParticleDistance,
+				boolean adaptiveParticleBudgetEnabled,
+				int adaptiveTargetFps,
+				int adaptiveMinParticlesPerTick,
+				int adaptiveMaxParticlesPerTick
+		) {
+			this.translationKey = translationKey;
+			this.particleAdmissionEnabled = particleAdmissionEnabled;
+			this.maxParticlesPerTick = maxParticlesPerTick;
+			this.prioritizeNearbyParticles = prioritizeNearbyParticles;
+			this.nearbyParticleReserve = nearbyParticleReserve;
+			this.nearbyParticleDistance = nearbyParticleDistance;
+			this.adaptiveParticleBudgetEnabled = adaptiveParticleBudgetEnabled;
+			this.adaptiveTargetFps = adaptiveTargetFps;
+			this.adaptiveMinParticlesPerTick = adaptiveMinParticlesPerTick;
+			this.adaptiveMaxParticlesPerTick = adaptiveMaxParticlesPerTick;
+		}
+
+		private boolean matches(FPSTuneConfig config) {
+			return config.particleAdmissionEnabled == particleAdmissionEnabled
+					&& config.maxParticlesPerTick == maxParticlesPerTick
+					&& config.prioritizeNearbyParticles == prioritizeNearbyParticles
+					&& config.nearbyParticleReserve == nearbyParticleReserve
+					&& config.nearbyParticleDistance == nearbyParticleDistance
+					&& config.adaptiveParticleBudgetEnabled == adaptiveParticleBudgetEnabled
+					&& config.adaptiveTargetFps == adaptiveTargetFps
+					&& config.adaptiveMinParticlesPerTick == adaptiveMinParticlesPerTick
+					&& config.adaptiveMaxParticlesPerTick == adaptiveMaxParticlesPerTick;
+		}
 	}
 }

@@ -25,7 +25,7 @@ Update Minecraft compatibility in a dedicated branch and pull request:
 6. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
 7. Add tests for any changed admission behavior and build every supported target.
 8. Run a graphical client with FPS Tune disabled and enabled for the new target.
-9. Test a controlled particle storm and optional weather-render reduction, then verify that normal particles, menus, world loading, disconnects, and shutdown remain stable.
+9. Test a controlled particle storm, diagnostics overlay, Adaptive budget behavior, and optional weather-render reduction, then verify that normal particles, menus, world loading, disconnects, and shutdown remain stable.
 10. Update the target `fabric.mod.json`, `README.md`, `AGENTS.md`, `docs/COMPATIBILITY.md`, `docs/DISTRIBUTION.md`, and `CHANGELOG.md`. Recheck the optional Mod Menu settings screen when its API or Minecraft compatibility changes.
 
 Do not claim support for a Minecraft version based only on compilation.
