@@ -1,5 +1,9 @@
 # FPS Tune
 
+<p align="center">
+  <img src="src/main/resources/assets/fpstune/icon.png" alt="FPS Tune logo" width="192">
+</p>
+
 FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 1.21.11 and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
 
 It is designed to protect the floor of the frame-time graph during particle storms and weather-heavy scenes, not to promise a universal FPS increase or replace broad rendering optimizers.
