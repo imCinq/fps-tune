@@ -1,69 +1,52 @@
-# CoreTune agent instructions
+# CoreTune
 
-These instructions apply to every automated coding agent working in this repository.
+CoreTune is a focused, client-side Fabric performance mod for Minecraft 26.2. Its runtime behavior is intentionally small: it limits admission of new local particles during a client tick so unusually dense particle scenes produce fewer rendering spikes.
 
-This file is intended to remain in the public repository. Keep it limited to non-secret project guidance. Private owner instructions, credentials, account details, and unpublished security information must never be added here or anywhere else in the repository.
+## Platform posture
 
-## Public identity
+CoreTune targets Minecraft 26.2 with Java 25, Fabric Loader 0.19.3 or newer, and Fabric API `0.158.0+26.2`. The compatibility baseline is declared in `gradle.properties` and `src/main/resources/fabric.mod.json`.
 
-- Use `Cinq` as the default public project and author name.
-- A verified GitHub username supplied directly by the owner may be used where GitHub requires an account reference.
-- `Codex` may be named only when attribution for automated assistance is explicitly requested.
-- Never infer or publish the owner's legal name, personal email, location, device paths, account identifiers, or other personal information.
-- Never add a personal contact email. Keep security and conduct reporting within GitHub or direct private contact initiated by the owner.
+- Prefer narrow, measurable changes over broad rendering rewrites.
+- Keep the mod client-only and disabled by default.
+- Keep the runtime path local to particle admission and rendering.
+- Treat Minecraft internals and mixin targets as version-specific implementation details.
+- Preserve the existing configuration, audit, and release boundaries when extending the project.
 
-## Project contract
+## Read it before you
 
-CoreTune is a narrow, client-only Fabric optimization for Minecraft 26.2. Its only gameplay-adjacent behavior is limiting new local particles admitted during each client tick. It must remain disabled by default.
+| Read it before you | Source |
+| --- | --- |
+| change runtime wiring, configuration, mixins, or packaging | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| build, test, package, or verify the mod | [docs/TESTING.md](docs/TESTING.md) and [README.md](README.md) |
+| change a Minecraft, Fabric, Java, Gradle, or Action version | [docs/MAINTENANCE.md](docs/MAINTENANCE.md) and [gradle.properties](gradle.properties) |
+| change the distribution or release surface | [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) and [REPOSITORY_SETUP.md](REPOSITORY_SETUP.md) |
+| add or change regression coverage | [src/test](src/test) and [docs/TESTING.md](docs/TESTING.md) |
+| work on a mixin target | [src/main/java/dev/coretune/mixin/ParticleEngineMixin.java](src/main/java/dev/coretune/mixin/ParticleEngineMixin.java) and [src/main/resources/coretune.mixins.json](src/main/resources/coretune.mixins.json) |
 
-Never add packet handling, custom networking, telemetry, analytics, update checks, remote configuration, combat logic, movement changes, inventory automation, targeting, rotation changes, click simulation, or server-rule evasion.
+## Further information
 
-## Current baseline
+- Inspect current source, tests, configuration, and Git state before relying on documentation or assumptions.
+- Keep documentation canonical. Update the existing source of truth instead of duplicating compatibility, architecture, testing, or release details.
+- Preserve the separation between the client entrypoint, configuration store, admission budget, and mixin bridge described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- Prefer deterministic behavior and explicit failure handling. Configuration recovery and file writes should remain safe under malformed or interrupted input.
+- A mixin change should be supported by target bytecode inspection and an appropriate client smoke test; injection points should not be widened speculatively.
+- Keep dependency and GitHub Action changes reviewable, pinned where the repository already requires pinning, and documented when they affect compatibility.
+- Keep release artifacts reproducible from a clean checkout and use the same verified build output across release destinations.
 
-- Mod version: `1.0.0`
-- Minecraft: `26.2`
-- Java: `25`
-- Fabric Loader: `0.19.3` or newer
-- Fabric API: `0.158.0+26.2`
-- Gradle: `9.5.1`
-- Main package: `dev.coretune`
+## Tests
 
-Treat `gradle.properties` and `src/main/resources/fabric.mod.json` as the authoritative machine-readable versions.
+Committed tests should cover critical behavior, compatibility-sensitive logic, and high-value regressions. Current coverage includes admission-budget boundaries, disabled behavior, configuration recovery, atomic writes, and a large-particle admission simulation.
 
-## Required workflow
+Use the repository's standard checks for every meaningful change:
 
-1. Read `README.md`, `PRIVACY.md`, `SECURITY.md`, and `docs/MAINTENANCE.md` before changing behavior or dependencies.
-2. Inspect the relevant source and existing tests before editing.
-3. Keep changes minimal and preserve the trust boundary.
-4. Add or update deterministic tests for every behavior or bug fix.
-5. Run `./gradlew clean build`, `./scripts/audit-client-only.sh`, and `./scripts/audit-repository.sh`.
-6. For mixin changes, inspect the target Minecraft bytecode and perform a graphical `runClient` smoke test.
-7. Update `CHANGELOG.md` for user-visible changes.
+```sh
+./gradlew clean build
+./scripts/audit-client-only.sh
+./scripts/audit-repository.sh
+```
 
-Do not push commits, create releases, publish artifacts, change repository visibility, or contact external services unless the repository owner explicitly requests it.
+Temporary experiments and graphical smoke-test artifacts belong outside the committed source tree unless they become a deliberate, maintainable part of the project.
 
-## Mixin rules
+## Before you finish
 
-- Keep mixins client-only and listed explicitly in `coretune.mixins.json`.
-- Preserve `ParticleEngine.add` cancellation at `HEAD` and count admission only at vanilla `Queue.add` invocation points.
-- Do not use broad redirects, ordinal-dependent hooks without bytecode evidence, or silent fallback behavior.
-- If the number or shape of vanilla queue insertion points changes, stop and redesign the hook with tests instead of forcing the old injection.
-
-## Update rules
-
-Never assume a new Minecraft, Fabric, Loom, Java, Gradle, or GitHub Action version is compatible. Verify official release metadata, update one compatibility layer at a time, build from a clean state, inspect mixin targets, and follow `docs/MAINTENANCE.md`.
-
-GitHub Actions must remain pinned to full commit SHAs with a version comment. Dependabot updates require review and a green CI run before merge.
-
-Use the checked-in Gradle Wrapper for every build. When upgrading Gradle, regenerate all Wrapper files, add the official binary-distribution SHA-256 value to `gradle-wrapper.properties`, and verify the Wrapper JAR against Gradle's published checksum.
-
-## Privacy
-
-Do not commit real names, personal emails, unapproved usernames, local filesystem paths, server addresses, coordinates, tokens, cookies, webhooks, crash reports, logs, configuration files, or generated runtime data. Use `Cinq`, verified project-owned identifiers, and sanitized minimal log excerpts.
-
-## Code review rules
-
-- Reject any change that expands behavior outside local particle admission without explicit owner approval and a documented design review.
-- Reject networking, telemetry, gameplay automation, server-rule evasion, hidden behavior, or weakened audit checks.
-- Require tests for configuration, admission-budget, and mixin-related behavior changes.
-- Treat personal information or credentials anywhere in source, documentation, artifacts, or history as a release blocker.
+Follow the relevant validation defined by the linked sources. Report only checks actually performed, and distinguish compilation, unit tests, packaging, bytecode inspection, graphical client testing, hosted CI, and release verification.
