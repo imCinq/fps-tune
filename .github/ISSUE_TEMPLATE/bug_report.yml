@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a reproducible problem in CoreTune.
+title: '[Bug] '
+labels: [bug]
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Include Minecraft, Fabric Loader, Fabric API, Java, and mod versions.
+      placeholder: Minecraft 26.2, Fabric Loader 0.19.3, Java 25, mod 1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Explain the expected and actual behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Start the game with...
+        2. Open or enable...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log excerpt
+      description: Remove tokens, private server addresses, coordinates, and personal information.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reproduced this without unrelated cheat, macro, or automation mods.
+          required: true
+        - label: I removed private information from the report.
+          required: true

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 25
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Build and test
+        run: ./gradlew clean build --no-daemon
+
+      - name: Audit client-only boundaries
+        run: ./scripts/audit-client-only.sh
+
+      - name: Audit repository privacy
+        run: ./scripts/audit-repository.sh
+
+      - name: Prepare verified artifacts
+        run: |
+          mkdir -p ci-artifacts
+          cp build/libs/core-tune-*.jar ci-artifacts/
+          cd ci-artifacts
+          sha256sum *.jar > SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coretune-minecraft-26.2
+          path: ci-artifacts/
+          if-no-files-found: error
+          retention-days: 14

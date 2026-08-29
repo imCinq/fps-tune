@@ -1,0 +1,25 @@
+# Gradle and build output
+.gradle/
+.gradle-local/
+build/
+
+# Runtime output
+run/
+logs/
+crash-reports/
+
+# Local toolchains and IDEs
+.tooling/
+.idea/
+.vscode/
+*.iml
+out/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Temporary and packaged files
+*.log
+*.tmp
+*.zip
