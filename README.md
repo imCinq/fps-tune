@@ -79,7 +79,7 @@ In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/re
 | 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% |
 | 26.2 | 78.69 FPS | 102.78 FPS | +30.6% |
 
-Before means FPS Tune was off; after means it was on. As a secondary frame-time stability check, p95 frame time changed from 6.65 ms to 5.63 ms on 1.21.11 (-15.3%) and from 17.61 ms to 14.39 ms on 26.2 (-18.3%). The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
+Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. In this test, p95 frame time changed from 6.65 ms to 5.63 ms on 1.21.11 (-15.3%) and from 17.61 ms to 14.39 ms on 26.2 (-18.3%). The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
 
 ## Build and test
 
