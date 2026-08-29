@@ -26,17 +26,22 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 
 ## Required description
 
-Use the FPS Tune logo above as the listing image. Upload the repository asset at `src/main/resources/assets/fpstune/icon.png` to each platform rather than linking to a private raw-file URL.
+Use the copy-ready listing in [docs/MODRINTH_DESCRIPTION.md](MODRINTH_DESCRIPTION.md). It is structured for a first-time reader: what FPS Tune changes, what it never changes, default behavior, controls, supported versions, measured results, compatibility, trade-offs, troubleshooting, and privacy.
 
-FPS Tune is a client-side Fabric FPS and frame-time stability toolkit that applies opt-in controls to optional local rendering workloads. Its current controllers limit particle admission and can disable the weather render pass during extreme visual scenes, helping reduce stutter during heavy visual workloads. It starts disabled, uses a configurable default limit of 300 particles per tick, changes only local rendering, and does not modify packets, movement, combat, inventory, targeting, or clicks. The release provides separate artifacts for Minecraft 1.21.11 and 26.2; players must install the artifact matching their game version.
+Use the FPS Tune logo as the listing icon and upload a human-created gallery image only after the final artwork has passed the platform's content rules. The current replacement icon is an AI-generated draft and is suitable for repository review, but it is not yet cleared for Modrinth branding under the current AI policy; replace it with human-authored artwork before submission, or disclose it and confirm that the platform accepts it. Do not link the description to a private raw-file URL. The listing should link only to support pages that public players can actually open.
 
-The listing must also state:
+## Modrinth version upload plan
 
-- F6 enables or disables the optimization.
-- The configuration file is `config/fpstune.properties`.
-- There is no telemetry, update checker, or custom networking.
-- Server permission is not guaranteed; players must check current server rules.
-- The project is not affiliated with Mojang, Microsoft, DonutSMP, or any server.
+Create one Modrinth version for each exact Minecraft target. Keep the internal mod version at `1.0.0`, but use unique SemVer-compatible Modrinth version numbers so the two files can coexist in one project:
+
+| Minecraft | Modrinth version number | Primary file | Loader | Environment |
+| --- | --- | --- | --- | --- |
+| 1.21.11 | `1.0.0+mc1.21.11` | `fps-tune-mc1.21.11-1.0.0.jar` | Fabric | Client |
+| 26.2 | `1.0.0+mc26.2` | `fps-tune-1.0.0.jar` | Fabric | Client |
+
+For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle/weather controls without implying a universal FPS increase.
+
+Because the GitHub repository is intentionally private, do not add a public-facing source or issue URL unless the destination is actually accessible to ordinary Modrinth users. Never make the repository public merely to make a link clickable.
 
 ### Measured before/after results for the listing
 
