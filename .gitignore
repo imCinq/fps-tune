@@ -23,3 +23,7 @@ Thumbs.db
 *.log
 *.tmp
 *.zip
+
+# Local workspace drafts and user-facing deliverables
+work/
+outputs/
