@@ -1,6 +1,6 @@
 # GitHub repository workflow
 
-The canonical private repository is `https://github.com/imCinq/fps-tune`.
+The canonical public repository is `https://github.com/imCinq/fps-tune`.
 
 ## First checkout
 
@@ -66,6 +66,6 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 - Require the `Build and test` status check before merging once branch protection is configured.
 - Keep Actions permissions read-only by default; the release workflow requests write access only for tagged releases.
 - Keep Actions pinned to full commit SHAs and review Dependabot changes individually.
-- Keep the repository private until a separate public-release review confirms privacy, licensing, server-rule, and distribution requirements.
+- Treat the repository, issues, Actions logs, releases, and artifacts as public. Before each release, review them for private information, correct licensing, server-rule language, and matching distribution artifacts.
 
 See [AGENTS.md](AGENTS.md), [docs/MAINTENANCE.md](docs/MAINTENANCE.md), and [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the detailed project contract and release rules.

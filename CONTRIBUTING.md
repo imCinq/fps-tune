@@ -1,6 +1,6 @@
 # Contributing
 
-FPS Tune targets Minecraft 26.2 and Java 25.
+FPS Tune targets Minecraft 1.21.11 with Java 21 and Minecraft 26.2 with Java 25. Keep compatibility-sensitive work aligned with the matching version profile.
 
 - Keep it client-only and limited to optional local rendering workloads and render scheduling.
 - Do not add telemetry, custom networking, packet manipulation, combat logic, movement changes, inventory automation, targeting, or click simulation.
@@ -12,9 +12,11 @@ FPS Tune targets Minecraft 26.2 and Java 25.
 Verify changes with:
 
 ```sh
-./gradlew clean build
-./scripts/audit-client-only.sh
+for target in 1.21.11 26.2; do
+  ./gradlew clean build -Pmc_target="$target"
+  ./scripts/audit-client-only.sh "$target"
+done
 ./scripts/audit-repository.sh
 ```
 
-Mixin changes must also be checked against the affected Minecraft 26.2 client bytecode and tested in a graphical client.
+Mixin changes must also be checked against the affected Minecraft client bytecode for each changed target and tested in a graphical client.

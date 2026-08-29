@@ -22,13 +22,13 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 - Minecraft versions: 1.21.11 and 26.2, with one matching JAR per version
 - Java versions: 21 for 1.21.11 and 25 for 26.2
 - Required dependency: the matching Fabric API release
-- Source and issue tracker: the canonical GitHub repository, with visibility controlled by the owner
+- Source and issue tracker: the canonical public GitHub repository
 
 ## Required description
 
 Use the copy-ready listing in [docs/MODRINTH_DESCRIPTION.md](MODRINTH_DESCRIPTION.md). It is structured for a first-time reader: what FPS Tune changes, what it never changes, default behavior, controls, supported versions, measured results, compatibility, trade-offs, troubleshooting, and privacy.
 
-Use the FPS Tune logo as the listing icon and upload a human-created gallery image only after the final artwork has passed the platform's content rules. The current replacement icon is an AI-generated draft and is suitable for repository review, but it is not yet cleared for Modrinth branding under the current AI policy; replace it with human-authored artwork before submission, or disclose it and confirm that the platform accepts it. Do not link the description to a private raw-file URL. The listing should link only to support pages that public players can actually open.
+Use the FPS Tune logo as the listing icon and upload a human-created gallery image only after the final artwork has passed the platform's content rules. The current replacement icon is an AI-generated draft and is suitable for repository review, but it is not yet cleared for Modrinth branding under the current AI policy; replace it with human-authored artwork before submission, or disclose it and confirm that the platform accepts it. The listing should link only to public support pages that ordinary players can open without authentication.
 
 ## Modrinth version upload plan
 
@@ -41,7 +41,7 @@ Create one Modrinth version for each exact Minecraft target. Keep the internal m
 
 For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle/weather controls without implying a universal FPS increase.
 
-Because the GitHub repository is intentionally private, do not add a public-facing source or issue URL unless the destination is actually accessible to ordinary Modrinth users. Never make the repository public merely to make a link clickable.
+Because the GitHub repository is public, verify that source, issue, license, release, and changelog links work without authentication before submitting the listing. Do not link to temporary raw-file URLs or private-only support pages.
 
 ### Measured before/after results for the listing
 
