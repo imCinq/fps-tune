@@ -72,14 +72,14 @@ FPS Tune is not affiliated with Mojang, Microsoft, or any server. Client-only do
 
 FPS Tune should be evaluated using repeatable frame-time measurements, not a single FPS screenshot. [docs/BENCHMARKING.md](docs/BENCHMARKING.md) defines fair comparisons using average FPS, 1% lows, long-tail frame time, hitch counts, and explicit visual trade-offs.
 
-In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/resource packs/companion mods, Fancy graphics, render distance 16, simulation distance 12, VSync off, 240 FPS cap), a fixed 10,000-particle burst produced these paired medians:
+In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/resource packs/companion mods, Fancy graphics, render distance 16, simulation distance 12, VSync off, 240 FPS cap), the average FPS changed like this:
 
-| Target | Disabled | Enabled | Median p95 frame time |
+| Version | Before | After | Change |
 | --- | ---: | ---: | ---: |
-| 1.21.11 | 210.10 FPS | 215.17 FPS (+2.4%) | 6.65 ms → 5.63 ms (-15.3%) |
-| 26.2 | 78.69 FPS | 102.78 FPS (+30.6%) | 17.61 ms → 14.39 ms (-18.3%) |
+| 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% |
+| 26.2 | 78.69 FPS | 102.78 FPS | +30.6% |
 
-The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
+Before means FPS Tune was off; after means it was on. As a secondary frame-time stability check, p95 frame time changed from 6.65 ms to 5.63 ms on 1.21.11 (-15.3%) and from 17.61 ms to 14.39 ms on 26.2 (-18.3%). The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
 
 ## Build and test
 
