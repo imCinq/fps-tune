@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 - 2026-08-29
+## 1.1 - 2026-08-29
 
 - Added optional nearby-particle prioritization with a reserved portion of the existing admission budget.
 - Added an opt-in local diagnostics HUD with current-tick admission counters and controller status.
