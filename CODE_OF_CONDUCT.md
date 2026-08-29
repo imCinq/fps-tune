@@ -2,7 +2,7 @@
 
 ## Our standards
 
-Be respectful, constructive, and focused on improving CoreTune. Harassment, threats, discrimination, publishing private information, deliberate disruption, and attempts to introduce harmful or deceptive behavior are not acceptable.
+Be respectful, constructive, and focused on improving FPS Tune. Harassment, threats, discrimination, publishing private information, deliberate disruption, and attempts to introduce harmful or deceptive behavior are not acceptable.
 
 ## Scope and enforcement
 

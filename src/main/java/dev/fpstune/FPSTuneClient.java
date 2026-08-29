@@ -1,7 +1,7 @@
-package dev.coretune;
+package dev.fpstune;
 
-import dev.coretune.config.ConfigStore;
-import dev.coretune.config.CoreTuneConfig;
+import dev.fpstune.config.ConfigStore;
+import dev.fpstune.config.FPSTuneConfig;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -13,11 +13,13 @@ import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class CoreTuneClient implements ClientModInitializer {
-	public static final String MOD_ID = "coretune";
+import java.nio.file.Path;
+
+public final class FPSTuneClient implements ClientModInitializer {
+	public static final String MOD_ID = "fpstune";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	private static CoreTuneConfig config;
+	private static FPSTuneConfig config;
 	private static KeyMapping toggleKey;
 
 	@Override
@@ -29,14 +31,14 @@ public final class CoreTuneClient implements ClientModInitializer {
 				Identifier.fromNamespaceAndPath(MOD_ID, "controls")
 		);
 		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-				"key.coretune.toggle",
+				"key.fpstune.toggle",
 				InputConstants.Type.KEYSYM,
 				InputConstants.KEY_F6,
 				category
 		));
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-		LOGGER.info("CoreTune initialized. F6 toggles the particle admission optimization.");
+		LOGGER.info("FPS Tune initialized. F6 toggles the local render controls.");
 	}
 
 	private void onClientTick(Minecraft client) {
@@ -45,13 +47,22 @@ public final class CoreTuneClient implements ClientModInitializer {
 			ConfigStore.save(client.gameDirectory.toPath(), config);
 			if (client.player != null) {
 				client.player.sendSystemMessage(Component.literal(
-						"CoreTune particle budget " + (config.enabled ? "enabled" : "disabled")
+						"FPS Tune render controls " + (config.enabled ? "enabled" : "disabled")
 				));
 			}
 		}
 	}
 
-	public static CoreTuneConfig config() {
+	public static FPSTuneConfig config() {
 		return config;
+	}
+
+	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
+		if (updatedConfig == null) {
+			return;
+		}
+		updatedConfig.clamp();
+		config = updatedConfig;
+		ConfigStore.save(runDirectory, config);
 	}
 }

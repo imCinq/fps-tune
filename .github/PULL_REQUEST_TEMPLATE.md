@@ -4,7 +4,7 @@ Describe what changed and why.
 
 ## Verification
 
-- [ ] CoreTune clean build passes
+- [ ] FPS Tune clean build passes
 - [ ] Client-only audit passes
 - [ ] New or changed behavior has tests
 - [ ] Graphical `runClient` test completed when rendering or mixins changed
@@ -13,5 +13,5 @@ Describe what changed and why.
 
 - [ ] No telemetry or custom networking was added
 - [ ] No packet, combat, movement, inventory, targeting, or click automation was added
-- [ ] CoreTune remains disabled by default
+- [ ] FPS Tune remains disabled by default
 - [ ] Privacy and security documentation was updated if needed

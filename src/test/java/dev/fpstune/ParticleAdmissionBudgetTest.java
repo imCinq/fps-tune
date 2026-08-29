@@ -1,6 +1,6 @@
-package dev.coretune;
+package dev.fpstune;
 
-import dev.coretune.config.CoreTuneConfig;
+import dev.fpstune.config.FPSTuneConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class ParticleAdmissionBudgetTest {
 	@Test
 	void enabledBudgetStopsExactlyAtConfiguredLimit() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.maxParticlesPerTick = 2;
 
@@ -21,7 +21,7 @@ final class ParticleAdmissionBudgetTest {
 
 	@Test
 	void onlyAcceptedParticlesConsumeBudget() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.maxParticlesPerTick = 2;
 
@@ -37,7 +37,7 @@ final class ParticleAdmissionBudgetTest {
 
 	@Test
 	void disabledOrMissingConfigIsApassThrough() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = false;
 		config.maxParticlesPerTick = 0;
 
@@ -47,8 +47,19 @@ final class ParticleAdmissionBudgetTest {
 	}
 
 	@Test
+	void particleControllerCanBeDisabledIndependently() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.particleAdmissionEnabled = false;
+		config.maxParticlesPerTick = 0;
+
+		assertTrue(ParticleAdmissionBudget.allows(10_000, config));
+		assertEquals(10_000, ParticleAdmissionBudget.recordAccepted(10_000, config));
+	}
+
+	@Test
 	void particleStormSimulationNeverExceedsBudget() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.maxParticlesPerTick = 300;
 
@@ -68,7 +79,7 @@ final class ParticleAdmissionBudgetTest {
 
 	@Test
 	void defensiveCounterDoesNotCrossZeroBudget() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.maxParticlesPerTick = 0;
 
@@ -78,7 +89,7 @@ final class ParticleAdmissionBudgetTest {
 
 	@Test
 	void configClampKeepsBudgetInsideSupportedRange() {
-		CoreTuneConfig config = new CoreTuneConfig();
+		FPSTuneConfig config = new FPSTuneConfig();
 		config.maxParticlesPerTick = -1;
 		config.clamp();
 		assertEquals(0, config.maxParticlesPerTick);

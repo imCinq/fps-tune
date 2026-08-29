@@ -1,14 +1,14 @@
 # GitHub repository workflow
 
-The canonical private repository is `https://github.com/imCinq/coretune`.
+The canonical private repository is `https://github.com/imCinq/fps-tune`.
 
 ## First checkout
 
 Clone the repository over HTTPS:
 
 ```sh
-git clone https://github.com/imCinq/coretune.git
-cd coretune
+git clone https://github.com/imCinq/fps-tune.git
+cd fps-tune
 ```
 
 Use `Cinq` as the public author name and GitHub's no-reply identity for commit metadata. Never add a personal contact email, local machine path, token, or runtime configuration to the repository.
@@ -23,7 +23,7 @@ Use `Cinq` as the public author name and GitHub's no-reply identity for commit m
    git switch -c fix/short-description
    ```
 
-2. Make the smallest change that solves the issue. Keep CoreTune client-only, disabled by default, and limited to local particle admission.
+2. Make the smallest change that solves the issue. Keep FPS Tune client-only, disabled by default, and limited to optional local rendering workloads or render scheduling.
 3. Add or update deterministic tests for the behavior.
 4. Run the full local verification checklist:
 
@@ -52,7 +52,7 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 4. Create and push an annotated tag matching the project version:
 
    ```sh
-   git tag -a vX.Y.Z -m "CoreTune X.Y.Z"
+   git tag -a vX.Y.Z -m "FPS Tune X.Y.Z"
    git push origin vX.Y.Z
    ```
 
