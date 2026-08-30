@@ -32,12 +32,12 @@ Use the FPS Tune logo as the listing icon and upload a human-created gallery ima
 
 ## Modrinth version upload plan
 
-Create one Modrinth version for each exact Minecraft target. Keep the internal mod version at `1.1`, and use target-specific Modrinth version identifiers so the two files can coexist in one project:
+Create one Modrinth version for each exact Minecraft target. Keep the internal mod version at `1.1.1`, and use target-specific Modrinth version identifiers so the two files can coexist in one project:
 
 | Minecraft | Modrinth version number | Primary file | Loader | Environment |
 | --- | --- | --- | --- | --- |
-| 1.21.11 | `1.1+mc1.21.11` | `fps-tune-mc1.21.11-1.1.jar` | Fabric | Client |
-| 26.2 | `1.1+mc26.2` | `fps-tune-1.1.jar` | Fabric | Client |
+| 1.21.11 | `1.1.1+mc1.21.11` | `fps-tune-mc1.21.11-1.1.1.jar` | Fabric | Client |
+| 26.2 | `1.1.1+mc26.2` | `fps-tune-1.1.1.jar` | Fabric | Client |
 
 For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle, Adaptive, and weather controls without implying a universal FPS increase.
 
