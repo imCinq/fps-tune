@@ -2,6 +2,15 @@
 
 FPS Tune is a focused, client-side Fabric performance mod for Minecraft 1.21.11 and 26.2. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
 
+## Remote-only development
+
+All future repository work must be performed remotely through GitHub.
+
+- Use GitHub branches and pull requests, GitHub Actions, hosted artifacts/releases, and other remote GitHub tooling for editing, building, testing, packaging, and verification.
+- Do not edit, build, test, or package this project in a local checkout on the owner's device.
+- Do not install, download, or run Java, any JDK, Gradle, the Gradle Wrapper distribution, or project dependencies on the owner's device.
+- If a required task cannot be completed with GitHub-hosted tooling, stop and ask the owner before doing anything locally.
+
 ## Platform posture
 
 FPS Tune has versioned targets rather than one universal JAR:
@@ -42,15 +51,7 @@ The compatibility profiles are declared in `gradle/versions/`, with matching met
 
 Committed tests should cover critical behavior, compatibility-sensitive logic, and high-value regressions. Current coverage includes admission-budget boundaries, nearby-priority behavior, bounded Adaptive streaks and cooldowns, diagnostics metrics, independently disabled controllers, configuration recovery, atomic writes, legacy configuration defaults, render-policy behavior, and a large-particle admission simulation.
 
-Use the repository's standard checks for every meaningful change:
-
-```sh
-./gradlew clean build -Pmc_target=1.21.11
-./scripts/audit-client-only.sh 1.21.11
-./gradlew clean build -Pmc_target=26.2
-./scripts/audit-client-only.sh 26.2
-./scripts/audit-repository.sh
-```
+Use the repository's GitHub Actions workflows for every meaningful change. Open a pull request or run the CI workflow manually; all Java/Gradle builds, tests, audits, and artifact verification must execute on GitHub-hosted runners, not on the owner's device.
 
 Temporary experiments and graphical smoke-test artifacts belong outside the committed source tree unless they become a deliberate, maintainable part of the project.
 

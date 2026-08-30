@@ -4,8 +4,8 @@ Describe what changed and why.
 
 ## Verification
 
-- [ ] FPS Tune clean build passes
-- [ ] Client-only audit passes
+- [ ] Hosted CI build passes
+- [ ] Hosted client-only audit passes
 - [ ] New or changed behavior has tests
 - [ ] Graphical `runClient` test completed when rendering or mixins changed
 

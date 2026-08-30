@@ -1,24 +1,16 @@
 # FPS Tune testing
 
-## Fast deterministic checks
+## Hosted deterministic checks
 
-Run the complete local checklist from the repository root for every supported target:
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds each supported target, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
 
-```sh
-for target in 1.21.11 26.2; do
-  ./gradlew clean build -Pmc_target="$target"
-  ./scripts/audit-client-only.sh "$target"
-done
-./scripts/audit-repository.sh
-```
-
-The Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, fixed and nearby-priority budget boundaries, adaptive budget streaks/cooldowns, current-tick diagnostics metrics, and a 100,000-particle admission simulation. The hosted CI matrix repeats this build with Java 21 for 1.21.11 and Java 25 for 26.2.
+The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, fixed and nearby-priority budget boundaries, adaptive budget streaks/cooldowns, current-tick diagnostics metrics, and a 100,000-particle admission simulation. The hosted CI matrix runs with Java 21 for 1.21.11 and Java 25 for 26.2.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
 ## Mixin verification
 
-Mixin changes require more than unit tests:
+Mixin changes require more than hosted unit tests and must be verified in a GitHub-hosted or other owner-approved remote client environment:
 
 1. Inspect the target Minecraft bytecode.
 2. Confirm the expected `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` method shapes and render boundaries for the selected target.
@@ -51,7 +43,7 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 ## Hosted CI
 
-`.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the built artifact. The workflow is the clean-checkout verification signal; local results and hosted results should be reported separately.
+`.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the built artifact. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
 ## Release verification
 

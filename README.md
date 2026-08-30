@@ -108,17 +108,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-```sh
-for target in 1.21.11 26.2; do
-  ./gradlew clean build -Pmc_target="$target"
-  ./scripts/audit-client-only.sh "$target"
-done
-./scripts/audit-repository.sh
-```
-
-The build output is written to `build/libs/`; the selected target controls the artifact suffix. Tests cover configuration recovery, atomic writes, copy-on-edit settings behavior, fixed and nearby-priority budget boundaries, adaptive streaks and cooldowns, diagnostics metrics, disabled behavior, independent render controllers, and a 100,000-particle admission simulation. The CI matrix runs the same build on Java 21 for 1.21.11 and Java 25 for 26.2.
-
-For the full development and release procedures, see [docs/TESTING.md](docs/TESTING.md), [docs/MAINTENANCE.md](docs/MAINTENANCE.md), [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md), and [REPOSITORY_SETUP.md](REPOSITORY_SETUP.md).
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted matrix builds both targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
