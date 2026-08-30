@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 - 2026-08-30
+
+- Fixed the packaged mod icon so the classic FPS Tune logo is used in released JARs and launcher metadata.
+- Preserved escaped metadata text during packaging so the generated Fabric metadata remains valid JSON.
+
 ## 1.1 - 2026-08-29
 
 - Added optional nearby-particle prioritization with a reserved portion of the existing admission budget.
