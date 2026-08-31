@@ -42,7 +42,7 @@ Do not claim support for a Minecraft version based only on compilation.
 4. For a full release, set the same version in `gradle.properties`, `CHANGELOG.md`, and the release tag. For a target-specific patch, keep the internal version and use the documented target tag.
 5. Merge through a pull request with the required CI check.
 6. Create an annotated `vX.Y.Z` tag for a full release, or the documented target-specific tag such as `v1.1.1-mc1.21.1`, and push it.
-7. Let the matching release workflow rebuild from the tag and publish JARs plus SHA-256 checksums.
+7. Let the matching release workflow rebuild from the annotated tag, verify its signed target commit and `main` ancestry, and publish JARs plus SHA-256 checksums. For the 1.21.1 patch, run the hosted promotion mode in `release-1.21.1.yml` to attach the already verified target JARs to the existing `v1.1.1` release.
 8. Download the release artifact, verify its checksum, and smoke-test that exact JAR before announcing it.
 
 ## Player update behavior
