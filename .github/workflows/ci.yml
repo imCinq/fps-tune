@@ -22,6 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - mc_target: '1.21.1'
+            java_version: '21'
           - mc_target: '1.21.11'
             java_version: '21'
           - mc_target: '26.2'
