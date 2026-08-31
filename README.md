@@ -4,7 +4,7 @@
   <img src="src/main/resources/assets/fpstune/icon.png" alt="FPS Tune logo" width="192">
 </p>
 
-FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 1.21.11 and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
+FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 1.21.1, 1.21.11, and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
 
 It is designed to protect the floor of the frame-time graph during particle storms and weather-heavy scenes, not to promise a universal FPS increase or replace broad rendering optimizers.
 
@@ -12,10 +12,10 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 1.21.11 and 26.2; separate JAR per version |
-| Loader | 1.21.11: 0.18.6+; 26.2: 0.19.3+ |
+| Minecraft | 1.21.1, 1.21.11, and 26.2; separate JAR per version |
+| Loader | 1.21.1: 0.16.14+; 1.21.11: 0.18.6+; 26.2: 0.19.3+ |
 | Environment | Client only |
-| Java | 21+ for 1.21.11; 25+ for 26.2 |
+| Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 |
 | Required dependency | Fabric API |
 | Optional integration | Mod Menu |
 | License | MIT |
@@ -38,12 +38,13 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install either Minecraft 1.21.11 with Fabric Loader 0.18.6 or newer, or Minecraft 26.2 with Fabric Loader 0.19.3 or newer.
+1. Install Minecraft 1.21.1 with Fabric Loader 0.16.14 or newer, Minecraft 1.21.11 with Fabric Loader 0.18.6 or newer, or Minecraft 26.2 with Fabric Loader 0.19.3 or newer.
 2. Install the Fabric API build matching that Minecraft version.
 3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
 
    | Minecraft | Matching artifact |
    | --- | --- |
+   | 1.21.1 | `fps-tune-mc1.21.1-<version>.jar` |
    | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
    | 26.2 | `fps-tune-<version>.jar` |
 
@@ -108,7 +109,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted matrix builds both targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted matrix builds all three targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
