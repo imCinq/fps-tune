@@ -19,8 +19,8 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 - License: MIT
 - Loader: Fabric
 - Environment: Client required; server unsupported
-- Minecraft versions: 1.21.11 and 26.2, with one matching JAR per version
-- Java versions: 21 for 1.21.11 and 25 for 26.2
+- Minecraft versions: 1.21.1, 1.21.11, and 26.2, with one matching JAR per version
+- Java versions: 21 for 1.21.1 and 1.21.11, and 25 for 26.2
 - Required dependency: the matching Fabric API release
 - Source and issue tracker: the canonical public GitHub repository
 
@@ -36,10 +36,13 @@ Create one Modrinth version for each exact Minecraft target. Keep the internal m
 
 | Minecraft | Modrinth version number | Primary file | Loader | Environment |
 | --- | --- | --- | --- | --- |
+| 1.21.1 | `1.1.1+mc1.21.1` | `fps-tune-mc1.21.1-1.1.1.jar` | Fabric | Client |
 | 1.21.11 | `1.1.1+mc1.21.11` | `fps-tune-mc1.21.11-1.1.1.jar` | Fabric | Client |
 | 26.2 | `1.1.1+mc26.2` | `fps-tune-1.1.1.jar` | Fabric | Client |
 
 For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle, Adaptive, and weather controls without implying a universal FPS increase.
+
+For the Minecraft 1.21.1 patch, keep the internal version at `1.1.1` and publish the annotated GitHub tag `v1.1.1-mc1.21.1`; this target-specific release leaves the historical `v1.1.1` release unchanged.
 
 Because the GitHub repository is public, verify that source, issue, license, release, and changelog links work without authentication before submitting the listing. Do not link to temporary raw-file URLs or private-only support pages.
 
@@ -73,7 +76,7 @@ FPS Tune appears compatible with Modrinth's content rules because its disclosed 
 
 - Use a unique project name and icon, English summary, complete English description, correct Mod category, Optimization category, and MIT license.
 - Upload the same tested JAR used for GitHub and Modrinth.
-- Tag only Fabric and Minecraft 1.21.11 and 26.2 after each exact artifact has passed the project verification checklist.
+- Tag only Fabric and Minecraft 1.21.1, 1.21.11, and 26.2 after each exact artifact has passed the project verification checklist.
 - Keep screenshots and explanatory media on the project page rather than inside the mod JAR.
 - Expect project and file moderation; answer requests accurately and do not claim server approval.
 
