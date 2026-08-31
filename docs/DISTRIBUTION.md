@@ -4,7 +4,7 @@
 
 ## Recommended order
 
-1. **GitHub Releases** — canonical source, audit history, signed tag workflow, source JAR, binary JAR, and SHA-256 checksums.
+1. **GitHub Releases** — canonical source, audit history, annotated tags with verified target commits, source JARs, binary JARs, and SHA-256 checksums.
 2. **Modrinth** — primary Minecraft discovery and launcher installation after the exact release JAR passes a graphical test.
 3. **CurseForge** — optional additional reach after the Modrinth listing is approved and the project has a unique icon.
 
@@ -42,7 +42,7 @@ Create one Modrinth version for each exact Minecraft target. Keep the internal m
 
 For each upload, mark the matching Fabric API as required, Mod Menu as optional, use the matching Minecraft version only, and upload only the tested primary JAR. Use `beta` for the first platform release until the graphical smoke test and moderation pass are complete. The changelog should identify the exact Minecraft target, state that FPS Tune is disabled by default and client-only, and mention the particle, Adaptive, and weather controls without implying a universal FPS increase.
 
-For the Minecraft 1.21.1 patch, keep the internal version at `1.1.1` and publish the annotated GitHub tag `v1.1.1-mc1.21.1`; this target-specific release leaves the historical `v1.1.1` release unchanged.
+For the Minecraft 1.21.1 patch, keep the internal version at `1.1.1` and publish the annotated GitHub tag `v1.1.1-mc1.21.1`. The verified 1.21.1 JARs are also attached to the existing `v1.1.1` GitHub release alongside the 1.21.11 and 26.2 artifacts; the historical `v1.1.1` tag and source remain unchanged.
 
 Because the GitHub repository is public, verify that source, issue, license, release, and changelog links work without authentication before submitting the listing. Do not link to temporary raw-file URLs or private-only support pages.
 
