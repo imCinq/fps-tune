@@ -6,17 +6,18 @@ This document separates verified combinations from combinations that are plausib
 
 | Component | Supported baseline |
 | --- | --- |
-| Minecraft | 1.21.11 and 26.2; use the matching target JAR |
+| Minecraft | 1.21.1, 1.21.11, and 26.2; use the matching target JAR |
 | Environment | Client only |
-| Fabric Loader | 1.21.11: 0.18.6 or newer; 26.2: 0.19.3 or newer |
-| Fabric API | Required; `0.141.6+1.21.11` or `0.158.0+26.2` in CI |
-| Java | 21 or newer for 1.21.11; 25 or newer for 26.2 |
-| Mod Menu | Optional; `17.0.0` for 1.21.11 or `20.0.0-beta.4` for 26.2 |
+| Fabric Loader | 1.21.1: 0.16.14 or newer; 1.21.11: 0.18.6 or newer; 26.2: 0.19.3 or newer |
+| Fabric API | Required; `0.116.15+1.21.1`, `0.141.6+1.21.11`, or `0.158.0+26.2` in CI |
+| Java | 21 or newer for 1.21.1 and 1.21.11; 25 or newer for 26.2 |
+| Mod Menu | Optional; `11.0.4` for 1.21.1, `17.0.0` for 1.21.11, or `20.0.0-beta.4` for 26.2 |
 
 ## Target profiles
 
 | Minecraft | Fabric API | Mod Menu | Loom mode | Artifact |
 | --- | --- | --- | --- | --- |
+| 1.21.1 | `0.116.15+1.21.1` | `11.0.4` | Remapping | `fps-tune-mc1.21.1-<version>.jar` |
 | 1.21.11 | `0.141.6+1.21.11` | `17.0.0` | Remapping | `fps-tune-mc1.21.11-<version>.jar` |
 | 26.2 | `0.158.0+26.2` | `20.0.0-beta.4` | Non-remapping | `fps-tune-<version>.jar` |
 
@@ -26,6 +27,7 @@ FPS Tune is not a server mod and does not need to be installed on a server. It s
 
 | Combination | Status | Notes |
 | --- | --- | --- |
+| FPS Tune with Fabric API on 1.21.1 | Hosted build verified | Hosted Java 21 CI and the client-only/repository audits passed; graphical smoke testing remains required before claiming graphical compatibility. |
 | FPS Tune with Fabric API on 1.21.11 | Graphical smoke verified | Required dependency; covered by the Java 21 CI build, unit tests, and a local 1.21.11 client startup smoke test. |
 | FPS Tune with Fabric API on 26.2 | Graphical smoke verified | Required dependency; covered by the Java 25 CI build, unit tests, and a local 26.2 client startup smoke test. |
 | FPS Tune without Mod Menu | Verified | The optional Mod Menu entrypoint is not required for startup. |

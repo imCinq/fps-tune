@@ -4,7 +4,7 @@
 
 Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds each supported target, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
 
-The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, fixed and nearby-priority budget boundaries, adaptive budget streaks/cooldowns, current-tick diagnostics metrics, and a 100,000-particle admission simulation. The hosted CI matrix runs with Java 21 for 1.21.11 and Java 25 for 26.2.
+The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults, enabled/disabled behavior, independent controller gates, fixed and nearby-priority budget boundaries, adaptive budget streaks/cooldowns, current-tick diagnostics metrics, and a 100,000-particle admission simulation. The hosted CI matrix runs with Java 21 for 1.21.1 and 1.21.11, and Java 25 for 26.2.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
@@ -13,7 +13,7 @@ The compile also verifies the optional Mod Menu API integration. The settings sc
 Mixin changes require more than hosted unit tests and must be verified in a GitHub-hosted or other owner-approved remote client environment:
 
 1. Inspect the target Minecraft bytecode.
-2. Confirm the expected `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` method shapes and render boundaries for the selected target.
+2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `LevelRenderer.addWeatherPass` on 1.21.11/26.2, and their render boundaries for the selected target.
 3. Update the mixin and tests together.
 4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
@@ -47,4 +47,4 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 ## Release verification
 
-`.github/workflows/release.yml` repeats the checks for a version tag, confirms the tag matches the project version, and publishes the GitHub Release artifact. Use the verified output from that workflow for later manual distribution submissions.
+`.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both confirm the tag matches the project version and publish the matching GitHub Release artifact. Use the verified output from that workflow for later manual distribution submissions.

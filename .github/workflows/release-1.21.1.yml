@@ -1,0 +1,54 @@
+name: Release Minecraft 1.21.1
+
+on:
+  push:
+    tags:
+      - 'v*-mc1.21.1'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish Minecraft 1.21.1 release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Java 21
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb300f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Verify target tag and project version
+        run: |
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          test "$GITHUB_REF_NAME" = "v${project_version}-mc1.21.1"
+
+      - name: Build Minecraft 1.21.1 artifact and audit
+        run: |
+          mkdir -p release
+          ./gradlew clean build --no-daemon -Pmc_target=1.21.1
+          cp build/libs/fps-tune-mc1.21.1-*.jar release/
+          ./scripts/audit-client-only.sh 1.21.1
+          ./scripts/audit-repository.sh
+
+      - name: Prepare release files
+        run: |
+          cd release
+          sha256sum *.jar > SHA256SUMS.txt
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/* --verify-tag --generate-notes --title "FPS Tune 1.1.1 for Minecraft 1.21.1"

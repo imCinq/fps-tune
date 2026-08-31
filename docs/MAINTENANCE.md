@@ -25,7 +25,7 @@ Update Minecraft compatibility in a dedicated branch and pull request:
 2. Select the correct Loom plugin: remapping Loom for Minecraft 1.21.11 and older, non-remapping Loom for Minecraft 26.1 and newer.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
-5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` when applicable.
+5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
 6. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
 7. Add tests for any changed admission behavior and build every supported target.
 8. Run a graphical client in a GitHub-hosted or other owner-approved remote environment with FPS Tune disabled and enabled for the new target.
@@ -37,12 +37,12 @@ Do not claim support for a Minecraft version based only on compilation.
 ## Release process
 
 1. Confirm the working tree contains no secrets or generated files.
-2. Trigger and confirm the hosted release workflow runs the build and both audit scripts.
+2. Trigger and confirm the hosted release workflow runs the selected-target build and both audit scripts.
 3. Confirm all tests pass and inspect the hosted `fps-tune-*.jar` artifacts.
-4. Set the same version in `gradle.properties`, `CHANGELOG.md`, and the release tag.
+4. For a full release, set the same version in `gradle.properties`, `CHANGELOG.md`, and the release tag. For a target-specific patch, keep the internal version and use the documented target tag.
 5. Merge through a pull request with the required CI check.
-6. Create an annotated `vX.Y.Z` tag and push it.
-7. Let the release workflow rebuild from the tag and publish JARs plus SHA-256 checksums.
+6. Create an annotated `vX.Y.Z` tag for a full release, or the documented target-specific tag such as `v1.1.1-mc1.21.1`, and push it.
+7. Let the matching release workflow rebuild from the tag and publish JARs plus SHA-256 checksums.
 8. Download the release artifact, verify its checksum, and smoke-test that exact JAR before announcing it.
 
 ## Player update behavior

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "fpstune",
+  "version": "${version}",
+  "name": "FPS Tune",
+  "description": "An opt-in, client-only performance mod that reduces particle workload to improve frame-time consistency in unusually heavy scenes. It intentionally trades some visual density for smoother performance.\n\nWHAT IT DOES\n\n• Limits how many new particle effects enter Minecraft's client particle engine each tick. Once the limit is reached, excess effects are skipped instead of being tracked and rendered.\n• Protects nearby particle effects by reducing distant effects first, while keeping the same total particle limit.\n• Can hide local rain and snow rendering when you choose that visual trade-off.\n• Can show a local performance overlay with current particle and controller information.\n\nAUTOMATIC ADJUSTMENT\n\nWhen enabled, Automatic adjustment monitors recent local frame times. If performance remains slow, it gradually lowers the particle limit; when frames remain healthy, it slowly raises the limit again. Adjustments stay within the configured minimum and maximum limits and use cooldowns to avoid rapid oscillation. It changes only the local particle budget, not the FPS cap, world simulation, or server state.\n\nWHAT IT DOES NOT DO\n\n• It does not remove existing particles; it limits which new effects are admitted during a client tick.\n• It does not change the world, gameplay, entities, simulation, packets, or server state.\n• It does not add networking, telemetry, analytics, automation, update checks, or anti-cheat behavior.\n• It does not guarantee approval on any multiplayer server. Check each server's current rules before enabling it.\n\nSIMPLE SETUP\n\nFPS Tune is disabled by default. Press F6 to toggle it, or open Configure from Mod Menu. Start with a performance profile:\n\n• Balanced keeps the default particle limit and nearby-particle protection.\n• Smoother frames starts with a lower particle limit and enables Automatic adjustment.\n• More particles keeps more effects visible while retaining nearby-particle protection.\n\nUse Advanced settings only when you want to tune the particle limit, nearby protection, or automatic-adjustment range yourself. The performance overlay and rain/snow display are independent options.\n\nIMPORTANT\n\nThe enabled case intentionally shows fewer particle effects during an extreme scene. The goal is smoother frame times, not a universal FPS increase. All settings are local to this Minecraft client and remain off until you opt in. Changes made in the settings screen are saved when you press Done; the F6 master-switch toggle saves immediately.",
+  "contact": {
+    "homepage": "https://github.com/imCinq/fps-tune",
+    "issues": "https://github.com/imCinq/fps-tune/issues",
+    "sources": "https://github.com/imCinq/fps-tune"
+  },
+  "authors": [
+    "Cinq"
+  ],
+  "license": "MIT",
+  "icon": "assets/fpstune/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.fpstune.FPSTuneClient"
+    ],
+    "modmenu": [
+      "dev.fpstune.integration.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "fpstune.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": ">=11.0.4"
+  }
+}
