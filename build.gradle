@@ -72,15 +72,19 @@ sourceSets {
 			if (targetJavaDirectory != "src/main/java") {
 				srcDir targetJavaDirectory
 			}
-			targetProperty("excluded_root_java_sources").split(",").findAll { !it.isBlank() }.each {
-				exclude it
+			def excludedRootJavaSources = targetProperty("excluded_root_java_sources").split(",").findAll { !it.isBlank() }
+			exclude { details ->
+				details.file.toPath().normalize().startsWith(file("src/main/java").toPath().normalize())
+						&& excludedRootJavaSources.any { details.file.toPath().normalize() == file("src/main/java/${it}").toPath().normalize() }
 			}
 		}
 		resources {
 			def targetResourceDirectory = targetProperty("source_directory") + "/resources"
 			srcDirs = ["src/main/resources", targetResourceDirectory]
-			targetProperty("excluded_root_resources").split(",").findAll { !it.isBlank() }.each {
-				exclude it
+			def excludedRootResources = targetProperty("excluded_root_resources").split(",").findAll { !it.isBlank() }
+			exclude { details ->
+				details.file.toPath().normalize().startsWith(file("src/main/resources").toPath().normalize())
+						&& excludedRootResources.any { details.file.toPath().normalize() == file("src/main/resources/${it}").toPath().normalize() }
 			}
 		}
 	}
