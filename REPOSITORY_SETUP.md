@@ -31,11 +31,13 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 
 ## Release flow
 
-1. Update `mod_version` in `gradle.properties`; the target metadata files in `src/1.21.11/resources/` and `src/26.2/resources/` use the expanded version placeholder. Make this change through a GitHub pull request.
+1. Update `mod_version` in `gradle.properties`; the target metadata files in `src/1.21.1/resources/`, `src/1.21.11/resources/`, and `src/26.2/resources/` use the expanded version placeholder. Make this change through a GitHub pull request.
 2. Update `CHANGELOG.md` in the same pull request and wait for hosted verification.
 3. Merge the release pull request into `main` after the required GitHub Actions checks pass.
-4. Create and push an annotated tag matching the project version using GitHub's release/tag interface.
-5. The release workflow rebuilds both target profiles, reruns the audits, checks that the tag matches the project version, and creates a GitHub Release containing one binary and one sources JAR per Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
+4. Create and push an annotated tag matching the project version using GitHub's release/tag interface. For a target-specific patch, use the target suffix documented below.
+5. The release workflows rebuild the supported target profiles, rerun the audits, check that the tag matches the project version, and create GitHub Releases containing one binary and one sources JAR per Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
+
+For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes only that target and leaves the historical `v1.1.1` release untouched.
 
 ## Repository safeguards
 
