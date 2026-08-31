@@ -32,6 +32,7 @@ Supported targets currently have separate files:
 
 | Minecraft | File |
 | --- | --- |
+| 1.21.1 | `fps-tune-mc1.21.1-<version>.jar` |
 | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
 | 26.2 | `fps-tune-<version>.jar` |
 
