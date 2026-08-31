@@ -27,7 +27,7 @@ FPS Tune is not a server mod and does not need to be installed on a server. It s
 
 | Combination | Status | Notes |
 | --- | --- | --- |
-| FPS Tune with Fabric API on 1.21.1 | Target bridge added | Uses the official 1.21.1 remapping profile; hosted Java 21 CI and a graphical smoke test are required before claiming full compatibility. |
+| FPS Tune with Fabric API on 1.21.1 | Hosted build verified | Hosted Java 21 CI and the client-only/repository audits passed; graphical smoke testing remains required before claiming graphical compatibility. |
 | FPS Tune with Fabric API on 1.21.11 | Graphical smoke verified | Required dependency; covered by the Java 21 CI build, unit tests, and a local 1.21.11 client startup smoke test. |
 | FPS Tune with Fabric API on 26.2 | Graphical smoke verified | Required dependency; covered by the Java 25 CI build, unit tests, and a local 26.2 client startup smoke test. |
 | FPS Tune without Mod Menu | Verified | The optional Mod Menu entrypoint is not required for startup. |
