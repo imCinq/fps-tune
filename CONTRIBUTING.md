@@ -1,6 +1,6 @@
 # Contributing
 
-FPS Tune targets Minecraft 1.21.11 with Java 21 and Minecraft 26.2 with Java 25. Keep compatibility-sensitive work aligned with the matching version profile.
+FPS Tune targets Minecraft 1.21.1 and 1.21.11 with Java 21, plus Minecraft 26.2 with Java 25. Keep compatibility-sensitive work aligned with the matching version profile.
 
 - Keep it client-only and limited to optional local rendering workloads and render scheduling.
 - Do not add telemetry, custom networking, packet manipulation, combat logic, movement changes, inventory automation, targeting, or click simulation.
@@ -11,6 +11,6 @@ FPS Tune targets Minecraft 1.21.11 with Java 21 and Minecraft 26.2 with Java 25.
 
 Verification:
 
-Open a pull request or trigger the GitHub Actions CI workflow manually. The hosted matrix builds both Minecraft targets, runs the unit tests and repository audits, and uploads the verified artifacts. Do not install, download, or run Java, any JDK, Gradle, the Gradle Wrapper distribution, or project dependencies on the owner's device.
+Open a pull request or trigger the GitHub Actions CI workflow manually. The hosted matrix builds all three Minecraft targets, runs the unit tests and repository audits, and uploads the verified artifacts. Do not install, download, or run Java, any JDK, Gradle, the Gradle Wrapper distribution, or project dependencies on the owner's device.
 
 Mixin changes must also be checked against the affected Minecraft client bytecode for each changed target and tested in a GitHub-hosted or other owner-approved remote graphical client environment.
