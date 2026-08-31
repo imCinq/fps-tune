@@ -37,14 +37,14 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 4. Create and push an annotated tag matching the project version using GitHub's release/tag interface. For a target-specific patch, use the target suffix documented below.
 5. The release workflows rebuild the supported target profiles, rerun the audits, check that the tag matches the project version, and create GitHub Releases containing one binary and one sources JAR per Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
 
-For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes only that target and leaves the historical `v1.1.1` release untouched.
+For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes that target, and its hosted promotion mode attaches the verified 1.21.1 binary and sources JARs to the existing `v1.1.1` release alongside the other target artifacts. The historical `v1.1.1` tag and source remain unchanged.
 
 ## Repository safeguards
 
 - Keep `main` protected against force pushes and deletion.
 - Require the `Build and test` status check before merging once branch protection is configured.
-- Keep Actions permissions read-only by default; the release workflow requests write access only for tagged releases.
-- Keep Actions pinned to full commit SHAs and review Dependabot changes individually.
+- Keep Actions permissions read-only by default; release publishing requests write access only inside the protected `release` environment.
+- Keep Actions pinned to full commit SHAs and review Dependabot changes individually.\n- Protect `v*` release tags from updates and deletion, and keep release workflows verifying annotated tags, verified target commits, and ancestry from `main`.
 - Treat the repository, issues, Actions logs, releases, and artifacts as public. Before each release, review them for private information, correct licensing, server-rule language, and matching distribution artifacts.
 
 See [AGENTS.md](AGENTS.md), [docs/MAINTENANCE.md](docs/MAINTENANCE.md), and [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the detailed project contract and release rules.
