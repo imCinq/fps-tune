@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
+
+- Added the Minecraft 1.21.1 compatibility profile using the remapping Loom setup, Java 21, Fabric Loader 0.16.14, Fabric API 0.116.15+1.21.1, and Mod Menu 11.0.4.
+- Added the 1.21.1 keybinding, HUD, and weather-render bridges while keeping the particle controller shared with the other targets.
+- Added a target-specific hosted release workflow for `v1.1.1-mc1.21.1`; the existing `v1.1.1` release remains historical and unchanged.
+
 ## 1.1.1 - 2026-08-30
 
 - Fixed the packaged mod icon so the classic FPS Tune logo is used in released JARs and launcher metadata.
