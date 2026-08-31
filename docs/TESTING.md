@@ -47,4 +47,4 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 ## Release verification
 
-`.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both confirm the tag matches the project version and publish the matching GitHub Release artifact. Use the verified output from that workflow for later manual distribution submissions.
+`.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both verify annotated-tag provenance, a signed target commit reachable from `main`, the project version, and matching GitHub Release artifacts. Its manual promotion mode verifies the published 1.21.1 checksums and attaches those artifacts to the existing `v1.1.1` release. Use the verified output from that workflow for later manual distribution submissions.
