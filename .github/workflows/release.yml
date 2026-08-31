@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+      - '!v*-mc1.21.1'
 
 permissions:
   contents: write
