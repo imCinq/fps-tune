@@ -45,6 +45,24 @@ public final class FPSTuneConfig {
 		return this;
 	}
 
+	/**
+	 * Restores only the settings owned by the Advanced screen. Basic-screen
+	 * choices remain in the draft until the user explicitly changes them.
+	 */
+	public void resetAdvancedSettings() {
+		FPSTuneConfig defaults = new FPSTuneConfig();
+		particleAdmissionEnabled = defaults.particleAdmissionEnabled;
+		maxParticlesPerTick = defaults.maxParticlesPerTick;
+		prioritizeNearbyParticles = defaults.prioritizeNearbyParticles;
+		nearbyParticleReserve = defaults.nearbyParticleReserve;
+		nearbyParticleDistance = defaults.nearbyParticleDistance;
+		adaptiveParticleBudgetEnabled = defaults.adaptiveParticleBudgetEnabled;
+		adaptiveTargetFps = defaults.adaptiveTargetFps;
+		adaptiveMinParticlesPerTick = defaults.adaptiveMinParticlesPerTick;
+		adaptiveMaxParticlesPerTick = defaults.adaptiveMaxParticlesPerTick;
+		clamp();
+	}
+
 	public void clamp() {
 		maxParticlesPerTick = Math.max(0, Math.min(maxParticlesPerTick, 10_000));
 		nearbyParticleReserve = Math.max(0, Math.min(nearbyParticleReserve, 10_000));
