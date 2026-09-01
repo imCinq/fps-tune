@@ -1,6 +1,10 @@
 # Changelog
 
-## FPS Tune v1.2.0 (in development)
+## FPS Tune v1.2.1
+
+- 🧱 Fixed disabling Rain and Snow on current targets from also hiding Map/World Border effects by limiting the weather gate to precipitation rendering only.
+
+## FPS Tune v1.2.0 - 2026-09-01
 
 - ⚡ Cached per-tick particle-controller state to reduce repeated configuration work during admissions.
 - 🚫 Rejected particles immediately once the current total budget is full, avoiding unnecessary nearby classification.
