@@ -95,7 +95,15 @@ public final class FPSTuneClient implements ClientModInitializer {
 			return false;
 		}
 
-		return client.player.distanceToSqr(particle.getBoundingBox().getCenter()) <= radiusSquared;
+		// Compute the existing bounding-box center directly to avoid allocating a Vec3.
+		var bounds = particle.getBoundingBox();
+		double centerX = (bounds.minX + bounds.maxX) * 0.5;
+		double centerY = (bounds.minY + bounds.maxY) * 0.5;
+		double centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
+		double deltaX = client.player.getX() - centerX;
+		double deltaY = client.player.getY() - centerY;
+		double deltaZ = client.player.getZ() - centerZ;
+		return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ <= radiusSquared;
 	}
 
 	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
