@@ -59,8 +59,8 @@ public final class FPSTuneClient implements ClientModInitializer {
 
 	/**
 	 * Resolves the Adaptive target from the configured client FPS limit when
-	 * Auto is selected. The numeric setting remains the fallback for unlimited
-	 * or unavailable limits.
+	 * Auto is selected. The numeric setting remains the fallback when the client limit is
+	 * unavailable.
 	 */
 	public static int effectiveAdaptiveTargetFps(FPSTuneConfig currentConfig) {
 		if (currentConfig == null) {
