@@ -13,9 +13,9 @@ The compile also verifies the optional Mod Menu API integration. The settings sc
 Mixin changes require more than hosted unit tests and must be verified in a GitHub-hosted or other owner-approved remote client environment:
 
 1. Inspect the target Minecraft bytecode.
-2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `LevelRenderer.addWeatherPass` on 1.21.11/26.2, and their render boundaries for the selected target.
+2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `LevelRenderer.renderWeather` inside `LevelRenderer.addWeatherPass` on 1.21.11/26.2, and their render boundaries for the selected target.
 3. Update the mixin and tests together.
-4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases.
+4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases. When weather rendering is disabled, confirm rain and snow disappear while Map/World Border effects remain visible.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
 
 ## Mod Menu settings screen
