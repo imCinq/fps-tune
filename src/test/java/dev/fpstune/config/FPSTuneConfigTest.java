@@ -52,6 +52,7 @@ final class FPSTuneConfigTest {
 		copy.nearbyParticleDistance = 8;
 		copy.diagnosticsHudEnabled = false;
 		copy.adaptiveParticleBudgetEnabled = false;
+		copy.adaptiveTargetAuto = true;
 		copy.adaptiveTargetFps = 90;
 		copy.adaptiveMinParticlesPerTick = 50;
 		copy.adaptiveMaxParticlesPerTick = 600;
