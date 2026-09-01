@@ -1,5 +1,14 @@
 # Changelog
 
+## FPS Tune v1.2.0 (in development)
+
+- ⚡ Cached per-tick particle-controller state to reduce repeated configuration work during admissions.
+- 🚫 Rejected particles immediately once the current total budget is full, avoiding unnecessary nearby classification.
+- 🛡️ Made the nearby reserve follow the current budget so low Adaptive budgets retain general particle capacity.
+- 🧰 Fixed Advanced settings reset behavior so it no longer overwrites the master switch, weather, or diagnostics choices.
+- 📊 Skipped detailed admission counters unless the diagnostics overlay is enabled.
+- ✅ Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
+
 ## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
 
 - Added the Minecraft 1.21.1 compatibility profile using the remapping Loom setup, Java 21, Fabric Loader 0.16.14, Fabric API 0.116.15+1.21.1, and Mod Menu 11.0.4.
