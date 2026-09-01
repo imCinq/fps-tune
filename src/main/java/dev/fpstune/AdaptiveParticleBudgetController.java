@@ -10,6 +10,7 @@ public final class AdaptiveParticleBudgetController {
 	private static final double EMA_ALPHA = 0.10;
 	private static final double SLOW_FRAME_THRESHOLD = 1.10;
 	private static final double HEALTHY_FRAME_THRESHOLD = 0.85;
+	private static final int PARTICLE_PRESSURE_PERCENT = 75;
 	private static final int SLOW_FRAME_STREAK_LIMIT = 15;
 	private static final int HEALTHY_FRAME_STREAK_LIMIT = 60;
 	private static final int COOLDOWN_FRAMES = 30;
@@ -96,6 +97,18 @@ public final class AdaptiveParticleBudgetController {
 	 * value so this class remains deterministic and easy to test.
 	 */
 	public static void observeFrame(long nowNanos, FPSTuneConfig config) {
+		observeFrame(nowNanos, config, ParticleAdmissionMetrics.pressureSnapshot());
+	}
+
+	/**
+	 * Records one in-world render interval and the pressure observed during the
+	 * corresponding client particle tick.
+	 */
+	public static void observeFrame(
+			long nowNanos,
+			FPSTuneConfig config,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
 		if (config == null || !config.enabled || !config.particleAdmissionEnabled
 				|| !config.adaptiveParticleBudgetEnabled) {
 			lastFrameNanos = 0L;
@@ -116,11 +129,24 @@ public final class AdaptiveParticleBudgetController {
 			clearStreaks();
 			return;
 		}
-		observeFrameMillis(frameTimeNanos / 1_000_000.0, config);
+		observeFrameMillis(frameTimeNanos / 1_000_000.0, config, pressure);
 	}
 
 	/** Package-private deterministic hook used by unit tests. */
 	static void observeFrameMillis(double frameTimeMillis, FPSTuneConfig config) {
+		observeFrameMillis(
+				frameTimeMillis,
+				config,
+				new ParticleAdmissionMetrics.PressureSnapshot(0, 0, 0)
+		);
+	}
+
+	/** Package-private deterministic hook used by unit tests. */
+	static void observeFrameMillis(
+			double frameTimeMillis,
+			FPSTuneConfig config,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
 		if (config == null || !config.enabled || !config.particleAdmissionEnabled
 				|| !config.adaptiveParticleBudgetEnabled || !Double.isFinite(frameTimeMillis) || frameTimeMillis <= 0.0) {
 			return;
@@ -142,11 +168,16 @@ public final class AdaptiveParticleBudgetController {
 
 		double targetFrameTimeMillis = 1_000.0 / trackedTargetFps;
 		if (smoothedFrameTimeMillis > targetFrameTimeMillis * SLOW_FRAME_THRESHOLD) {
-			slowFrameStreak++;
 			healthyFrameStreak = 0;
-			if (slowFrameStreak >= SLOW_FRAME_STREAK_LIMIT) {
-				adjustBudget(false);
+			if (hasParticlePressure(pressure)) {
+				slowFrameStreak++;
+				if (slowFrameStreak >= SLOW_FRAME_STREAK_LIMIT) {
+					adjustBudget(false);
+					clearStreaks();
+				}
+			} else {
 				clearStreaks();
+				direction = Direction.HOLDING;
 			}
 		} else if (smoothedFrameTimeMillis < targetFrameTimeMillis * HEALTHY_FRAME_THRESHOLD) {
 			healthyFrameStreak++;
@@ -186,6 +217,22 @@ public final class AdaptiveParticleBudgetController {
 				smoothedFrameTimeMillis,
 				direction
 		);
+	}
+
+	private static boolean hasParticlePressure(ParticleAdmissionMetrics.PressureSnapshot pressure) {
+		if (pressure == null || pressure.attemptedThisTick() <= 0) {
+			return false;
+		}
+		if (pressure.rejectedAtTotalBudgetThisTick() > 0) {
+			return true;
+		}
+
+		int totalBudget = pressure.totalBudget();
+		if (totalBudget <= 0) {
+			return false;
+		}
+		int threshold = Math.max(1, (totalBudget * PARTICLE_PRESSURE_PERCENT + 99) / 100);
+		return pressure.attemptedThisTick() >= threshold;
 	}
 
 	private static void adjustBudget(boolean increase) {
