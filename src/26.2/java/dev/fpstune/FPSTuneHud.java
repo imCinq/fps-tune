@@ -29,7 +29,12 @@ public final class FPSTuneHud {
 			return;
 		}
 		if (FPSTuneRenderPolicy.shouldLimitParticles(config) && config.adaptiveParticleBudgetEnabled) {
-			AdaptiveParticleBudgetController.observeFrame(System.nanoTime(), config);
+			AdaptiveParticleBudgetController.observeFrame(
+					System.nanoTime(),
+					config,
+					FPSTuneClient.effectiveAdaptiveTargetFps(config),
+					ParticleAdmissionMetrics.pressureSnapshot()
+				);
 		}
 		if (!FPSTuneDiagnostics.shouldRender(config)) {
 			return;

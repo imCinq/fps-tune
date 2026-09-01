@@ -1,5 +1,21 @@
 # Changelog
 
+## FPS Tune v1.2.0 (in development)
+
+- ⚡ Cached per-tick particle-controller state to reduce repeated configuration work during admissions.
+- 🚫 Rejected particles immediately once the current total budget is full, avoiding unnecessary nearby classification.
+- 🛡️ Made the nearby reserve follow the current budget so low Adaptive budgets retain general particle capacity.
+- 🧰 Fixed Advanced settings reset behavior so it no longer overwrites the master switch, weather, or diagnostics choices.
+- 📊 Skipped detailed admission counters unless the diagnostics overlay is enabled.
+- 🎯 Made Adaptive mode lower the budget only when slow frames coincide with particle pressure; unrelated slow frames now hold the budget.
+- 📈 Added lightweight pressure tracking for Adaptive mode without enabling detailed HUD counters.
+- 🎯 Added an Auto Adaptive target that follows Minecraft's configured FPS cap, with the numeric target retained as a fallback.
+- 🚨 Added a pressure-gated emergency response that cuts the particle budget by 25% after sustained frame times above 2x the target.
+- 🧮 Removed the temporary center-vector allocation from nearby-particle classification while preserving the existing bounding-box semantics.
+- 🧭 Simplified Advanced Mod Menu organization with grouped, dependency-aware controls and a compact Auto target selector.
+
+- ✅ Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
+
 ## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
 
 - Added the Minecraft 1.21.1 compatibility profile using the remapping Loom setup, Java 21, Fabric Loader 0.16.14, Fabric API 0.116.15+1.21.1, and Mod Menu 11.0.4.

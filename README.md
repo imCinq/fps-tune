@@ -23,7 +23,7 @@ It is designed to protect the floor of the frame-time graph during particle stor
 ## What it changes
 
 - Limits local particle admission during a client tick when enabled.
-- Can reserve part of that existing budget for particles near the player, so distant cosmetic particles are rejected first during a storm.
+- Can reserve part of the current effective budget for particles near the player, so distant cosmetic particles are rejected first during a storm.
 - Can skip the local rain/snow render pass when explicitly enabled.
 - Can show an opt-in local diagnostics HUD with current-tick admission counters.
 - Starts disabled and changes nothing until you opt in with `F6` or the settings screen.
@@ -52,7 +52,7 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
 5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune → Configure.
 
-The default particle budget is 300 admitted particles per client tick. Nearby-particle prioritization reserves 100 of those admissions for particles within 16 blocks of the player. Weather rendering remains enabled unless you explicitly disable it in the settings, and the diagnostics HUD remains off by default.
+The default particle budget is 300 admitted particles per client tick. Adaptive profiles use Auto to follow Minecraft's configured FPS cap; Advanced settings retain a numeric target for manual control or fallback. Nearby-particle prioritization uses a configured reserve of 100; the effective reserve is capped at half the current budget, so the default budget protects 100 nearby admissions and a 100-particle Adaptive budget protects 50. Weather rendering remains enabled unless you explicitly disable it in the settings, and the diagnostics HUD remains off by default.
 
 ## Configuration
 
@@ -66,18 +66,19 @@ The complete setting reference, defaults, file format, migration behavior, and U
 | `particleAdmissionEnabled` | `true` | Enables the particle budget while the master switch is active. |
 | `maxParticlesPerTick` | `300` | Particle admissions allowed per client tick, clamped to `0..10000`. |
 | `prioritizeNearbyParticles` | `true` | Protects nearby particles with a reserved part of the existing budget. |
-| `nearbyParticleReserve` | `100` | Admissions reserved for nearby particles per client tick, capped by the total budget. |
+| `nearbyParticleReserve` | `100` | Configured upper bound for nearby admissions; the effective reserve is capped at half the current budget. |
 | `nearbyParticleDistance` | `16` | Distance in blocks used to classify a particle as nearby. |
 | `diagnosticsHudEnabled` | `false` | Shows local current-tick admission counters in the HUD. |
-| `adaptiveParticleBudgetEnabled` | `false` | Slowly adjusts the particle budget toward the target FPS. |
-| `adaptiveTargetFps` | `120` | Target FPS used by Adaptive mode, clamped to `30..360`. |
+| `adaptiveParticleBudgetEnabled` | `false` | Adjusts the particle budget toward the target FPS when slow frames coincide with particle pressure. |
+| `adaptiveTargetAuto` | `true` | Follows Minecraft's configured client FPS limit in Adaptive mode. |
+| `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lowest Adaptive-mode particle budget. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Highest Adaptive-mode particle budget. |
 | `weatherRenderingEnabled` | `true` | Keeps the vanilla weather render pass enabled. |
 
-Mod Menu is optional. The FPS Tune details pane provides a long-form, plain-language overview of what it changes, what it leaves untouched, how to get started, and the intentional visual trade-off. The Configure screen uses performance profiles and keeps only the most useful visual options in view; individual particle and automatic-adjustment controls are available under Advanced settings. Done on the main screen saves settings; Back returns from Advanced settings, while Cancel and Escape on the main screen discard edits. `F6` toggles only the master switch and saves immediately.
+Mod Menu is optional. The FPS Tune details pane provides a long-form, plain-language overview of what it changes, what it leaves untouched, how to get started, and the intentional visual trade-off. The Configure screen uses performance profiles and keeps only the most useful visual options in view; individual particle and Adaptive controls are available under Advanced settings, with unrelated controls dimmed when their parent feature is off. Done on the main screen saves settings; Back returns from Advanced settings, while Cancel and Escape on the main screen discard edits. `F6` toggles only the master switch and saves immediately.
 
-Adaptive mode is off by default. When enabled, it starts from the fixed particle budget, lowers that budget after sustained slow frames, and raises it slowly after sustained healthy frames. It never changes the FPS cap, render distance, weather setting, world simulation, or server behavior.
+Adaptive mode is off by default. When enabled, Auto follows Minecraft's configured FPS cap unless you choose a numeric target; it starts from the fixed particle budget, lowers that budget only after sustained slow frames coincide with particle pressure, and uses a pressure-gated 25% emergency cut for severe sustained frame times. It raises the budget slowly after sustained healthy frames. Slow frames with little particle pressure hold the current budget. It never changes the FPS cap, render distance, weather setting, world simulation, or server behavior.
 
 ## Compatibility and server rules
 

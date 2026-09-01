@@ -1,11 +1,8 @@
 package dev.fpstune.mixin;
 
-import dev.fpstune.AdaptiveParticleBudgetController;
 import dev.fpstune.FPSTuneClient;
-import dev.fpstune.FPSTuneRenderPolicy;
 import dev.fpstune.ParticleAdmissionBudget;
 import dev.fpstune.ParticleAdmissionMetrics;
-import dev.fpstune.config.FPSTuneConfig;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,33 +19,56 @@ public abstract class ParticleEngineMixin {
 	private int fpstune$priorityAcceptedThisTick;
 	@Unique
 	private boolean fpstune$priorityForCurrentAdmission;
+	@Unique
+	private ParticleAdmissionBudget.RuntimeSnapshot fpstune$runtimeSnapshot;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void fpstune$resetBudget(CallbackInfo callbackInfo) {
 		fpstune$acceptedThisTick = 0;
 		fpstune$priorityAcceptedThisTick = 0;
 		fpstune$priorityForCurrentAdmission = false;
-		ParticleAdmissionMetrics.beginTick();
+		fpstune$runtimeSnapshot = ParticleAdmissionBudget.snapshot(FPSTuneClient.config());
+		ParticleAdmissionMetrics.beginTick(
+				fpstune$runtimeSnapshot.pressureTrackingEnabled(),
+				fpstune$runtimeSnapshot.totalBudget()
+		);
 	}
 
 	@Inject(method = "add", at = @At("HEAD"), cancellable = true)
 	private void fpstune$limitAdmission(Particle particle, CallbackInfo callbackInfo) {
-		FPSTuneConfig config = FPSTuneClient.config();
-		if (!FPSTuneRenderPolicy.shouldLimitParticles(config)) {
+		ParticleAdmissionBudget.RuntimeSnapshot snapshot = fpstune$getRuntimeSnapshot();
+		if (!snapshot.limitsParticles()) {
+			return;
+		}
+		if (snapshot.pressureTrackingEnabled()) {
+			ParticleAdmissionMetrics.recordPressureAttempt();
+		}
+
+		if (fpstune$acceptedThisTick >= snapshot.totalBudget()) {
+			if (snapshot.pressureTrackingEnabled()) {
+				ParticleAdmissionMetrics.recordPressureRejectionAtTotalBudget();
+			}
+			if (snapshot.detailedMetricsEnabled()) {
+				boolean priority = snapshot.prioritizeNearbyParticles()
+						&& FPSTuneClient.isNearbyParticle(particle, snapshot.nearbyRadiusSquared());
+				ParticleAdmissionMetrics.recordRejected(priority);
+			}
+			callbackInfo.cancel();
 			return;
 		}
 
-		boolean priority = FPSTuneClient.isNearbyParticle(particle);
+		boolean priority = snapshot.prioritizeNearbyParticles()
+				&& FPSTuneClient.isNearbyParticle(particle, snapshot.nearbyRadiusSquared());
 		fpstune$priorityForCurrentAdmission = priority;
-		int totalBudget = AdaptiveParticleBudgetController.effectiveBudget(config);
 		if (!ParticleAdmissionBudget.allows(
 				fpstune$acceptedThisTick,
 				fpstune$priorityAcceptedThisTick,
 				priority,
-				config,
-				totalBudget
+				snapshot
 		)) {
-			ParticleAdmissionMetrics.recordRejected(priority);
+			if (snapshot.detailedMetricsEnabled()) {
+				ParticleAdmissionMetrics.recordRejected(priority);
+			}
 			callbackInfo.cancel();
 		}
 	}
@@ -58,8 +78,8 @@ public abstract class ParticleEngineMixin {
 			at = @At(value = "INVOKE", target = "Ljava/util/Queue;add(Ljava/lang/Object;)Z")
 	)
 	private void fpstune$countAdmission(Particle particle, CallbackInfo callbackInfo) {
-		FPSTuneConfig config = FPSTuneClient.config();
-		if (!FPSTuneRenderPolicy.shouldLimitParticles(config)) {
+		ParticleAdmissionBudget.RuntimeSnapshot snapshot = fpstune$getRuntimeSnapshot();
+		if (!snapshot.limitsParticles()) {
 			return;
 		}
 
@@ -67,14 +87,23 @@ public abstract class ParticleEngineMixin {
 		// This runs only at vanilla's queue.add calls, after admission checks.
 		fpstune$acceptedThisTick = ParticleAdmissionBudget.recordAccepted(
 				fpstune$acceptedThisTick,
-				config,
-				AdaptiveParticleBudgetController.effectiveBudget(config)
+				snapshot
 		);
 		fpstune$priorityAcceptedThisTick = ParticleAdmissionBudget.recordPriorityAccepted(
 				fpstune$priorityAcceptedThisTick,
 				priority,
-				config
+				snapshot
 		);
-		ParticleAdmissionMetrics.recordAccepted(priority);
+		if (snapshot.detailedMetricsEnabled()) {
+			ParticleAdmissionMetrics.recordAccepted(priority);
+		}
+	}
+
+	@Unique
+	private ParticleAdmissionBudget.RuntimeSnapshot fpstune$getRuntimeSnapshot() {
+		if (fpstune$runtimeSnapshot == null) {
+			fpstune$runtimeSnapshot = ParticleAdmissionBudget.snapshot(FPSTuneClient.config());
+		}
+		return fpstune$runtimeSnapshot;
 	}
 }

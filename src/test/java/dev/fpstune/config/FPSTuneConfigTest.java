@@ -19,6 +19,7 @@ final class FPSTuneConfigTest {
 		assertEquals(16, config.nearbyParticleDistance);
 		assertFalse(config.diagnosticsHudEnabled);
 		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertTrue(config.adaptiveTargetAuto);
 		assertEquals(120, config.adaptiveTargetFps);
 		assertEquals(100, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
@@ -36,6 +37,7 @@ final class FPSTuneConfigTest {
 		original.nearbyParticleDistance = 24;
 		original.diagnosticsHudEnabled = true;
 		original.adaptiveParticleBudgetEnabled = true;
+		original.adaptiveTargetAuto = false;
 		original.adaptiveTargetFps = 144;
 		original.adaptiveMinParticlesPerTick = 80;
 		original.adaptiveMaxParticlesPerTick = 1_800;
@@ -50,6 +52,7 @@ final class FPSTuneConfigTest {
 		copy.nearbyParticleDistance = 8;
 		copy.diagnosticsHudEnabled = false;
 		copy.adaptiveParticleBudgetEnabled = false;
+		copy.adaptiveTargetAuto = true;
 		copy.adaptiveTargetFps = 90;
 		copy.adaptiveMinParticlesPerTick = 50;
 		copy.adaptiveMaxParticlesPerTick = 600;
@@ -63,6 +66,7 @@ final class FPSTuneConfigTest {
 		assertEquals(24, original.nearbyParticleDistance);
 		assertTrue(original.diagnosticsHudEnabled);
 		assertTrue(original.adaptiveParticleBudgetEnabled);
+		assertFalse(original.adaptiveTargetAuto);
 		assertEquals(144, original.adaptiveTargetFps);
 		assertEquals(80, original.adaptiveMinParticlesPerTick);
 		assertEquals(1_800, original.adaptiveMaxParticlesPerTick);
@@ -75,6 +79,7 @@ final class FPSTuneConfigTest {
 		assertEquals(8, copy.nearbyParticleDistance);
 		assertFalse(copy.diagnosticsHudEnabled);
 		assertFalse(copy.adaptiveParticleBudgetEnabled);
+		assertTrue(copy.adaptiveTargetAuto);
 		assertEquals(90, copy.adaptiveTargetFps);
 		assertEquals(50, copy.adaptiveMinParticlesPerTick);
 		assertEquals(600, copy.adaptiveMaxParticlesPerTick);
@@ -101,6 +106,40 @@ final class FPSTuneConfigTest {
 		assertEquals(2_000, draft.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, draft.adaptiveMaxParticlesPerTick);
 		assertTrue(draft.weatherRenderingEnabled);
+	}
+
+	@Test
+	void resetAdvancedSettingsPreservesBasicSettings() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.diagnosticsHudEnabled = true;
+		config.weatherRenderingEnabled = false;
+		config.particleAdmissionEnabled = false;
+		config.maxParticlesPerTick = 512;
+		config.prioritizeNearbyParticles = false;
+		config.nearbyParticleReserve = 180;
+		config.nearbyParticleDistance = 24;
+		config.adaptiveParticleBudgetEnabled = true;
+		config.adaptiveTargetAuto = false;
+		config.adaptiveTargetFps = 144;
+		config.adaptiveMinParticlesPerTick = 80;
+		config.adaptiveMaxParticlesPerTick = 1_800;
+
+		config.resetAdvancedSettings();
+
+		assertTrue(config.enabled);
+		assertTrue(config.diagnosticsHudEnabled);
+		assertFalse(config.weatherRenderingEnabled);
+		assertTrue(config.particleAdmissionEnabled);
+		assertEquals(300, config.maxParticlesPerTick);
+		assertTrue(config.prioritizeNearbyParticles);
+		assertEquals(100, config.nearbyParticleReserve);
+		assertEquals(16, config.nearbyParticleDistance);
+		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertTrue(config.adaptiveTargetAuto);
+		assertEquals(120, config.adaptiveTargetFps);
+		assertEquals(100, config.adaptiveMinParticlesPerTick);
+		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
 	}
 
 	@Test

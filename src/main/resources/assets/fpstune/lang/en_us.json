@@ -4,9 +4,9 @@
   "screen.fpstune.title": "FPS Tune",
   "screen.fpstune.description": "Choose a simple way to make busy scenes feel smoother. Press Done to save.",
   "screen.fpstune.advanced.title": "FPS Tune: Advanced settings",
-  "screen.fpstune.advanced.description": "Fine-tune particle effects. Press Back to return; use Done on the main screen to save.",
-  "section.fpstune.particle_controls": "Particle effects",
-  "section.fpstune.automatic_controls": "Automatic adjustment",
+  "screen.fpstune.advanced.description": "Fine-tune particle admission and Adaptive budget. Dependent controls dim when their parent switch is off. Press Back to return; use Done on the main screen to save.",
+  "section.fpstune.particle_controls": "Particle budget",
+  "section.fpstune.automatic_controls": "Adaptive budget",
   "option.fpstune.enabled": "Enable FPS Tune",
   "option.fpstune.enabled.tooltip": "Turn on FPS Tune's local visual changes. Off by default.",
   "option.fpstune.profile": "Performance profile",
@@ -38,11 +38,12 @@
   "option.fpstune.adaptive_budget": "Automatically adjust particle limit",
   "option.fpstune.adaptive_budget.tooltip": "Lower or raise the particle limit slowly to stay near your target FPS. Off by default.",
   "option.fpstune.adaptive_target": "Target FPS",
+  "option.fpstune.adaptive_target.auto": "Auto (client FPS cap)",
   "option.fpstune.adaptive_target.value": "%s FPS",
   "option.fpstune.adaptive_minimum": "Minimum limit",
   "option.fpstune.adaptive_minimum.value": "%s particles",
   "option.fpstune.adaptive_maximum": "Maximum limit",
   "option.fpstune.adaptive_maximum.value": "%s particles",
-  "button.fpstune.reset": "Reset all settings",
-  "button.fpstune.reset.tooltip": "Restore every FPS Tune option to its default. Changes apply when you press Done."
+  "button.fpstune.reset": "Reset advanced settings",
+  "button.fpstune.reset.tooltip": "Restore particle and Adaptive settings to their defaults. Basic-screen choices remain unchanged until you press Done."
 }

@@ -39,7 +39,11 @@ public final class ConfigStore {
 				config.enabled = getBoolean(properties, "enabled", config.enabled);
 				config.maxParticlesPerTick = getInt(properties, "maxParticlesPerTick", config.maxParticlesPerTick);
 				int configVersion = getInt(properties, "configVersion", 0);
-				if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION) {
+				if (configVersion < 0 || configVersion > FPSTuneConfig.CURRENT_CONFIG_VERSION) {
+					// Unknown versions must not activate newly introduced controller behavior.
+					config.adaptiveTargetAuto = false;
+				}
+if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION) {
 					config.particleAdmissionEnabled = getBoolean(
 							properties,
 							"particleAdmissionEnabled",
@@ -70,6 +74,16 @@ public final class ConfigStore {
 							"adaptiveParticleBudgetEnabled",
 							config.adaptiveParticleBudgetEnabled
 					);
+					if (configVersion >= 4) {
+						config.adaptiveTargetAuto = getBoolean(
+								properties,
+								"adaptiveTargetAuto",
+								config.adaptiveTargetAuto
+						);
+					} else {
+						// v1.1/v1.2-pre-auto files retain their explicit numeric target.
+						config.adaptiveTargetAuto = false;
+					}
 					config.adaptiveTargetFps = getInt(
 							properties,
 							"adaptiveTargetFps",
@@ -118,6 +132,7 @@ public final class ConfigStore {
 		properties.setProperty("nearbyParticleDistance", Integer.toString(config.nearbyParticleDistance));
 		properties.setProperty("diagnosticsHudEnabled", Boolean.toString(config.diagnosticsHudEnabled));
 		properties.setProperty("adaptiveParticleBudgetEnabled", Boolean.toString(config.adaptiveParticleBudgetEnabled));
+		properties.setProperty("adaptiveTargetAuto", Boolean.toString(config.adaptiveTargetAuto));
 		properties.setProperty("adaptiveTargetFps", Integer.toString(config.adaptiveTargetFps));
 		properties.setProperty("adaptiveMinParticlesPerTick", Integer.toString(config.adaptiveMinParticlesPerTick));
 		properties.setProperty("adaptiveMaxParticlesPerTick", Integer.toString(config.adaptiveMaxParticlesPerTick));

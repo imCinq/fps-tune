@@ -34,6 +34,29 @@ final class FPSTuneDiagnosticsTest {
 	}
 
 	@Test
+	void diagnosticsShowAutoAndEffectiveTargetTogether() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.particleAdmissionEnabled = true;
+		config.adaptiveParticleBudgetEnabled = true;
+		config.adaptiveTargetAuto = true;
+		config.diagnosticsHudEnabled = true;
+
+		assertTrue(FPSTuneDiagnostics.lines(
+				config,
+				new ParticleAdmissionMetrics.Snapshot(4, 1, 0, 0),
+				new AdaptiveParticleBudgetController.Snapshot(
+						270,
+						100,
+						2_000,
+						60,
+						10.0,
+						AdaptiveParticleBudgetController.Direction.DECREASING
+				)
+		)[2].contains("Auto->60 FPS"));
+	}
+
+	@Test
 	void diagnosticsRemainExplicitWhenControlsAreDisabled() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.diagnosticsHudEnabled = true;
@@ -63,6 +86,7 @@ final class FPSTuneDiagnosticsTest {
 		config.particleAdmissionEnabled = true;
 		config.prioritizeNearbyParticles = false;
 		config.adaptiveParticleBudgetEnabled = true;
+		config.adaptiveTargetAuto = false;
 		config.diagnosticsHudEnabled = true;
 
 		assertArrayEquals(

@@ -27,6 +27,7 @@ final class ConfigStoreTest {
 		assertTrue(config.particleAdmissionEnabled);
 		assertEquals(10_000, config.maxParticlesPerTick);
 		assertEquals(30, config.adaptiveTargetFps);
+		assertFalse(config.adaptiveTargetAuto);
 		assertEquals(2_000, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
 		assertTrue(config.weatherRenderingEnabled);
@@ -43,6 +44,7 @@ final class ConfigStoreTest {
 		original.nearbyParticleDistance = 24;
 		original.diagnosticsHudEnabled = true;
 		original.adaptiveParticleBudgetEnabled = true;
+		original.adaptiveTargetAuto = false;
 		original.adaptiveTargetFps = 144;
 		original.adaptiveMinParticlesPerTick = 80;
 		original.adaptiveMaxParticlesPerTick = 1_800;
@@ -59,6 +61,7 @@ final class ConfigStoreTest {
 		assertEquals(24, reloaded.nearbyParticleDistance);
 		assertTrue(reloaded.diagnosticsHudEnabled);
 		assertTrue(reloaded.adaptiveParticleBudgetEnabled);
+		assertFalse(reloaded.adaptiveTargetAuto);
 		assertEquals(144, reloaded.adaptiveTargetFps);
 		assertEquals(80, reloaded.adaptiveMinParticlesPerTick);
 		assertEquals(1_800, reloaded.adaptiveMaxParticlesPerTick);
@@ -68,12 +71,13 @@ final class ConfigStoreTest {
 		try (var input = Files.newInputStream(runDirectory.resolve("config").resolve("fpstune.properties"))) {
 			persisted.load(input);
 		}
-		assertEquals("3", persisted.getProperty("configVersion"));
+		assertEquals("4", persisted.getProperty("configVersion"));
 		assertEquals("false", persisted.getProperty("prioritizeNearbyParticles"));
 		assertEquals("180", persisted.getProperty("nearbyParticleReserve"));
 		assertEquals("24", persisted.getProperty("nearbyParticleDistance"));
 		assertEquals("true", persisted.getProperty("diagnosticsHudEnabled"));
 		assertEquals("true", persisted.getProperty("adaptiveParticleBudgetEnabled"));
+		assertEquals("false", persisted.getProperty("adaptiveTargetAuto"));
 		assertEquals("144", persisted.getProperty("adaptiveTargetFps"));
 		assertEquals("80", persisted.getProperty("adaptiveMinParticlesPerTick"));
 		assertEquals("1800", persisted.getProperty("adaptiveMaxParticlesPerTick"));
@@ -97,6 +101,7 @@ final class ConfigStoreTest {
 		assertEquals(16, config.nearbyParticleDistance);
 		assertFalse(config.diagnosticsHudEnabled);
 		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertFalse(config.adaptiveTargetAuto);
 		assertEquals(120, config.adaptiveTargetFps);
 		assertEquals(100, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
@@ -139,6 +144,7 @@ final class ConfigStoreTest {
 		assertEquals("16", migrated.getProperty("nearbyParticleDistance"));
 		assertEquals("false", migrated.getProperty("diagnosticsHudEnabled"));
 		assertEquals("false", migrated.getProperty("adaptiveParticleBudgetEnabled"));
+		assertEquals("false", migrated.getProperty("adaptiveTargetAuto"));
 		assertEquals("120", migrated.getProperty("adaptiveTargetFps"));
 		assertEquals("100", migrated.getProperty("adaptiveMinParticlesPerTick"));
 		assertEquals("2000", migrated.getProperty("adaptiveMaxParticlesPerTick"));
@@ -163,7 +169,7 @@ final class ConfigStoreTest {
 		Path configDirectory = runDirectory.resolve("config");
 		Files.createDirectories(configDirectory);
 		Files.writeString(configDirectory.resolve("fpstune.properties"),
-				"configVersion=4\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
+				"configVersion=5\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
 
 		FPSTuneConfig config = ConfigStore.load(runDirectory);
 

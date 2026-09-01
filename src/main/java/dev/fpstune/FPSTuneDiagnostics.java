@@ -48,11 +48,14 @@ public final class FPSTuneDiagnostics {
 				? safeMetrics.priorityAcceptedThisTick() + " admitted / "
 						+ ParticleAdmissionBudget.effectivePriorityReserve(config, displayedBudget) + " reserve"
 				: "off";
+		String targetState = config.adaptiveTargetAuto
+				? "Auto->" + safeAdaptive.targetFps() + " FPS"
+				: safeAdaptive.targetFps() + " FPS";
 		String budgetState = !particleLimiterEnabled
 				? "inactive"
 				: config.adaptiveParticleBudgetEnabled
 						? safeAdaptive.currentBudget() + " (" + safeAdaptive.minimumBudget() + "-"
-								+ safeAdaptive.maximumBudget() + " @ " + safeAdaptive.targetFps() + " FPS, "
+								+ safeAdaptive.maximumBudget() + " @ " + targetState + ", "
 								+ safeAdaptive.direction().label() + ")"
 						: displayedBudget + " fixed";
 		String weatherState = controlsEnabled && !config.weatherRenderingEnabled

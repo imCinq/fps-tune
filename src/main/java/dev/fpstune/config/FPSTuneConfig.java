@@ -1,7 +1,7 @@
 package dev.fpstune.config;
 
 public final class FPSTuneConfig {
-	public static final int CURRENT_CONFIG_VERSION = 3;
+	public static final int CURRENT_CONFIG_VERSION = 4;
 
 	// The master switch is opt-in by default: a server should never be tested with
 	// a custom client render controller enabled before its rules and staff guidance
@@ -14,6 +14,8 @@ public final class FPSTuneConfig {
 	public int nearbyParticleDistance = 16;
 	public boolean diagnosticsHudEnabled = false;
 	public boolean adaptiveParticleBudgetEnabled = false;
+	public boolean adaptiveTargetAuto = true;
+	// Manual fallback used when Auto cannot read a finite client FPS limit.
 	public int adaptiveTargetFps = 120;
 	public int adaptiveMinParticlesPerTick = 100;
 	public int adaptiveMaxParticlesPerTick = 2_000;
@@ -37,12 +39,32 @@ public final class FPSTuneConfig {
 		nearbyParticleDistance = source.nearbyParticleDistance;
 		diagnosticsHudEnabled = source.diagnosticsHudEnabled;
 		adaptiveParticleBudgetEnabled = source.adaptiveParticleBudgetEnabled;
+		adaptiveTargetAuto = source.adaptiveTargetAuto;
 		adaptiveTargetFps = source.adaptiveTargetFps;
 		adaptiveMinParticlesPerTick = source.adaptiveMinParticlesPerTick;
 		adaptiveMaxParticlesPerTick = source.adaptiveMaxParticlesPerTick;
 		weatherRenderingEnabled = source.weatherRenderingEnabled;
 		clamp();
 		return this;
+	}
+
+	/**
+	 * Restores only the settings owned by the Advanced screen. Basic-screen
+	 * choices remain in the draft until the user explicitly changes them.
+	 */
+	public void resetAdvancedSettings() {
+		FPSTuneConfig defaults = new FPSTuneConfig();
+		particleAdmissionEnabled = defaults.particleAdmissionEnabled;
+		maxParticlesPerTick = defaults.maxParticlesPerTick;
+		prioritizeNearbyParticles = defaults.prioritizeNearbyParticles;
+		nearbyParticleReserve = defaults.nearbyParticleReserve;
+		nearbyParticleDistance = defaults.nearbyParticleDistance;
+		adaptiveParticleBudgetEnabled = defaults.adaptiveParticleBudgetEnabled;
+		adaptiveTargetAuto = defaults.adaptiveTargetAuto;
+		adaptiveTargetFps = defaults.adaptiveTargetFps;
+		adaptiveMinParticlesPerTick = defaults.adaptiveMinParticlesPerTick;
+		adaptiveMaxParticlesPerTick = defaults.adaptiveMaxParticlesPerTick;
+		clamp();
 	}
 
 	public void clamp() {

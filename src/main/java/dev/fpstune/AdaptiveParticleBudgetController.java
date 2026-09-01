@@ -10,6 +10,10 @@ public final class AdaptiveParticleBudgetController {
 	private static final double EMA_ALPHA = 0.10;
 	private static final double SLOW_FRAME_THRESHOLD = 1.10;
 	private static final double HEALTHY_FRAME_THRESHOLD = 0.85;
+	private static final int PARTICLE_PRESSURE_PERCENT = 75;
+	private static final double EMERGENCY_FRAME_THRESHOLD = 2.00;
+	private static final int EMERGENCY_FRAME_STREAK_LIMIT = 3;
+	private static final int EMERGENCY_STEP_PERCENT = 25;
 	private static final int SLOW_FRAME_STREAK_LIMIT = 15;
 	private static final int HEALTHY_FRAME_STREAK_LIMIT = 60;
 	private static final int COOLDOWN_FRAMES = 30;
@@ -19,15 +23,18 @@ public final class AdaptiveParticleBudgetController {
 	private static boolean trackedEnabled;
 	private static boolean trackedParticleAdmissionEnabled;
 	private static boolean trackedAdaptiveEnabled;
+	private static boolean trackedAdaptiveTargetAuto;
 	private static int trackedFixedBudget;
 	private static int trackedMinimumBudget;
 	private static int trackedMaximumBudget;
+	private static int trackedConfiguredTargetFps;
 	private static int trackedTargetFps;
 	private static int currentBudget;
 	private static long lastFrameNanos;
 	private static boolean hasLastFrame;
 	private static double smoothedFrameTimeMillis = -1.0;
 	private static int slowFrameStreak;
+	private static int emergencyFrameStreak;
 	private static int healthyFrameStreak;
 	private static int cooldownFrames;
 	private static Direction direction = Direction.HOLDING;
@@ -43,6 +50,7 @@ public final class AdaptiveParticleBudgetController {
 			hasLastFrame = false;
 			smoothedFrameTimeMillis = -1.0;
 			slowFrameStreak = 0;
+			emergencyFrameStreak = 0;
 			healthyFrameStreak = 0;
 			cooldownFrames = 0;
 			direction = Direction.HOLDING;
@@ -52,13 +60,15 @@ public final class AdaptiveParticleBudgetController {
 		trackedEnabled = config.enabled;
 		trackedParticleAdmissionEnabled = config.particleAdmissionEnabled;
 		trackedAdaptiveEnabled = config.adaptiveParticleBudgetEnabled;
+		trackedAdaptiveTargetAuto = config.adaptiveTargetAuto;
 		trackedFixedBudget = clampParticles(config.maxParticlesPerTick);
 		trackedMinimumBudget = clampParticles(config.adaptiveMinParticlesPerTick);
 		trackedMaximumBudget = clampParticles(config.adaptiveMaxParticlesPerTick);
 		if (trackedMinimumBudget > trackedMaximumBudget) {
 			trackedMaximumBudget = trackedMinimumBudget;
 		}
-		trackedTargetFps = clampTargetFps(config.adaptiveTargetFps);
+		trackedConfiguredTargetFps = clampTargetFps(config.adaptiveTargetFps);
+		trackedTargetFps = trackedConfiguredTargetFps;
 		currentBudget = trackedAdaptiveEnabled
 				? clamp(trackedFixedBudget, trackedMinimumBudget, trackedMaximumBudget)
 				: trackedFixedBudget;
@@ -66,6 +76,7 @@ public final class AdaptiveParticleBudgetController {
 		hasLastFrame = false;
 		smoothedFrameTimeMillis = -1.0;
 		slowFrameStreak = 0;
+		emergencyFrameStreak = 0;
 		healthyFrameStreak = 0;
 		cooldownFrames = 0;
 		direction = Direction.HOLDING;
@@ -96,6 +107,31 @@ public final class AdaptiveParticleBudgetController {
 	 * value so this class remains deterministic and easy to test.
 	 */
 	public static void observeFrame(long nowNanos, FPSTuneConfig config) {
+		observeFrame(nowNanos, config, configuredTargetFps(config), ParticleAdmissionMetrics.pressureSnapshot());
+	}
+
+	/**
+	 * Records one in-world render interval and the pressure observed during the
+	 * corresponding client particle tick.
+	 */
+	public static void observeFrame(
+			long nowNanos,
+			FPSTuneConfig config,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
+		observeFrame(nowNanos, config, configuredTargetFps(config), pressure);
+	}
+
+	/**
+	 * Records one in-world render interval using the target resolved by the
+	 * target-specific Minecraft bridge.
+	 */
+	public static void observeFrame(
+			long nowNanos,
+			FPSTuneConfig config,
+			int effectiveTargetFps,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
 		if (config == null || !config.enabled || !config.particleAdmissionEnabled
 				|| !config.adaptiveParticleBudgetEnabled) {
 			lastFrameNanos = 0L;
@@ -104,6 +140,11 @@ public final class AdaptiveParticleBudgetController {
 		}
 
 		ensureConfiguration(config);
+		if (setEffectiveTargetFps(effectiveTargetFps)) {
+			lastFrameNanos = nowNanos;
+			hasLastFrame = true;
+			return;
+		}
 		if (!hasLastFrame) {
 			lastFrameNanos = nowNanos;
 			hasLastFrame = true;
@@ -116,17 +157,42 @@ public final class AdaptiveParticleBudgetController {
 			clearStreaks();
 			return;
 		}
-		observeFrameMillis(frameTimeNanos / 1_000_000.0, config);
+		observeFrameMillis(frameTimeNanos / 1_000_000.0, config, pressure);
 	}
 
 	/** Package-private deterministic hook used by unit tests. */
 	static void observeFrameMillis(double frameTimeMillis, FPSTuneConfig config) {
+		observeFrameMillis(
+				frameTimeMillis,
+				config,
+				configuredTargetFps(config),
+				new ParticleAdmissionMetrics.PressureSnapshot(0, 0, 0)
+		);
+	}
+
+	/** Package-private deterministic hook used by unit tests. */
+	static void observeFrameMillis(
+			double frameTimeMillis,
+			FPSTuneConfig config,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
+		observeFrameMillis(frameTimeMillis, config, configuredTargetFps(config), pressure);
+	}
+
+	/** Package-private deterministic hook used by unit tests. */
+	static void observeFrameMillis(
+			double frameTimeMillis,
+			FPSTuneConfig config,
+			int effectiveTargetFps,
+			ParticleAdmissionMetrics.PressureSnapshot pressure
+	) {
 		if (config == null || !config.enabled || !config.particleAdmissionEnabled
 				|| !config.adaptiveParticleBudgetEnabled || !Double.isFinite(frameTimeMillis) || frameTimeMillis <= 0.0) {
 			return;
 		}
 
 		ensureConfiguration(config);
+		setEffectiveTargetFps(effectiveTargetFps);
 		if (smoothedFrameTimeMillis < 0.0) {
 			smoothedFrameTimeMillis = frameTimeMillis;
 		} else {
@@ -142,17 +208,32 @@ public final class AdaptiveParticleBudgetController {
 
 		double targetFrameTimeMillis = 1_000.0 / trackedTargetFps;
 		if (smoothedFrameTimeMillis > targetFrameTimeMillis * SLOW_FRAME_THRESHOLD) {
-			slowFrameStreak++;
 			healthyFrameStreak = 0;
-			if (slowFrameStreak >= SLOW_FRAME_STREAK_LIMIT) {
-				adjustBudget(false);
+			if (hasParticlePressure(pressure)) {
+				slowFrameStreak++;
+				if (smoothedFrameTimeMillis > targetFrameTimeMillis * EMERGENCY_FRAME_THRESHOLD) {
+					emergencyFrameStreak++;
+					if (emergencyFrameStreak >= EMERGENCY_FRAME_STREAK_LIMIT) {
+						adjustBudget(false, true);
+						clearStreaks();
+					}
+				} else {
+					emergencyFrameStreak = 0;
+					if (slowFrameStreak >= SLOW_FRAME_STREAK_LIMIT) {
+						adjustBudget(false, false);
+						clearStreaks();
+					}
+				}
+			} else {
 				clearStreaks();
+				direction = Direction.HOLDING;
 			}
 		} else if (smoothedFrameTimeMillis < targetFrameTimeMillis * HEALTHY_FRAME_THRESHOLD) {
 			healthyFrameStreak++;
 			slowFrameStreak = 0;
+			emergencyFrameStreak = 0;
 			if (healthyFrameStreak >= HEALTHY_FRAME_STREAK_LIMIT) {
-				adjustBudget(true);
+				adjustBudget(true, false);
 				clearStreaks();
 			}
 		} else {
@@ -188,8 +269,26 @@ public final class AdaptiveParticleBudgetController {
 		);
 	}
 
-	private static void adjustBudget(boolean increase) {
-		int step = Math.max(10, currentBudget / 10);
+	private static boolean hasParticlePressure(ParticleAdmissionMetrics.PressureSnapshot pressure) {
+		if (pressure == null || pressure.attemptedThisTick() <= 0) {
+			return false;
+		}
+		if (pressure.rejectedAtTotalBudgetThisTick() > 0) {
+			return true;
+		}
+
+		int totalBudget = pressure.totalBudget();
+		if (totalBudget <= 0) {
+			return false;
+		}
+		int threshold = Math.max(1, (totalBudget * PARTICLE_PRESSURE_PERCENT + 99) / 100);
+		return pressure.attemptedThisTick() >= threshold;
+	}
+
+	private static void adjustBudget(boolean increase, boolean emergency) {
+		int step = increase
+				? Math.max(10, currentBudget / 10)
+				: Math.max(10, emergency ? (currentBudget * EMERGENCY_STEP_PERCENT) / 100 : currentBudget / 10);
 		int nextBudget = increase
 				? Math.min(trackedMaximumBudget, currentBudget + step)
 				: Math.max(trackedMinimumBudget, currentBudget - step);
@@ -211,9 +310,28 @@ public final class AdaptiveParticleBudgetController {
 				|| trackedFixedBudget != clampParticles(config.maxParticlesPerTick)
 				|| trackedMinimumBudget != clampParticles(config.adaptiveMinParticlesPerTick)
 				|| trackedMaximumBudget != normalizedMaximum(config)
-				|| trackedTargetFps != clampTargetFps(config.adaptiveTargetFps)) {
+				|| trackedAdaptiveTargetAuto != config.adaptiveTargetAuto
+				|| trackedConfiguredTargetFps != clampTargetFps(config.adaptiveTargetFps)) {
 			reset(config);
 		}
+	}
+
+	private static boolean setEffectiveTargetFps(int effectiveTargetFps) {
+		int normalizedTarget = clampTargetFps(effectiveTargetFps);
+		if (trackedTargetFps == normalizedTarget) {
+			return false;
+		}
+		trackedTargetFps = normalizedTarget;
+		lastFrameNanos = 0L;
+		hasLastFrame = false;
+		smoothedFrameTimeMillis = -1.0;
+		clearStreaks();
+		direction = Direction.HOLDING;
+		return true;
+	}
+
+	private static int configuredTargetFps(FPSTuneConfig config) {
+		return config == null ? 120 : clampTargetFps(config.adaptiveTargetFps);
 	}
 
 	private static int normalizedMaximum(FPSTuneConfig config) {
@@ -223,6 +341,7 @@ public final class AdaptiveParticleBudgetController {
 
 	private static void clearStreaks() {
 		slowFrameStreak = 0;
+		emergencyFrameStreak = 0;
 		healthyFrameStreak = 0;
 	}
 

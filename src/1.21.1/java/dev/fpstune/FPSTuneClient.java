@@ -57,8 +57,37 @@ public final class FPSTuneClient implements ClientModInitializer {
 		return config;
 	}
 
+	/**
+	 * Resolves the Adaptive target from the configured client FPS limit when
+	 * Auto is selected. The numeric setting remains the fallback when the client limit is
+	 * unavailable.
+	 */
+	public static int effectiveAdaptiveTargetFps(FPSTuneConfig currentConfig) {
+		if (currentConfig == null) {
+			return 120;
+		}
+		int fallback = Math.max(30, Math.min(currentConfig.adaptiveTargetFps, 360));
+		if (!currentConfig.adaptiveTargetAuto) {
+			return fallback;
+		}
+
+		Minecraft client = Minecraft.getInstance();
+		int configuredLimit = client.options.framerateLimit().get();
+		return configuredLimit > 0
+				? Math.max(30, Math.min(configuredLimit, 360))
+				: fallback;
+	}
+
 	public static boolean isNearbyParticle(Particle particle) {
 		if (particle == null || config == null || !config.prioritizeNearbyParticles || config.nearbyParticleDistance <= 0) {
+			return false;
+		}
+		double radius = config.nearbyParticleDistance;
+		return isNearbyParticle(particle, radius * radius);
+	}
+
+	public static boolean isNearbyParticle(Particle particle, double radiusSquared) {
+		if (particle == null || radiusSquared <= 0.0) {
 			return false;
 		}
 		Minecraft client = Minecraft.getInstance();
@@ -66,8 +95,15 @@ public final class FPSTuneClient implements ClientModInitializer {
 			return false;
 		}
 
-		double radius = config.nearbyParticleDistance;
-		return client.player.distanceToSqr(particle.getBoundingBox().getCenter()) <= radius * radius;
+		// Compute the existing bounding-box center directly to avoid allocating a Vec3.
+		var bounds = particle.getBoundingBox();
+		double centerX = (bounds.minX + bounds.maxX) * 0.5;
+		double centerY = (bounds.minY + bounds.maxY) * 0.5;
+		double centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
+		double deltaX = client.player.getX() - centerX;
+		double deltaY = client.player.getY() - centerY;
+		double deltaZ = client.player.getZ() - centerZ;
+		return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ <= radiusSquared;
 	}
 
 	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
