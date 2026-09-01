@@ -14,7 +14,7 @@ FPS Tune is a client-only Fabric mod. The runtime path is intentionally limited 
 | `FPSTuneRenderPolicy` | Applies the master switch and independent controller gates without touching Minecraft state. |
 | `ParticleAdmissionBudget` | Applies the total per-tick limit and optional nearby-particle reserve, and provides an immutable per-tick runtime snapshot for the particle mixin. |
 | `ParticleAdmissionMetrics` | Holds non-persistent, client-thread current-tick admission counters for diagnostics. |
-| `AdaptiveParticleBudgetController` | Adjusts the total particle budget from recent local frame times with bounded steps, hysteresis, and cooldowns. |
+| `AdaptiveParticleBudgetController` | Adjusts the total particle budget from recent local frame times and particle pressure with bounded steps, hysteresis, and cooldowns. |
 | `ParticleEngineMixin` | Connects the particle controller to the client particle engine at the version-checked injection points. |
 | `LevelRendererMixin` | Connects the weather controller to the client weather render pass at its version-checked boundary. |
 | `ModMenuIntegration` | Exposes the optional in-game configuration entrypoint without adding runtime behavior outside the client. |
@@ -34,9 +34,9 @@ Adaptive frame-time sampling stays in the target-specific `FPSTuneHud` bridge be
 
 1. Fabric invokes `FPSTuneClient` on the client.
 2. FPS Tune loads local configuration and initializes the render policies.
-3. At `ParticleEngine.tick` head, the particle mixin captures one client-thread admission snapshot. Each `add` call reuses that state, rejects particles immediately after the total budget is full, classifies nearby particles only when capacity remains, and updates detailed current-tick counters only when diagnostics are enabled.
+3. At `ParticleEngine.tick` head, the particle mixin captures one client-thread admission snapshot. Each `add` call reuses that state, records lightweight pressure attempts for Adaptive mode, rejects particles immediately after the total budget is full, classifies nearby particles only when capacity remains, and updates detailed current-tick counters only when diagnostics are enabled.
 4. The weather mixin observes the client weather render pass.
-5. The target-specific HUD bridge samples local render intervals for Adaptive mode and reads the counters for the optional diagnostics overlay.
+5. The target-specific HUD bridge samples local render intervals and the current-tick pressure snapshot for Adaptive mode, then reads the detailed counters for the optional diagnostics overlay.
 6. Mod Menu, when installed, can open a simple profile-first settings screen and an optional Advanced settings screen; both edit a draft copy and save only on confirmation from the main screen.
 7. Enabled controllers apply deterministic local limits; disabled controllers pass through vanilla behavior.
 8. Configuration changes are saved locally and apply to later client ticks and render passes.
