@@ -65,13 +65,20 @@ public final class FPSTuneClient implements ClientModInitializer {
 		if (particle == null || config == null || !config.prioritizeNearbyParticles || config.nearbyParticleDistance <= 0) {
 			return false;
 		}
+		double radius = config.nearbyParticleDistance;
+		return isNearbyParticle(particle, radius * radius);
+	}
+
+	public static boolean isNearbyParticle(Particle particle, double radiusSquared) {
+		if (particle == null || radiusSquared <= 0.0) {
+			return false;
+		}
 		Minecraft client = Minecraft.getInstance();
 		if (client.player == null) {
 			return false;
 		}
 
-		double radius = config.nearbyParticleDistance;
-		return client.player.distanceToSqr(particle.getBoundingBox().getCenter()) <= radius * radius;
+		return client.player.distanceToSqr(particle.getBoundingBox().getCenter()) <= radiusSquared;
 	}
 
 	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
