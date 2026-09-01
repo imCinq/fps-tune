@@ -61,6 +61,27 @@ public final class FPSTuneClient implements ClientModInitializer {
 		return config;
 	}
 
+	/**
+	 * Resolves the Adaptive target from the configured client FPS limit when
+	 * Auto is selected. The numeric setting remains the fallback for unlimited
+	 * or unavailable limits.
+	 */
+	public static int effectiveAdaptiveTargetFps(FPSTuneConfig currentConfig) {
+		if (currentConfig == null) {
+			return 120;
+		}
+		int fallback = Math.max(30, Math.min(currentConfig.adaptiveTargetFps, 360));
+		if (!currentConfig.adaptiveTargetAuto) {
+			return fallback;
+		}
+
+		Minecraft client = Minecraft.getInstance();
+		int configuredLimit = client.options.framerateLimit().get();
+		return configuredLimit > 0
+				? Math.max(30, Math.min(configuredLimit, 360))
+				: fallback;
+	}
+
 	public static boolean isNearbyParticle(Particle particle) {
 		if (particle == null || config == null || !config.prioritizeNearbyParticles || config.nearbyParticleDistance <= 0) {
 			return false;
