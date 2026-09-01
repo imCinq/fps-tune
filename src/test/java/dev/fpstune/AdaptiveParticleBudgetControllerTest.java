@@ -102,13 +102,13 @@ final class AdaptiveParticleBudgetControllerTest {
 		for (int index = 0; index < 3; index++) {
 			AdaptiveParticleBudgetController.observeFrameMillis(30.0, config, 100, pressured());
 		}
-		assertEquals(270, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
+		assertEquals(225, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
 
 		AdaptiveParticleBudgetController.observeFrameMillis(8.0, config, 60, pressured());
 
 		AdaptiveParticleBudgetController.Snapshot snapshot =
 				AdaptiveParticleBudgetController.snapshot(config);
-		assertEquals(270, snapshot.currentBudget());
+		assertEquals(225, snapshot.currentBudget());
 		assertEquals(60, snapshot.targetFps());
 		assertEquals(8.0, snapshot.smoothedFrameTimeMillis());
 	}
