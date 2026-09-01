@@ -48,6 +48,14 @@ The compatibility profiles are declared in `gradle/versions/`, with matching met
 - Keep dependency and GitHub Action changes reviewable, pinned where the repository already requires pinning, and documented when they affect compatibility.
 - Keep release artifacts reproducible from a clean checkout and use the same verified build output across release destinations.
 
+## Changelog style
+
+Use the project's simple patch-notes style for future release entries:
+
+- Start with a clear `## <Project> v<version>` heading.
+- Use a short, easy-to-scan bullet list; emoji are welcome, and bold key Minecraft targets or major features when useful.
+- Cover user-visible additions, improvements, experimental or visual trade-offs, removals, compatibility, and fixes as applicable.
+- Keep claims tied to verified behavior and avoid universal performance promises.
 ## Tests
 
 Committed tests should cover critical behavior, compatibility-sensitive logic, and high-value regressions. Current coverage includes admission-budget boundaries, nearby-priority behavior, bounded Adaptive streaks and cooldowns, diagnostics metrics, independently disabled controllers, configuration recovery, atomic writes, legacy configuration defaults, render-policy behavior, and a large-particle admission simulation.
