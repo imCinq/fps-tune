@@ -7,6 +7,8 @@
 - 🛡️ Made the nearby reserve follow the current budget so low Adaptive budgets retain general particle capacity.
 - 🧰 Fixed Advanced settings reset behavior so it no longer overwrites the master switch, weather, or diagnostics choices.
 - 📊 Skipped detailed admission counters unless the diagnostics overlay is enabled.
+- 🎯 Made Adaptive mode lower the budget only when slow frames coincide with particle pressure; unrelated slow frames now hold the budget.
+- 📈 Added lightweight pressure tracking for Adaptive mode without enabling detailed HUD counters.
 - ✅ Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
 
 ## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
