@@ -15,7 +15,7 @@ FPS Tune is disabled by default. Its settings control only local client renderin
 | `diagnosticsHudEnabled` | `false` | Shows local current-tick particle counters and controller status in the HUD. |
 | `adaptiveParticleBudgetEnabled` | `false` | Adjusts the particle budget from recent local frame times when particle pressure is present. |
 | `adaptiveTargetAuto` | `true` | Follows Minecraft's configured client FPS limit when Adaptive mode is enabled. |
-| `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback when Auto cannot read a finite client limit, clamped to `30..360`. |
+| `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback when the client limit is unavailable, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lower bound for the Adaptive-mode budget, clamped to `0..10000`. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Upper bound for the Adaptive-mode budget, clamped to `0..10000`. |
 | `weatherRenderingEnabled` | `true` | Keeps the vanilla weather render pass enabled while FPS Tune is active. |
