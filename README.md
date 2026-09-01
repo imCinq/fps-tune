@@ -69,7 +69,7 @@ The complete setting reference, defaults, file format, migration behavior, and U
 | `nearbyParticleReserve` | `100` | Configured upper bound for nearby admissions; the effective reserve is capped at half the current budget. |
 | `nearbyParticleDistance` | `16` | Distance in blocks used to classify a particle as nearby. |
 | `diagnosticsHudEnabled` | `false` | Shows local current-tick admission counters in the HUD. |
-| `adaptiveParticleBudgetEnabled` | `false` | Slowly adjusts the particle budget toward the target FPS. |
+| `adaptiveParticleBudgetEnabled` | `false` | Adjusts the particle budget toward the target FPS when slow frames coincide with particle pressure. |
 | `adaptiveTargetFps` | `120` | Target FPS used by Adaptive mode, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lowest Adaptive-mode particle budget. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Highest Adaptive-mode particle budget. |
@@ -77,7 +77,7 @@ The complete setting reference, defaults, file format, migration behavior, and U
 
 Mod Menu is optional. The FPS Tune details pane provides a long-form, plain-language overview of what it changes, what it leaves untouched, how to get started, and the intentional visual trade-off. The Configure screen uses performance profiles and keeps only the most useful visual options in view; individual particle and automatic-adjustment controls are available under Advanced settings. Done on the main screen saves settings; Back returns from Advanced settings, while Cancel and Escape on the main screen discard edits. `F6` toggles only the master switch and saves immediately.
 
-Adaptive mode is off by default. When enabled, it starts from the fixed particle budget, lowers that budget after sustained slow frames, and raises it slowly after sustained healthy frames. It never changes the FPS cap, render distance, weather setting, world simulation, or server behavior.
+Adaptive mode is off by default. When enabled, it starts from the fixed particle budget, lowers that budget only after sustained slow frames coincide with particle pressure, and raises it slowly after sustained healthy frames. Slow frames with little particle pressure hold the current budget. It never changes the FPS cap, render distance, weather setting, world simulation, or server behavior.
 
 ## Compatibility and server rules
 
