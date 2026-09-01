@@ -104,6 +104,38 @@ final class FPSTuneConfigTest {
 	}
 
 	@Test
+	void resetAdvancedSettingsPreservesBasicSettings() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.diagnosticsHudEnabled = true;
+		config.weatherRenderingEnabled = false;
+		config.particleAdmissionEnabled = false;
+		config.maxParticlesPerTick = 512;
+		config.prioritizeNearbyParticles = false;
+		config.nearbyParticleReserve = 180;
+		config.nearbyParticleDistance = 24;
+		config.adaptiveParticleBudgetEnabled = true;
+		config.adaptiveTargetFps = 144;
+		config.adaptiveMinParticlesPerTick = 80;
+		config.adaptiveMaxParticlesPerTick = 1_800;
+
+		config.resetAdvancedSettings();
+
+		assertTrue(config.enabled);
+		assertTrue(config.diagnosticsHudEnabled);
+		assertFalse(config.weatherRenderingEnabled);
+		assertTrue(config.particleAdmissionEnabled);
+		assertEquals(300, config.maxParticlesPerTick);
+		assertTrue(config.prioritizeNearbyParticles);
+		assertEquals(100, config.nearbyParticleReserve);
+		assertEquals(16, config.nearbyParticleDistance);
+		assertFalse(config.adaptiveParticleBudgetEnabled);
+		assertEquals(120, config.adaptiveTargetFps);
+		assertEquals(100, config.adaptiveMinParticlesPerTick);
+		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
+	}
+
+	@Test
 	void clampKeepsAdaptiveSettingsInsideSafeBoundsAndOrdersBudget() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.adaptiveTargetFps = 10;
