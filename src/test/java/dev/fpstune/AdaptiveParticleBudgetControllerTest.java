@@ -19,14 +19,43 @@ final class AdaptiveParticleBudgetControllerTest {
 		FPSTuneConfig config = adaptiveConfig();
 		AdaptiveParticleBudgetController.reset(config);
 
-		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		for (int index = 0; index < 15; index++) {
-			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		}
 
 		AdaptiveParticleBudgetController.Snapshot snapshot = AdaptiveParticleBudgetController.snapshot(config);
 		assertEquals(270, snapshot.currentBudget());
 		assertEquals(AdaptiveParticleBudgetController.Direction.DECREASING, snapshot.direction());
+	}
+
+	@Test
+	void slowFramesWithoutParticlePressureHoldTheBudget() {
+		FPSTuneConfig config = adaptiveConfig();
+		AdaptiveParticleBudgetController.reset(config);
+
+		for (int index = 0; index < 100; index++) {
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+		}
+
+		AdaptiveParticleBudgetController.Snapshot snapshot = AdaptiveParticleBudgetController.snapshot(config);
+		assertEquals(300, snapshot.currentBudget());
+		assertEquals(AdaptiveParticleBudgetController.Direction.HOLDING, snapshot.direction());
+	}
+
+	@Test
+	void nearBudgetAttemptsCountAsPressureWithoutTotalRejection() {
+		FPSTuneConfig config = adaptiveConfig();
+		AdaptiveParticleBudgetController.reset(config);
+		ParticleAdmissionMetrics.PressureSnapshot pressure =
+				new ParticleAdmissionMetrics.PressureSnapshot(225, 300, 0);
+
+		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressure);
+		for (int index = 0; index < 15; index++) {
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressure);
+		}
+
+		assertEquals(270, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
 	}
 
 	@Test
@@ -66,12 +95,12 @@ final class AdaptiveParticleBudgetControllerTest {
 		FPSTuneConfig config = adaptiveConfig();
 		AdaptiveParticleBudgetController.reset(config);
 
-		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		for (int index = 0; index < 15; index++) {
-			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		}
 		for (int index = 0; index < 30; index++) {
-			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		}
 
 		assertEquals(270, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
@@ -135,9 +164,9 @@ final class AdaptiveParticleBudgetControllerTest {
 		FPSTuneConfig config = adaptiveConfig();
 		AdaptiveParticleBudgetController.reset(config);
 
-		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+		AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		for (int index = 0; index < 14; index++) {
-			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config);
+			AdaptiveParticleBudgetController.observeFrameMillis(20.0, config, pressured());
 		}
 		assertEquals(270, AdaptiveParticleBudgetController.effectiveBudget(config));
 
@@ -145,6 +174,10 @@ final class AdaptiveParticleBudgetControllerTest {
 
 		assertEquals(600, AdaptiveParticleBudgetController.effectiveBudget(config));
 		assertEquals(-1.0, AdaptiveParticleBudgetController.snapshot(config).smoothedFrameTimeMillis());
+	}
+
+	private static ParticleAdmissionMetrics.PressureSnapshot pressured() {
+		return new ParticleAdmissionMetrics.PressureSnapshot(300, 300, 1);
 	}
 
 	private static FPSTuneConfig adaptiveConfig() {
