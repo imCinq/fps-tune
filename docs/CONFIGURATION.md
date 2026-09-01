@@ -13,7 +13,7 @@ FPS Tune is disabled by default. Its settings control only local client renderin
 | `nearbyParticleReserve` | `100` | Configured upper bound for nearby admissions; the effective reserve is capped at half the current budget. |
 | `nearbyParticleDistance` | `16` | Radius in blocks used to classify a particle as nearby. |
 | `diagnosticsHudEnabled` | `false` | Shows local current-tick particle counters and controller status in the HUD. |
-| `adaptiveParticleBudgetEnabled` | `false` | Adjusts the particle budget from recent local frame times. |
+| `adaptiveParticleBudgetEnabled` | `false` | Adjusts the particle budget from recent local frame times when particle pressure is present. |
 | `adaptiveTargetFps` | `120` | Target FPS for Adaptive mode, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lower bound for the Adaptive-mode budget, clamped to `0..10000`. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Upper bound for the Adaptive-mode budget, clamped to `0..10000`. |
@@ -73,7 +73,7 @@ The nearby classification is calculated on the client from the local player posi
 
 When `diagnosticsHudEnabled=true`, the HUD shows whether FPS Tune is enabled, the current-tick admitted and rejected counts, the nearby admitted count and reserve, the current fixed/adaptive budget, and whether weather rendering is vanilla or suppressed. When the overlay is disabled, detailed admission counters are not updated in the particle hot path. It is hidden while a screen is open and is off by default. It does not show an active-particle count because the current controller intentionally limits admissions rather than owning particle lifetime/removal.
 
-When `adaptiveParticleBudgetEnabled=true`, the controller starts at the fixed `maxParticlesPerTick` value clamped into the adaptive range. It tracks recent in-world render intervals locally. A smoothed frame time more than 10% above the target for 15 consecutive observations lowers the budget by about 10%; a smoothed frame time below 85% of the target for 60 consecutive observations raises it by about 10%. A 30-frame cooldown follows an adjustment. The value always stays between the configured adaptive minimum and maximum. Intervals longer than 250 ms are ignored so opening a menu or switching away from the client does not cause a sudden budget collapse.
+When `adaptiveParticleBudgetEnabled=true`, the controller starts at the fixed `maxParticlesPerTick` value clamped into the adaptive range. It tracks recent in-world render intervals and lightweight particle-pressure signals locally. A smoothed frame time more than 10% above the target lowers the budget only after 15 consecutive observations with particle pressure: at least 75% of the current budget was attempted, or the total budget was rejected. Slow frames with little particle pressure hold the budget. A smoothed frame time below 85% of the target for 60 consecutive observations raises it by about 10%. A 30-frame cooldown follows an adjustment. The value always stays between the configured adaptive minimum and maximum. Intervals longer than 250 ms are ignored so opening a menu or switching away from the client does not cause a sudden budget collapse. Pressure tracking remains active for Adaptive mode even when detailed diagnostics are disabled.
 
 When `enabled=true` and `weatherRenderingEnabled=false`, FPS Tune skips the local weather render pass. Rain and snow still exist in the world and are still simulated; only their client-side rendering is suppressed.
 
