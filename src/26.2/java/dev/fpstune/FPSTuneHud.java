@@ -32,6 +32,7 @@ public final class FPSTuneHud {
 			AdaptiveParticleBudgetController.observeFrame(
 					System.nanoTime(),
 					config,
+					FPSTuneClient.effectiveAdaptiveTargetFps(config),
 					ParticleAdmissionMetrics.pressureSnapshot()
 				);
 		}
