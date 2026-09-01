@@ -25,6 +25,26 @@ final class ParticleAdmissionMetricsTest {
 	}
 
 	@Test
+	void pressureTrackingCapturesAttemptsAndTotalBudgetRejections() {
+		ParticleAdmissionMetrics.beginTick(true, 300);
+		ParticleAdmissionMetrics.recordPressureAttempt();
+		ParticleAdmissionMetrics.recordPressureAttempt();
+		ParticleAdmissionMetrics.recordPressureRejectionAtTotalBudget();
+
+		assertEquals(
+				new ParticleAdmissionMetrics.PressureSnapshot(2, 300, 1),
+				ParticleAdmissionMetrics.pressureSnapshot()
+		);
+
+		ParticleAdmissionMetrics.beginTick(false, 300);
+		ParticleAdmissionMetrics.recordPressureAttempt();
+		assertEquals(
+				new ParticleAdmissionMetrics.PressureSnapshot(0, 0, 0),
+				ParticleAdmissionMetrics.pressureSnapshot()
+		);
+	}
+
+	@Test
 	void beginningATickClearsThePreviousSnapshot() {
 		ParticleAdmissionMetrics.recordAccepted(true);
 		ParticleAdmissionMetrics.recordRejected(true);
