@@ -9,6 +9,11 @@
 - 📊 Skipped detailed admission counters unless the diagnostics overlay is enabled.
 - 🎯 Made Adaptive mode lower the budget only when slow frames coincide with particle pressure; unrelated slow frames now hold the budget.
 - 📈 Added lightweight pressure tracking for Adaptive mode without enabling detailed HUD counters.
+- 🎯 Added an Auto Adaptive target that follows Minecraft's configured FPS cap, with the numeric target retained as a fallback.
+- 🚨 Added a pressure-gated emergency response that cuts the particle budget by 25% after sustained frame times above 2x the target.
+- 🧮 Removed the temporary center-vector allocation from nearby-particle classification while preserving the existing bounding-box semantics.
+- 🧭 Simplified Advanced Mod Menu organization with grouped, dependency-aware controls and a compact Auto target selector.
+
 - ✅ Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
 
 ## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
