@@ -59,6 +59,61 @@ final class AdaptiveParticleBudgetControllerTest {
 	}
 
 	@Test
+	void severePressuredFramesTriggerAQuarterBudgetCut() {
+		FPSTuneConfig config = adaptiveConfig();
+		config.maxParticlesPerTick = 1_000;
+		config.adaptiveMinParticlesPerTick = 100;
+		config.adaptiveMaxParticlesPerTick = 2_000;
+		config.adaptiveTargetFps = 100;
+		config.clamp();
+		AdaptiveParticleBudgetController.reset(config);
+
+		for (int index = 0; index < 3; index++) {
+			AdaptiveParticleBudgetController.observeFrameMillis(30.0, config, pressured());
+		}
+
+		AdaptiveParticleBudgetController.Snapshot snapshot =
+				AdaptiveParticleBudgetController.snapshot(config);
+		assertEquals(750, snapshot.currentBudget());
+		assertEquals(AdaptiveParticleBudgetController.Direction.DECREASING, snapshot.direction());
+	}
+
+	@Test
+	void severeFramesWithoutParticlePressureHoldTheBudget() {
+		FPSTuneConfig config = adaptiveConfig();
+		config.maxParticlesPerTick = 1_000;
+		config.adaptiveTargetFps = 100;
+		config.clamp();
+		AdaptiveParticleBudgetController.reset(config);
+
+		for (int index = 0; index < 20; index++) {
+			AdaptiveParticleBudgetController.observeFrameMillis(30.0, config);
+		}
+
+		assertEquals(1_000, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
+	}
+
+	@Test
+	void changingTheEffectiveAutoTargetPreservesTheCurrentBudget() {
+		FPSTuneConfig config = adaptiveConfig();
+		config.adaptiveTargetAuto = true;
+		AdaptiveParticleBudgetController.reset(config);
+
+		for (int index = 0; index < 3; index++) {
+			AdaptiveParticleBudgetController.observeFrameMillis(30.0, config, 100, pressured());
+		}
+		assertEquals(270, AdaptiveParticleBudgetController.snapshot(config).currentBudget());
+
+		AdaptiveParticleBudgetController.observeFrameMillis(8.0, config, 60, pressured());
+
+		AdaptiveParticleBudgetController.Snapshot snapshot =
+				AdaptiveParticleBudgetController.snapshot(config);
+		assertEquals(270, snapshot.currentBudget());
+		assertEquals(60, snapshot.targetFps());
+		assertEquals(8.0, snapshot.smoothedFrameTimeMillis());
+	}
+
+	@Test
 	void movesUpOnlyAfterAHealthyStreak() {
 		FPSTuneConfig config = adaptiveConfig();
 		AdaptiveParticleBudgetController.reset(config);
