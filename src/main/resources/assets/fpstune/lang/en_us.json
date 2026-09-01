@@ -43,6 +43,6 @@
   "option.fpstune.adaptive_minimum.value": "%s particles",
   "option.fpstune.adaptive_maximum": "Maximum limit",
   "option.fpstune.adaptive_maximum.value": "%s particles",
-  "button.fpstune.reset": "Reset all settings",
-  "button.fpstune.reset.tooltip": "Restore every FPS Tune option to its default. Changes apply when you press Done."
+  "button.fpstune.reset": "Reset advanced settings",
+  "button.fpstune.reset.tooltip": "Restore particle and Adaptive settings to their defaults. Basic-screen choices remain unchanged until you press Done."
 }
