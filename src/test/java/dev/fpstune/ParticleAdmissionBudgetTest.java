@@ -118,15 +118,30 @@ final class ParticleAdmissionBudgetTest {
 	}
 
 	@Test
-	void priorityReserveCannotIncreaseTheTotalBudget() {
+	void priorityReserveIsCappedAtHalfOfTheCurrentBudget() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.maxParticlesPerTick = 4;
 		config.nearbyParticleReserve = 99;
 
-		assertEquals(4, ParticleAdmissionBudget.effectivePriorityReserve(config));
-		assertTrue(ParticleAdmissionBudget.allows(0, 0, true, config));
+		assertEquals(2, ParticleAdmissionBudget.effectivePriorityReserve(config));
+		assertTrue(ParticleAdmissionBudget.allows(1, 0, false, config));
+		assertFalse(ParticleAdmissionBudget.allows(2, 0, false, config));
+		assertTrue(ParticleAdmissionBudget.allows(2, 0, true, config));
 		assertFalse(ParticleAdmissionBudget.allows(4, 4, true, config));
+	}
+
+	@Test
+	void nearbyReserveScalesDownAtLowEffectiveBudgets() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.maxParticlesPerTick = 100;
+		config.nearbyParticleReserve = 100;
+
+		assertEquals(50, ParticleAdmissionBudget.effectivePriorityReserve(config));
+		assertTrue(ParticleAdmissionBudget.allows(49, 0, false, config));
+		assertFalse(ParticleAdmissionBudget.allows(50, 0, false, config));
+		assertTrue(ParticleAdmissionBudget.allows(50, 0, true, config));
 	}
 
 	@Test
@@ -152,6 +167,38 @@ final class ParticleAdmissionBudgetTest {
 		assertFalse(ParticleAdmissionBudget.allows(100, 0, false, config, 200));
 		assertTrue(ParticleAdmissionBudget.allows(100, 0, true, config, 200));
 		assertFalse(ParticleAdmissionBudget.allows(200, 100, true, config, 200));
+	}
+
+	@Test
+	void runtimeSnapshotCapturesOneTickOfAdmissionState() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.particleAdmissionEnabled = true;
+		config.maxParticlesPerTick = 300;
+		config.prioritizeNearbyParticles = true;
+		config.nearbyParticleReserve = 100;
+		config.nearbyParticleDistance = 16;
+		config.diagnosticsHudEnabled = true;
+
+		ParticleAdmissionBudget.RuntimeSnapshot snapshot = ParticleAdmissionBudget.snapshot(config);
+
+		assertTrue(snapshot.limitsParticles());
+		assertEquals(300, snapshot.totalBudget());
+		assertEquals(100, snapshot.effectivePriorityReserve());
+		assertTrue(snapshot.prioritizeNearbyParticles());
+		assertEquals(256.0, snapshot.nearbyRadiusSquared());
+		assertFalse(snapshot.adaptiveEnabled());
+		assertTrue(snapshot.detailedMetricsEnabled());
+
+		config.maxParticlesPerTick = 4;
+		config.prioritizeNearbyParticles = false;
+		config.diagnosticsHudEnabled = false;
+
+		assertEquals(300, snapshot.totalBudget());
+		assertTrue(snapshot.prioritizeNearbyParticles());
+		assertTrue(snapshot.detailedMetricsEnabled());
+		assertTrue(ParticleAdmissionBudget.allows(299, 0, true, snapshot));
+		assertFalse(ParticleAdmissionBudget.allows(300, 0, true, snapshot));
 	}
 
 	@Test
