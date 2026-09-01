@@ -16,7 +16,7 @@ FPS Tune is a client-only Fabric mod. The runtime path is intentionally limited 
 | `ParticleAdmissionMetrics` | Holds non-persistent, client-thread current-tick admission counters for diagnostics. |
 | `AdaptiveParticleBudgetController` | Adjusts the total particle budget from recent local frame times and particle pressure with bounded steps, hysteresis, and cooldowns. |
 | `ParticleEngineMixin` | Connects the particle controller to the client particle engine at the version-checked injection points. |
-| `LevelRendererMixin` | Connects the weather controller to the client precipitation renderer at the version-checked boundary without suppressing world-border geometry. |
+| `LevelRendererMixin` / `WeatherEffectRendererMixin` | Connects the weather controller to the version-specific precipitation boundary: `LevelRenderer.renderSnowAndRain` on 1.21.1 and `WeatherEffectRenderer.render` on 1.21.11/26.2, without suppressing world-border geometry. |
 | `ModMenuIntegration` | Exposes the optional in-game configuration entrypoint without adding runtime behavior outside the client. |
 | `FPSTuneConfigScreen` | Provides the simple profile-first settings screen, edits a copied configuration, and persists it only after an explicit Done action. |
 | `FPSTuneAdvancedConfigScreen` | Provides optional individual particle and automatic-adjustment controls without crowding the main settings screen. |
