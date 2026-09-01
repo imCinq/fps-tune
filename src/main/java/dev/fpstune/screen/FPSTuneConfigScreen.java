@@ -127,6 +127,7 @@ public final class FPSTuneConfigScreen extends Screen {
 		config.nearbyParticleReserve = profile.nearbyParticleReserve;
 		config.nearbyParticleDistance = profile.nearbyParticleDistance;
 		config.adaptiveParticleBudgetEnabled = profile.adaptiveParticleBudgetEnabled;
+		config.adaptiveTargetAuto = profile.adaptiveTargetAuto;
 		config.adaptiveTargetFps = profile.adaptiveTargetFps;
 		config.adaptiveMinParticlesPerTick = profile.adaptiveMinParticlesPerTick;
 		config.adaptiveMaxParticlesPerTick = profile.adaptiveMaxParticlesPerTick;
@@ -169,6 +170,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				100,
 				16,
 				false,
+				true,
 				120,
 				100,
 				2_000
@@ -180,6 +182,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				true,
 				100,
 				16,
+				true,
 				true,
 				120,
 				100,
@@ -193,6 +196,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				100,
 				16,
 				false,
+				true,
 				120,
 				100,
 				2_000
@@ -205,6 +209,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				0,
 				0,
 				false,
+				true,
 				120,
 				0,
 				0
@@ -217,6 +222,7 @@ public final class FPSTuneConfigScreen extends Screen {
 		private final int nearbyParticleReserve;
 		private final int nearbyParticleDistance;
 		private final boolean adaptiveParticleBudgetEnabled;
+		private final boolean adaptiveTargetAuto;
 		private final int adaptiveTargetFps;
 		private final int adaptiveMinParticlesPerTick;
 		private final int adaptiveMaxParticlesPerTick;
@@ -229,6 +235,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				int nearbyParticleReserve,
 				int nearbyParticleDistance,
 				boolean adaptiveParticleBudgetEnabled,
+				boolean adaptiveTargetAuto,
 				int adaptiveTargetFps,
 				int adaptiveMinParticlesPerTick,
 				int adaptiveMaxParticlesPerTick
@@ -240,6 +247,7 @@ public final class FPSTuneConfigScreen extends Screen {
 			this.nearbyParticleReserve = nearbyParticleReserve;
 			this.nearbyParticleDistance = nearbyParticleDistance;
 			this.adaptiveParticleBudgetEnabled = adaptiveParticleBudgetEnabled;
+			this.adaptiveTargetAuto = adaptiveTargetAuto;
 			this.adaptiveTargetFps = adaptiveTargetFps;
 			this.adaptiveMinParticlesPerTick = adaptiveMinParticlesPerTick;
 			this.adaptiveMaxParticlesPerTick = adaptiveMaxParticlesPerTick;
@@ -252,7 +260,8 @@ public final class FPSTuneConfigScreen extends Screen {
 					&& config.nearbyParticleReserve == nearbyParticleReserve
 					&& config.nearbyParticleDistance == nearbyParticleDistance
 					&& config.adaptiveParticleBudgetEnabled == adaptiveParticleBudgetEnabled
-					&& config.adaptiveTargetFps == adaptiveTargetFps
+					&& (!adaptiveParticleBudgetEnabled || config.adaptiveTargetAuto == adaptiveTargetAuto)
+					&& (!adaptiveParticleBudgetEnabled || config.adaptiveTargetFps == adaptiveTargetFps)
 					&& config.adaptiveMinParticlesPerTick == adaptiveMinParticlesPerTick
 					&& config.adaptiveMaxParticlesPerTick == adaptiveMaxParticlesPerTick;
 		}
