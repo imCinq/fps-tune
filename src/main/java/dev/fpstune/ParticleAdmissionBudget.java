@@ -205,5 +205,9 @@ public final class ParticleAdmissionBudget {
 		public boolean limitsParticles() {
 			return masterEnabled && particleAdmissionEnabled;
 		}
+
+		public boolean pressureTrackingEnabled() {
+			return limitsParticles() && adaptiveEnabled;
+		}
 	}
 }
