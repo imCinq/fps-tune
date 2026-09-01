@@ -12,7 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
-	@Inject(method = "addWeatherPass", at = @At("HEAD"), cancellable = true)
+	/**
+	 * Current targets put precipitation and world-border geometry in the same
+	 * weather pass. Cancel only precipitation so world-border effects remain
+	 * visible when Rain and Snow is disabled.
+	 */
+	@Inject(method = "renderWeather", at = @At("HEAD"), cancellable = true)
 	private void fpstune$limitWeatherRendering(
 			FrameGraphBuilder frameGraphBuilder,
 			GpuBufferSlice gpuBufferSlice,
