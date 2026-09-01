@@ -7,6 +7,8 @@ import dev.fpstune.config.FPSTuneConfig;
  */
 public final class ParticleAdmissionBudget {
 	private static final int PRIORITY_RESERVE_PERCENT = 50;
+	private static final RuntimeSnapshot NO_LIMIT_SNAPSHOT =
+			new RuntimeSnapshot(false, false, 0, 0, false, 0.0, false, false);
 
 	private ParticleAdmissionBudget() {
 	}
@@ -17,23 +19,14 @@ public final class ParticleAdmissionBudget {
 	 */
 	public static RuntimeSnapshot snapshot(FPSTuneConfig config) {
 		if (config == null) {
-			return new RuntimeSnapshot(false, false, 0, 0, false, 0.0, false, false);
+			return NO_LIMIT_SNAPSHOT;
 		}
 
 		boolean masterEnabled = config.enabled;
 		boolean particleAdmissionEnabled = config.particleAdmissionEnabled;
 		boolean adaptiveEnabled = config.adaptiveParticleBudgetEnabled;
 		if (!masterEnabled || !particleAdmissionEnabled) {
-			return new RuntimeSnapshot(
-					masterEnabled,
-					particleAdmissionEnabled,
-					0,
-					0,
-					false,
-					0.0,
-					adaptiveEnabled,
-					false
-			);
+			return NO_LIMIT_SNAPSHOT;
 		}
 
 		int totalBudget = Math.max(0, AdaptiveParticleBudgetController.effectiveBudget(config));
