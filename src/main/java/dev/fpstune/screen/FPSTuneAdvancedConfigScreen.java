@@ -178,7 +178,7 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 	}
 
 	private void resetDefaults() {
-		draftConfig.copyFrom(new FPSTuneConfig());
+		draftConfig.resetAdvancedSettings();
 		rebuildWidgets();
 	}
 
