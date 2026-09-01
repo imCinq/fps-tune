@@ -11,7 +11,7 @@ public final class AdaptiveParticleBudgetController {
 	private static final double SLOW_FRAME_THRESHOLD = 1.10;
 	private static final double HEALTHY_FRAME_THRESHOLD = 0.85;
 	private static final int PARTICLE_PRESSURE_PERCENT = 75;
-	private static final double EMERGENCY_FRAME_THRESHOLD = 1.75;
+	private static final double EMERGENCY_FRAME_THRESHOLD = 2.00;
 	private static final int EMERGENCY_FRAME_STREAK_LIMIT = 3;
 	private static final int EMERGENCY_STEP_PERCENT = 25;
 	private static final int SLOW_FRAME_STREAK_LIMIT = 15;
@@ -76,6 +76,7 @@ public final class AdaptiveParticleBudgetController {
 		hasLastFrame = false;
 		smoothedFrameTimeMillis = -1.0;
 		slowFrameStreak = 0;
+		emergencyFrameStreak = 0;
 		healthyFrameStreak = 0;
 		cooldownFrames = 0;
 		direction = Direction.HOLDING;
