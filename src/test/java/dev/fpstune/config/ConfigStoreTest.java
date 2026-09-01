@@ -169,7 +169,7 @@ final class ConfigStoreTest {
 		Path configDirectory = runDirectory.resolve("config");
 		Files.createDirectories(configDirectory);
 		Files.writeString(configDirectory.resolve("fpstune.properties"),
-				"configVersion=4\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
+				"configVersion=5\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
 
 		FPSTuneConfig config = ConfigStore.load(runDirectory);
 
