@@ -12,7 +12,7 @@ FPS Tune is a client-only Fabric mod. The runtime path is intentionally limited 
 | `FPSTuneConfig` | Defines the master switch, module switches, configuration version, and particle-policy defaults. |
 | `ConfigStore` | Loads, validates, and atomically persists local configuration. |
 | `FPSTuneRenderPolicy` | Applies the master switch and independent controller gates without touching Minecraft state. |
-| `ParticleAdmissionBudget` | Applies the total per-tick limit and optional nearby-particle reserve with deterministic boundaries. |
+| `ParticleAdmissionBudget` | Applies the total per-tick limit and optional nearby-particle reserve, and provides an immutable per-tick runtime snapshot for the particle mixin. |
 | `ParticleAdmissionMetrics` | Holds non-persistent, client-thread current-tick admission counters for diagnostics. |
 | `AdaptiveParticleBudgetController` | Adjusts the total particle budget from recent local frame times with bounded steps, hysteresis, and cooldowns. |
 | `ParticleEngineMixin` | Connects the particle controller to the client particle engine at the version-checked injection points. |
@@ -34,7 +34,7 @@ Adaptive frame-time sampling stays in the target-specific `FPSTuneHud` bridge be
 
 1. Fabric invokes `FPSTuneClient` on the client.
 2. FPS Tune loads local configuration and initializes the render policies.
-3. The particle mixin observes particle-engine admission on the client thread, asks the adaptive controller for the current total budget, classifies nearby particles from the local player position, and records current-tick counters.
+3. At `ParticleEngine.tick` head, the particle mixin captures one client-thread admission snapshot. Each `add` call reuses that state, rejects particles immediately after the total budget is full, classifies nearby particles only when capacity remains, and updates detailed current-tick counters only when diagnostics are enabled.
 4. The weather mixin observes the client weather render pass.
 5. The target-specific HUD bridge samples local render intervals for Adaptive mode and reads the counters for the optional diagnostics overlay.
 6. Mod Menu, when installed, can open a simple profile-first settings screen and an optional Advanced settings screen; both edit a draft copy and save only on confirmation from the main screen.
