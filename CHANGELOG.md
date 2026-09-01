@@ -1,5 +1,12 @@
 # Changelog
 
+## FPS Tune v1.2.2
+
+- 🌧️ Fixed disabling Rain and Snow so Map/World Border effects remain visible on Minecraft 1.21.11 and 26.2.
+- 🎯 Moved the modern weather gate onto the precipitation renderer instead of cancelling the full weather pass.
+- 🧩 Added separate version-specific weather mixins for the 1.21.11 and 26.2 render signatures.
+- ✅ Kept the Minecraft 1.21.1 weather bridge unchanged.
+
 ## FPS Tune v1.2.1
 
 - 🧱 Fixed disabling Rain and Snow on current targets from also hiding Map/World Border effects by limiting the weather gate to precipitation rendering only.

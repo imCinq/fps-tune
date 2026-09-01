@@ -4,6 +4,6 @@
   "compatibilityLevel": "JAVA_25",
   "client": [
     "ParticleEngineMixin",
-    "LevelRendererMixin"
+    "WeatherEffectRendererMixin"
   ]
 }

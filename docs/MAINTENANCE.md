@@ -25,7 +25,7 @@ Update Minecraft compatibility in a dedicated branch and pull request:
 2. Select the correct Loom plugin: remapping Loom for Minecraft 1.21.11 and older, non-remapping Loom for Minecraft 26.1 and newer.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
-5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
+5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
 6. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
 7. Add tests for any changed admission behavior and build every supported target.
 8. Run a graphical client in a GitHub-hosted or other owner-approved remote environment with FPS Tune disabled and enabled for the new target.
