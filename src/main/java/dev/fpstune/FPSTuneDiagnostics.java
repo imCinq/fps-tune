@@ -48,6 +48,9 @@ public final class FPSTuneDiagnostics {
 				? safeMetrics.priorityAcceptedThisTick() + " admitted / "
 						+ ParticleAdmissionBudget.effectivePriorityReserve(config, displayedBudget) + " reserve"
 				: "off";
+		String targetState = config.adaptiveTargetAuto
+				? "Auto->" + safeAdaptive.targetFps() + " FPS"
+				: safeAdaptive.targetFps() + " FPS";
 		String budgetState = !particleLimiterEnabled
 				? "inactive"
 				: config.adaptiveParticleBudgetEnabled
@@ -58,9 +61,6 @@ public final class FPSTuneDiagnostics {
 		String weatherState = controlsEnabled && !config.weatherRenderingEnabled
 				? "suppressed"
 				: "vanilla";
-		String targetState = config.adaptiveTargetAuto
-				? "Auto->" + safeAdaptive.targetFps() + " FPS"
-				: safeAdaptive.targetFps() + " FPS";
 
 		return new String[]{
 				"FPS Tune: " + (controlsEnabled ? "ON" : "OFF"),
