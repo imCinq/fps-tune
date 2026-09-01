@@ -28,7 +28,10 @@ public abstract class ParticleEngineMixin {
 		fpstune$priorityAcceptedThisTick = 0;
 		fpstune$priorityForCurrentAdmission = false;
 		fpstune$runtimeSnapshot = ParticleAdmissionBudget.snapshot(FPSTuneClient.config());
-		ParticleAdmissionMetrics.beginTick();
+		ParticleAdmissionMetrics.beginTick(
+				fpstune$runtimeSnapshot.pressureTrackingEnabled(),
+				fpstune$runtimeSnapshot.totalBudget()
+		);
 	}
 
 	@Inject(method = "add", at = @At("HEAD"), cancellable = true)
@@ -37,8 +40,14 @@ public abstract class ParticleEngineMixin {
 		if (!snapshot.limitsParticles()) {
 			return;
 		}
+		if (snapshot.pressureTrackingEnabled()) {
+			ParticleAdmissionMetrics.recordPressureAttempt();
+		}
 
 		if (fpstune$acceptedThisTick >= snapshot.totalBudget()) {
+			if (snapshot.pressureTrackingEnabled()) {
+				ParticleAdmissionMetrics.recordPressureRejectionAtTotalBudget();
+			}
 			if (snapshot.detailedMetricsEnabled()) {
 				boolean priority = snapshot.prioritizeNearbyParticles()
 						&& FPSTuneClient.isNearbyParticle(particle, snapshot.nearbyRadiusSquared());
