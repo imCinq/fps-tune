@@ -52,12 +52,15 @@ public final class FPSTuneDiagnostics {
 				? "inactive"
 				: config.adaptiveParticleBudgetEnabled
 						? safeAdaptive.currentBudget() + " (" + safeAdaptive.minimumBudget() + "-"
-								+ safeAdaptive.maximumBudget() + " @ " + safeAdaptive.targetFps() + " FPS, "
+								+ safeAdaptive.maximumBudget() + " @ " + targetState + ", "
 								+ safeAdaptive.direction().label() + ")"
 						: displayedBudget + " fixed";
 		String weatherState = controlsEnabled && !config.weatherRenderingEnabled
 				? "suppressed"
 				: "vanilla";
+		String targetState = config.adaptiveTargetAuto
+				? "Auto->" + safeAdaptive.targetFps() + " FPS"
+				: safeAdaptive.targetFps() + " FPS";
 
 		return new String[]{
 				"FPS Tune: " + (controlsEnabled ? "ON" : "OFF"),
