@@ -1,31 +1,40 @@
 # Changelog
 
+## FPS Tune v1.2.3
+
+-ø<¯ Fixed Adaptive Auto mode so timestamp sampling consistently uses Minecraft's effective FPS target instead of the numeric fallback.
+- ÿ’ Preserved the learned Adaptive particle budget while inventory, chat, and other menus are open, while retaining full resets for world and configuration changes.
+-øýÊ Cached diagnostics HUD lines and text widths until displayed values change, with width invalidation when client resources reload.
+-&¡ Skipped nearby-particle distance checks when the effective reserve is zero and detailed diagnostics are disabled, without changing admission behavior.
+-  Added deterministic regressions for target forwarding, menu pauses, HUD caching, resource reloads, and zero-reserve admission.
+
+
 ## FPS Tune v1.2.2
 
-- ðŸŒ§ï¸ Fixed disabling Rain and Snow so Map/World Border effects remain visible on Minecraft 1.21.11 and 26.2.
-- ðŸŽ¯ Moved the modern weather gate onto the precipitation renderer instead of cancelling the full weather pass.
-- ðŸ§© Added separate version-specific weather mixins for the 1.21.11 and 26.2 render signatures.
-- âœ… Kept the Minecraft 1.21.1 weather bridge unchanged.
+- ÿÿ Fixed disabling Rain and Snow so Map/World Border effects remain visible on Minecraft 1.21.11 and 26.2.
+-ø<¯ Moved the modern weather gate onto the precipitation renderer instead of cancelling the full weather pass.
+- ÿé Added separate version-specific weather mixins for the 1.21.11 and 26.2 render signatures.
+-  Kept the Minecraft 1.21.1 weather bridge unchanged.
 
 ## FPS Tune v1.2.1
 
-- ðŸ§± Fixed disabling Rain and Snow on current targets from also hiding Map/World Border effects by limiting the weather gate to precipitation rendering only.
+-ø>ñ Fixed disabling Rain and Snow on current targets from also hiding Map/World Border effects by limiting the weather gate to precipitation rendering only.
 
 ## FPS Tune v1.2.0 - 2026-09-01
 
-- âš¡ Cached per-tick particle-controller state to reduce repeated configuration work during admissions.
-- ðŸš« Rejected particles immediately once the current total budget is full, avoiding unnecessary nearby classification.
-- ðŸ›¡ï¸ Made the nearby reserve follow the current budget so low Adaptive budgets retain general particle capacity.
-- ðŸ§° Fixed Advanced settings reset behavior so it no longer overwrites the master switch, weather, or diagnostics choices.
-- ðŸ“Š Skipped detailed admission counters unless the diagnostics overlay is enabled.
-- ðŸŽ¯ Made Adaptive mode lower the budget only when slow frames coincide with particle pressure; unrelated slow frames now hold the budget.
-- ðŸ“ˆ Added lightweight pressure tracking for Adaptive mode without enabling detailed HUD counters.
-- ðŸŽ¯ Added an Auto Adaptive target that follows Minecraft's configured FPS cap, with the numeric target retained as a fallback.
-- ðŸš¨ Added a pressure-gated emergency response that cuts the particle budget by 25% after sustained frame times above 2x the target.
-- ðŸ§® Removed the temporary center-vector allocation from nearby-particle classification while preserving the existing bounding-box semantics.
-- ðŸ§­ Simplified Advanced Mod Menu organization with grouped, dependency-aware controls and a compact Auto target selector.
+-&¡ Cached per-tick particle-controller state to reduce repeated configuration work during admissions.
+- ÿ« Rejected particles immediately once the current total budget is full, avoiding unnecessary nearby classification.
+-ø=ÿ Made the nearby reserve follow the current budget so low Adaptive budgets retain general particle capacity.
+-ø>ð Fixed Advanced settings reset behavior so it no longer overwrites the master switch, weather, or diagnostics choices.
+-ø=Ê Skipped detailed admission counters unless the diagnostics overlay is enabled.
+-ø<¯ Made Adaptive mode lower the budget only when slow frames coincide with particle pressure; unrelated slow frames now hold the budget.
+- ýÈ Added lightweight pressure tracking for Adaptive mode without enabling detailed HUD counters.
+- ÿ¯ Added an Auto Adaptive target that follows Minecraft's configured FPS cap, with the numeric target retained as a fallback.
+-ø=¨ Added a pressure-gated emergency response that cuts the particle budget by 25% after sustained frame times above 2x the target.
+- ÿî Removed the temporary center-vector allocation from nearby-particle classification while preserving the existing bounding-box semantics.
+-øÿí Simplified Advanced Mod Menu organization with grouped, dependency-aware controls and a compact Auto target selector.
 
-- âœ… Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
+-' Added regression coverage for cached admission state, dynamic reserves, and scoped settings reset behavior.
 
 ## 1.1.1 for Minecraft 1.21.1 - 2026-08-31
 
