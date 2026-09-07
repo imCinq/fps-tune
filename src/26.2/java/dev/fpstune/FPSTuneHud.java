@@ -24,7 +24,7 @@ public final class FPSTuneHud {
 	private static void extract(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
 		Minecraft client = Minecraft.getInstance();
 		FPSTuneConfig config = FPSTuneClient.config();
-		if (client.player == null || client.gui.screen() != null) {
+		if (client.player == null) {
 			AdaptiveParticleBudgetController.reset(config);
 			return;
 		}
