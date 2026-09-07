@@ -25,7 +25,11 @@ public final class FPSTuneHud {
 		Minecraft client = Minecraft.getInstance();
 		FPSTuneConfig config = FPSTuneClient.config();
 		if (client.player == null || client.gui.screen() != null) {
-			AdaptiveParticleBudgetController.pause(config);
+			AdaptiveParticleBudgetController.reset(config);
+			return;
+		}
+		if (client.gui.screen() != null) {
+			AdaptiveParticleBudgetController.pause();
 			return;
 		}
 		if (FPSTuneRenderPolicy.shouldLimitParticles(config) && config.adaptiveParticleBudgetEnabled) {
