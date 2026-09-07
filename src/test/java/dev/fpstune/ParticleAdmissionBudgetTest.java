@@ -202,6 +202,42 @@ final class ParticleAdmissionBudgetTest {
 	}
 
 	@Test
+	void zeroEffectiveReserveSkipsNearbyClassificationWithoutChangingAdmission() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.particleAdmissionEnabled = true;
+		config.maxParticlesPerTick = 1;
+		config.prioritizeNearbyParticles = true;
+		config.nearbyParticleReserve = 100;
+		config.diagnosticsHudEnabled = false;
+
+		ParticleAdmissionBudget.RuntimeSnapshot snapshot = ParticleAdmissionBudget.snapshot(config);
+
+		assertEquals(0, snapshot.effectivePriorityReserve());
+		assertFalse(snapshot.prioritizeNearbyParticles());
+		assertTrue(ParticleAdmissionBudget.allows(0, 0, false, snapshot));
+		assertTrue(ParticleAdmissionBudget.allows(0, 0, true, snapshot));
+		assertFalse(ParticleAdmissionBudget.allows(1, 0, false, snapshot));
+		assertFalse(ParticleAdmissionBudget.allows(1, 0, true, snapshot));
+	}
+
+	@Test
+	void diagnosticsStillClassifyNearbyParticlesAtZeroEffectiveReserve() {
+		FPSTuneConfig config = new FPSTuneConfig();
+		config.enabled = true;
+		config.particleAdmissionEnabled = true;
+		config.maxParticlesPerTick = 1;
+		config.prioritizeNearbyParticles = true;
+		config.nearbyParticleReserve = 100;
+		config.diagnosticsHudEnabled = true;
+
+		ParticleAdmissionBudget.RuntimeSnapshot snapshot = ParticleAdmissionBudget.snapshot(config);
+
+		assertEquals(0, snapshot.effectivePriorityReserve());
+		assertTrue(snapshot.prioritizeNearbyParticles());
+	}
+
+	@Test
 	void disablingPriorityRestoresTheFullBudgetForGeneralParticles() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
