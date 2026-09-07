@@ -30,14 +30,16 @@ public final class ParticleAdmissionBudget {
 		}
 
 		int totalBudget = Math.max(0, AdaptiveParticleBudgetController.effectiveBudget(config));
-		boolean prioritizeNearbyParticles = config.prioritizeNearbyParticles;
+		int effectivePriorityReserve = effectivePriorityReserve(config, totalBudget);
+		boolean prioritizeNearbyParticles = config.prioritizeNearbyParticles
+				&& (effectivePriorityReserve > 0 || config.diagnosticsHudEnabled);
 		int nearbyDistance = Math.max(0, Math.min(config.nearbyParticleDistance, 64));
 		double nearbyRadiusSquared = (double) nearbyDistance * nearbyDistance;
 		return new RuntimeSnapshot(
 				masterEnabled,
 				particleAdmissionEnabled,
 				totalBudget,
-				effectivePriorityReserve(config, totalBudget),
+				effectivePriorityReserve,
 				prioritizeNearbyParticles,
 				nearbyRadiusSquared,
 				adaptiveEnabled,
