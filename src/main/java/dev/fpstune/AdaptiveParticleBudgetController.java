@@ -157,7 +157,7 @@ public final class AdaptiveParticleBudgetController {
 			clearStreaks();
 			return;
 		}
-		observeFrameMillis(frameTimeNanos / 1_000_000.0, config, pressure);
+		observeFrameMillis(frameTimeNanos / 1_000_000.0, config, effectiveTargetFps, pressure);
 	}
 
 	/** Package-private deterministic hook used by unit tests. */
