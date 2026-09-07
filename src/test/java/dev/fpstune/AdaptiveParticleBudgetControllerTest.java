@@ -231,6 +231,44 @@ final class AdaptiveParticleBudgetControllerTest {
 		assertEquals(-1.0, AdaptiveParticleBudgetController.snapshot(config).smoothedFrameTimeMillis());
 	}
 
+	@Test
+	void timestampFramesUseTheEffectiveAutoTargetForSlowFrames() {
+		FPSTuneConfig config = adaptiveConfig();
+		config.adaptiveTargetAuto = true;
+		config.adaptiveTargetFps = 120;
+		AdaptiveParticleBudgetController.reset(config);
+
+		long nowNanos = 1_000_000_000L;
+		AdaptiveParticleBudgetController.observeFrame(nowNanos, config, 60, pressured());
+		for (int index = 0; index < 15; index++) {
+			nowNanos += 20_000_000L;
+			AdaptiveParticleBudgetController.observeFrame(nowNanos, config, 60, pressured());
+		}
+
+		AdaptiveParticleBudgetController.Snapshot snapshot = AdaptiveParticleBudgetController.snapshot(config);
+		assertEquals(270, snapshot.currentBudget());
+		assertEquals(60, snapshot.targetFps());
+	}
+
+	@Test
+	void timestampFramesUseTheEffectiveAutoTargetForHealthyFrames() {
+		FPSTuneConfig config = adaptiveConfig();
+		config.adaptiveTargetAuto = true;
+		config.adaptiveTargetFps = 60;
+		AdaptiveParticleBudgetController.reset(config);
+
+		long nowNanos = 1_000_000_000L;
+		AdaptiveParticleBudgetController.observeFrame(nowNanos, config, 120, pressured());
+		for (int index = 0; index < 60; index++) {
+			nowNanos += 5_000_000L;
+			AdaptiveParticleBudgetController.observeFrame(nowNanos, config, 120, pressured());
+		}
+
+		AdaptiveParticleBudgetController.Snapshot snapshot = AdaptiveParticleBudgetController.snapshot(config);
+		assertEquals(330, snapshot.currentBudget());
+		assertEquals(120, snapshot.targetFps());
+	}
+
 	private static ParticleAdmissionMetrics.PressureSnapshot pressured() {
 		return new ParticleAdmissionMetrics.PressureSnapshot(300, 300, 1);
 	}
