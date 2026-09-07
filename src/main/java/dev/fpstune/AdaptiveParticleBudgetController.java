@@ -84,11 +84,15 @@ public final class AdaptiveParticleBudgetController {
 	}
 
 	/**
-	 * Clears the frame clock and returns the adaptive budget to its configured
-	 * starting point when no in-world render frames are available.
+	 * Clears frame timing when in-world rendering is temporarily paused without
+	 * discarding the learned adaptive budget.
 	 */
-	public static void pause(FPSTuneConfig config) {
-		reset(config);
+	public static void pause() {
+		lastFrameNanos = 0L;
+		hasLastFrame = false;
+		smoothedFrameTimeMillis = -1.0;
+		clearStreaks();
+		direction = Direction.HOLDING;
 	}
 
 	public static int effectiveBudget(FPSTuneConfig config) {
