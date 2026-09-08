@@ -68,7 +68,7 @@ jobs:
         run: |
           artifact=$(find neoforge-26.2/build/libs -type f -name "fps-tune-neoforge-26.2-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
-          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"1.2.3\""
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"1.2.4\""
           unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
           unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
           ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
