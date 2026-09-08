@@ -38,8 +38,8 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install Minecraft 1.21.1 with Fabric Loader 0.16.14 or newer, Minecraft 1.21.11 with Fabric Loader 0.18.6 or newer, or Minecraft 26.2 with Fabric Loader 0.19.3 or newer.
-2. Install the Fabric API build matching that Minecraft version.
+1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, or NeoForge 26.2.0.77+ for NeoForge 26.2.
+2. Install the matching Fabric API for Fabric targets; NeoForge 26.2 uses the NeoForge loader dependency instead.
 3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
 
    | Minecraft | Matching artifact |
@@ -110,7 +110,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted matrix builds all three targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all four targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
@@ -119,3 +119,5 @@ FPS Tune does not silently update itself or contact an update server. A maintain
 ## NeoForge 26.2
 
 The 1.2.3 release also includes `fps-tune-neoforge-26.2-1.2.3.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
+
+The four 1.2.3 primary artifacts are: `fps-tune-mc1.21.1-1.2.3.jar` (1.21.1 Fabric), `fps-tune-mc1.21.11-1.2.3.jar` (1.21.11 Fabric), `fps-tune-1.2.3.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.3.jar` (26.2 NeoForge).
