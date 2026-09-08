@@ -56,7 +56,7 @@ jobs:
       - name: Build Minecraft 26.2 artifacts
         run: |
           mkdir -p release
-          ./gradlew clean build --no-daemon -Pmc_target=26.2
+          ./gradlew :clean :build --no-daemon -Pmc_target=26.2
           cp build/libs/fps-tune-*.jar release/
 
       - name: Build Minecraft 26.2 NeoForge artifact
@@ -72,9 +72,9 @@ jobs:
 
       - name: Build Minecraft 1.21.1 and 1.21.11 artifacts and audit
         run: |
-          ./gradlew clean build --no-daemon -Pmc_target=1.21.1
+          ./gradlew :clean :build --no-daemon -Pmc_target=1.21.1
           cp build/libs/fps-tune-mc1.21.1-*.jar release/
-          ./gradlew clean build --no-daemon -Pmc_target=1.21.11
+          ./gradlew :clean :build --no-daemon -Pmc_target=1.21.11
           cp build/libs/fps-tune-mc1.21.11-*.jar release/
           ./scripts/audit-client-only.sh 26.2
           ./scripts/audit-client-only.sh 1.21.1

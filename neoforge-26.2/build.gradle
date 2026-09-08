@@ -26,6 +26,10 @@ base {
     archivesName = 'fps-tune-neoforge-26.2'
 }
 
+repositories {
+    mavenCentral()
+}
+
 sourceSets {
     main {
         java {

@@ -47,7 +47,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Build and test
-        run: ./gradlew clean build --no-daemon -Pmc_target=${{ matrix.mc_target }}
+        run: ./gradlew :clean :build --no-daemon -Pmc_target=${{ matrix.mc_target }}
 
       - name: Audit client-only boundaries
         run: ./scripts/audit-client-only.sh ${{ matrix.mc_target }}
