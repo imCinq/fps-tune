@@ -20,7 +20,7 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 | `ModMenuIntegration` | Exposes the optional in-game configuration entrypoint without adding runtime behavior outside the client. |
 | `FPSTuneConfigScreen` | Provides the simple profile-first settings screen, edits a copied configuration, and persists it only after an explicit Done action. |
 | `FPSTuneAdvancedConfigScreen` | Provides optional individual particle and automatic-adjustment controls without crowding the main settings screen. |
-| `FPSTuneHud` | Renders the optional local diagnostics overlay through the target version.s Fabric HUD API or NeoForge GUI-layer API. |
+| `FPSTuneHud` | Renders the optional local diagnostics overlay through the target version's Fabric HUD API or NeoForge GUI-layer API. |
 
 ## Versioned build layout
 
