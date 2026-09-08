@@ -4,7 +4,7 @@
   <img src="src/main/resources/assets/fpstune/icon.png" alt="FPS Tune logo" width="192">
 </p>
 
-FPS Tune is a client-side Fabric frame-time stability toolkit for Minecraft 1.21.1, 1.21.11, and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
+FPS Tune is a client-side Fabric and NeoForge frame-time stability toolkit for Minecraft 1.21.1, 1.21.11, and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
 
 It is designed to protect the floor of the frame-time graph during particle storms and weather-heavy scenes, not to promise a universal FPS increase or replace broad rendering optimizers.
 
@@ -12,12 +12,12 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 1.21.1, 1.21.11, and 26.2; separate JAR per version |
-| Loader | 1.21.1: 0.16.14+; 1.21.11: 0.18.6+; 26.2: 0.19.3+ |
+| Minecraft | 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge; separate JAR per target |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 26.2: 26.2.0.77+ |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 |
-| Required dependency | Fabric API |
-| Optional integration | Mod Menu |
+| Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for the NeoForge target |
+| Optional integration | Mod Menu on Fabric; native Mods screen on NeoForge |
 | License | MIT |
 
 ## What it changes
