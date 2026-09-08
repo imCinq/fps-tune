@@ -86,6 +86,7 @@ jobs:
           ./gradlew :clean :build --no-daemon -Pmc_target=1.21.11
           cp build/libs/fps-tune-mc1.21.11-*.jar release/
           ./scripts/audit-client-only.sh 26.2
+          ./scripts/audit-client-only.sh 26.2-neoforge
           ./scripts/audit-client-only.sh 1.21.1
           ./scripts/audit-client-only.sh 1.21.11
           ./scripts/audit-repository.sh
