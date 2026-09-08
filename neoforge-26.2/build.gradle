@@ -76,7 +76,7 @@ neoForge {
 }
 
 dependencies {
-    testImplementation platform("org.junit.jupiter:junit-bom:${rootProject.property('junit_version')}")
+    testImplementation platform("org.junit:junit-bom:${rootProject.property('junit_version')}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
