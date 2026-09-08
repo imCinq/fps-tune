@@ -1,6 +1,6 @@
 # FPS Tune
 
-FPS Tune is a client-side Fabric FPS and frame-time stability mod for Minecraft. It helps reduce long frame-time spikes during unusually heavy particle and weather scenes by limiting optional local rendering work.
+FPS Tune is a client-side Fabric and NeoForge FPS and frame-time stability mod for Minecraft. It helps reduce long frame-time spikes during unusually heavy particle and weather scenes by limiting optional local rendering work.
 
 FPS Tune is disabled by default. It changes only what your client renders; it does not change the world, server, gameplay, or network traffic.
 
@@ -24,7 +24,7 @@ Client-only does not mean server-approved. Check the current rules of every mult
 
 ## Installation
 
-1. Install Fabric Loader and the Fabric API version matching your Minecraft version.
+1. Install the loader matching your target: Fabric Loader plus matching Fabric API for Fabric targets, or NeoForge 26.2.0.77+ for the NeoForge target.
 2. Download the FPS Tune file for the exact Minecraft version you are running.
 3. Put that one file in the instance's `mods` folder and launch Minecraft.
 
@@ -36,7 +36,7 @@ Supported targets currently have separate files:
 | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
 | 26.2 | `fps-tune-<version>.jar` |
 
-Do not install both target files in the same instance. Mod Menu is optional; FPS Tune runs without it.
+Do not install both target files in the same instance. Mod Menu is optional on Fabric; the NeoForge build uses the native Mods screen, and FPS Tune runs without optional integrations.
 
 ## Settings
 
@@ -87,3 +87,7 @@ FPS Tune is designed to coexist with broad rendering optimizers, but a project-o
 ## License and privacy
 
 FPS Tune is released under the MIT License. It has no telemetry, analytics, custom networking, or in-mod updater. It is not affiliated with Mojang, Microsoft, or any multiplayer server.
+
+## Loader compatibility
+
+The 1.2.3 release has four exact target files: 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge. Select the file matching both Minecraft and loader. Never install the Fabric and NeoForge 26.2 files together.
