@@ -39,7 +39,7 @@ if [[ "$target" == "26.2-neoforge" ]]; then
 	grep -Fq 'modId="fpstune"' "$metadata_file"
 	grep -Fq 'displayURL="https://github.com/imCinq/fps-tune"' "$metadata_file"
 	grep -Fq 'issueTrackerURL="https://github.com/imCinq/fps-tune/issues"' "$metadata_file"
-	grep -Fq 'versionRange="\${minecraft_version_range}"' "$metadata_file"
+	grep -Fq 'versionRange="${minecraft_version_range}"' "$metadata_file"
 	grep -Fq 'logoFile="assets/fpstune/icon.png"' "$metadata_file"
 	grep -Fq 'config="fpstune.mixins.json"' "$metadata_file"
 else
