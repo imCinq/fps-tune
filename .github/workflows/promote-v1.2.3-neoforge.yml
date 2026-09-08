@@ -1,0 +1,72 @@
+name: Promote NeoForge asset for v1.2.3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_TAG: v1.2.3
+
+jobs:
+  add-neoforge:
+    name: Build and attach 26.2 NeoForge artifact
+    environment:
+      name: release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out merged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Java 25
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Verify release version
+        run: |
+          set -euo pipefail
+          release_version="${RELEASE_TAG#v}"
+          project_version=$(sed -n s/^mod_version=//p gradle.properties)
+          test "$release_version" = "$project_version"
+
+      - name: Build NeoForge artifact
+        run: ./gradlew :neoforge-26.2:clean :neoforge-26.2:build --no-daemon
+
+      - name: Verify and prepare NeoForge artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          artifact=$(find neoforge-26.2/build/libs -type f -name "fps-tune-neoforge-26.2-*.jar" ! -name "*-sources.jar" -print -quit)
+          test -n "$artifact"
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"1.2.3\""
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
+          unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
+          ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
+          mkdir -p release
+          artifact_name=$(basename "$artifact")
+          cp "$artifact" "release/$artifact_name"
+          gh release download "$RELEASE_TAG" --pattern SHA256SUMS.txt --dir release
+          sha256sum "release/$artifact_name" >> release/SHA256SUMS.txt
+
+      - name: Attach NeoForge artifact to v1.2.3
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          artifact=$(find release -maxdepth 1 -type f -name "fps-tune-neoforge-26.2-*.jar" -print -quit)
+          test -n "$artifact"
+          gh release upload "$RELEASE_TAG" "$artifact" release/SHA256SUMS.txt --clobber
