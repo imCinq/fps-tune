@@ -115,3 +115,7 @@ Use GitHub Actions for the complete verification checklist. Open a pull request 
 ## Updating FPS Tune
 
 FPS Tune does not silently update itself or contact an update server. A maintainer updates dependencies and Minecraft compatibility in source, runs the verification checklist, and publishes a tagged GitHub release. Players then replace the older JAR in their `mods` folder and keep only one FPS Tune version installed.
+
+## NeoForge 26.2
+
+The 1.2.3 release also includes `fps-tune-neoforge-26.2-1.2.3.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
