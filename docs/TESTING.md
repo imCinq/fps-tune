@@ -2,9 +2,9 @@
 
 ## Hosted deterministic checks
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds each supported target, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds all four supported target configurations, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
 
-The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for 1.21.1 and 1.21.11, and Java 25 for 26.2.
+The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for 1.21.1 and 1.21.11, and Java 25 for Fabric and NeoForge 26.2.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
@@ -20,7 +20,7 @@ Mixin changes require more than hosted unit tests and must be verified in a GitH
 
 ## Mod Menu settings screen
 
-When Mod Menu is present, repeat the click-through on each supported target's matching Mod Menu version:
+For Fabric targets with Mod Menu, repeat the click-through on each matching Mod Menu version. For NeoForge 26.2, repeat the same settings checks from the native Mods screen extension:
 
 1. Open the Mods screen, select FPS Tune, and open Configure.
 2. Confirm the FPS Tune details pane shows a wrapped long-form overview with clear sections for behavior, boundaries, setup, and the intentional visual trade-off.
@@ -43,8 +43,12 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 ## Hosted CI
 
-`.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the built artifact. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
+`.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
 ## Release verification
 
 `.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both verify annotated-tag provenance, a signed target commit reachable from `main`, the project version, and matching GitHub Release artifacts. Its manual promotion mode verifies the published 1.21.1 checksums and attaches those artifacts to the existing `v1.1.1` release. Use the verified output from that workflow for later manual distribution submissions.
+
+## NeoForge 26.2
+
+The NeoForge target must pass the isolated `:neoforge-26.2:build` task, the `26.2-neoforge` client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata.

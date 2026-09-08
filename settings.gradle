@@ -6,3 +6,5 @@ pluginManagement {
 }
 
 rootProject.name = "fps-tune"
+
+include(":neoforge-26.2")
