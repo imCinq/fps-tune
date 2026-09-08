@@ -49,6 +49,9 @@ sourceSets {
     test {
         java {
             srcDirs = [rootProject.file('src/test/java')]
+            // The shared UI test directly loads Minecraft Screen; Fabric target builds cover it,
+            // while NeoForge's isolated test classpath intentionally remains loader-neutral.
+            exclude 'dev/fpstune/screen/FPSTuneConfigScreenTest.java'
         }
     }
 }
