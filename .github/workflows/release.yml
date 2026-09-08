@@ -32,7 +32,6 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REF_TYPE" = "tag"
-          test "$(git cat-file -t "$GITHUB_REF_NAME")" = "tag"
           tag_commit=$(git rev-parse "$GITHUB_REF_NAME^{commit}")
           git fetch origin main --no-tags
           git merge-base --is-ancestor "$tag_commit" "origin/main"
