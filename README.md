@@ -47,6 +47,7 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
    | 1.21.1 | `fps-tune-mc1.21.1-<version>.jar` |
    | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
    | 26.2 | `fps-tune-<version>.jar` |
+   | 26.2 NeoForge | `fps-tune-neoforge-26.2-<version>.jar` |
 
    Do not install both target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
