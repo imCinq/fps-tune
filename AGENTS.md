@@ -34,7 +34,7 @@ The compatibility profiles are declared in `gradle/versions/`, with matching Fab
 | change runtime wiring, configuration, render controllers, mixins, or packaging | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | build, test, package, or verify the mod | [docs/TESTING.md](docs/TESTING.md) and [README.md](README.md) |
 | change a Minecraft, Fabric, Java, Gradle, or Action version | [docs/MAINTENANCE.md](docs/MAINTENANCE.md) and the matching profile in [gradle/versions](gradle/versions) |
-| change the distribution or release surface | [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) and [REPOSITORY_SETUP.md](REPOSITORY_SETUP.md) |
+| change the distribution or release surface | [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) and [docs/REPOSITORY_SETUP.md](docs/REPOSITORY_SETUP.md) |
 | add or change regression coverage | [src/test](src/test) and [docs/TESTING.md](docs/TESTING.md) |
 | work on a mixin target | [src/main/java/dev/fpstune/mixin](src/main/java/dev/fpstune/mixin) and the matching file in `src/<minecraft-version>/resources/` |
 
