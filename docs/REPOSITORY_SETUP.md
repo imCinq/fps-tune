@@ -48,4 +48,4 @@ For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create
 - Protect `v*` release tags from updates and deletion, and keep release workflows verifying annotated tags, verified target commits, and ancestry from `main`.
 - Treat the repository, issues, Actions logs, releases, and artifacts as public. Before each release, review them for private information, correct licensing, server-rule language, and matching distribution artifacts.
 
-See [AGENTS.md](AGENTS.md), [docs/MAINTENANCE.md](docs/MAINTENANCE.md), and [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the detailed project contract and release rules.
+See [AGENTS.md](../AGENTS.md), [MAINTENANCE.md](MAINTENANCE.md), and [DISTRIBUTION.md](DISTRIBUTION.md) for the detailed project contract and release rules.
