@@ -38,7 +38,17 @@ sourceSets {
                     rootProject.file('src/main/java'),
                     rootProject.file('src/1.21.1-neoforge/java')
             ]
-            exclude 'dev/fpstune/integration/ModMenuIntegration.java'
+            def excludedRootJavaSources = [
+                    'dev/fpstune/integration/ModMenuIntegration.java',
+                    'dev/fpstune/screen/FPSTuneConfigScreen.java',
+                    'dev/fpstune/screen/FPSTuneAdvancedConfigScreen.java'
+            ]
+            exclude { details ->
+                details.file.toPath().normalize().startsWith(rootProject.file('src/main/java').toPath().normalize())
+                        && excludedRootJavaSources.any {
+                            details.file.toPath().normalize() == rootProject.file("src/main/java/${it}").toPath().normalize()
+                        }
+            }
         }
         resources {
             srcDirs = [
