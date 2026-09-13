@@ -67,7 +67,9 @@ jobs:
         run: |
           artifact=$(find neoforge-26.2/build/libs -type f -name "fps-tune-neoforge-26.2-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
-          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"1.2.4\""
+          expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          test -n "$expected_version"
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"$expected_version\""
           unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
           unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
           ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
@@ -78,6 +80,17 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Build Minecraft 1.21.1 NeoForge artifact
+        run: |
+          ./gradlew :neoforge-1.21.1:clean :neoforge-1.21.1:build --no-daemon
+          cp neoforge-1.21.1/build/libs/fps-tune-neoforge-1.21.1-*.jar release/
+          artifact=$(find neoforge-1.21.1/build/libs -type f -name "fps-tune-neoforge-1.21.1-*.jar" ! -name "*-sources.jar" -print -quit)
+          test -n "$artifact"
+          expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"$expected_version\""
+          unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
+          ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
+
       - name: Build Minecraft 1.21.1 and 1.21.11 artifacts and audit
         run: |
           ./gradlew :clean :build --no-daemon -Pmc_target=1.21.1
@@ -87,6 +100,7 @@ jobs:
           ./scripts/audit-client-only.sh 26.2
           ./scripts/audit-client-only.sh 26.2-neoforge
           ./scripts/audit-client-only.sh 1.21.1
+          ./scripts/audit-client-only.sh 1.21.1-neoforge
           ./scripts/audit-client-only.sh 1.21.11
           ./scripts/audit-repository.sh
 

@@ -12,11 +12,11 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge; separate JAR per target |
-| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 26.2: 26.2.0.77+ |
+| Minecraft | 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, and 26.2 Fabric and NeoForge; separate JAR per target |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 1.21.1: 21.1.250+; NeoForge 26.2: 26.2.0.77+ |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 |
-| Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for the NeoForge target |
+| Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets |
 | Optional integration | Mod Menu on Fabric; native Mods screen on NeoForge |
 | License | MIT |
 
@@ -38,18 +38,19 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, or NeoForge 26.2.0.77+ for NeoForge 26.2.
-2. Install the matching Fabric API for Fabric targets; NeoForge 26.2 uses the NeoForge loader dependency instead.
+1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, NeoForge 21.1.250+ for NeoForge 1.21.1, or NeoForge 26.2.0.77+ for NeoForge 26.2.
+2. Install the matching Fabric API for Fabric targets; NeoForge targets use the NeoForge loader dependency instead.
 3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
 
    | Minecraft | Matching artifact |
    | --- | --- |
    | 1.21.1 | `fps-tune-mc1.21.1-<version>.jar` |
+   | 1.21.1 NeoForge | `fps-tune-neoforge-1.21.1-<version>.jar` |
    | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
    | 26.2 | `fps-tune-<version>.jar` |
    | 26.2 NeoForge | `fps-tune-neoforge-26.2-<version>.jar` |
 
-   Do not install both target JARs in one instance.
+   Do not install multiple target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
 5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune → Configure.
 
@@ -111,7 +112,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all four targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all five targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 

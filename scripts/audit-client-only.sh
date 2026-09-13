@@ -7,6 +7,9 @@ case "$target" in
 	26.2-neoforge)
 		resource_directory="src/26.2-neoforge/resources"
 		;;
+	1.21.1-neoforge)
+		resource_directory="src/1.21.1-neoforge/resources"
+		;;
 	26.2)
 		resource_directory="src/26.2/resources"
 		;;
@@ -22,7 +25,7 @@ case "$target" in
 		;;
 esac
 
-if [[ "$target" == "26.2-neoforge" ]]; then
+if [[ "$target" == *-neoforge ]]; then
 	metadata_file="$resource_directory/META-INF/neoforge.mods.toml"
 else
 	metadata_file="$resource_directory/fabric.mod.json"
@@ -35,7 +38,7 @@ if grep -RInE --include='*.java' "$prohibited_pattern" src; then
 	exit 1
 fi
 
-if [[ "$target" == "26.2-neoforge" ]]; then
+if [[ "$target" == *-neoforge ]]; then
 	grep -Fq 'modId="fpstune"' "$metadata_file"
 	grep -Fq 'displayURL="https://github.com/imCinq/fps-tune"' "$metadata_file"
 	grep -Fq 'issueTrackerURL="https://github.com/imCinq/fps-tune/issues"' "$metadata_file"

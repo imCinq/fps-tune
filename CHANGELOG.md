@@ -1,5 +1,12 @@
 # Changelog
 
+## FPS Tune v1.2.4
+
+- 🧩 Added a Minecraft **1.21.1 NeoForge** target using Java 21 and NeoForge 21.1.250.
+- 🛠️ Added native NeoForge startup, F6 keybinding, configuration screen, diagnostics HUD, resource-reload handling, and the existing 1.21.1 particle/weather mixins.
+- 🧪 Added hosted build, packaging, metadata, and client-only audit coverage while keeping graphical smoke testing required before release.
+
+
 ## FPS Tune v1.2.3
 
 - 🧩 Added a parallel Minecraft 26.2 NeoForge target while preserving the existing 1.21.1 Fabric, 1.21.11 Fabric, and 26.2 Fabric targets.

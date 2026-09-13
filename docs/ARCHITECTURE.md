@@ -24,7 +24,7 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 
 ## Versioned build layout
 
-The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; 1.21.1 provides the older string-category keybinding, HUD callback, and weather bridge, 1.21.11 provides its older keybinding/chat bridge and MultiBufferSource weather bridge, and 26.2 uses the newer client APIs and weather-state bridge. Each Fabric target owns `fabric.mod.json`; NeoForge owns `META-INF/neoforge.mods.toml`; every target owns its `fpstune.mixins.json`.
+The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; 1.21.1 provides the older string-category keybinding, HUD callback, and weather bridge, 1.21.11 provides its older keybinding/chat bridge and MultiBufferSource weather bridge, and 26.2 uses the newer client APIs and weather-state bridge. Each Fabric target owns `fabric.mod.json`; each NeoForge target owns `META-INF/neoforge.mods.toml`; every target owns its `fpstune.mixins.json`.
 
 Adaptive frame-time sampling and FPS-cap resolution stay in the target-specific `FPSTuneHud`/`FPSTuneClient` bridges because the HUD callbacks, drawing types, and client option mappings differ between supported Minecraft targets. The common adaptive controller receives only monotonic frame intervals, the resolved target, and pressure data; it never depends on Minecraft internals. A future patch that changes the HUD API should therefore require a narrow target-bridge update and target build, not a new renderer mixin.
 
@@ -61,6 +61,6 @@ The selected Fabric metadata or NeoForge TOML, icon, language resource, mixin co
 
 Keep each change close to the component it affects. Runtime behavior changes should update deterministic tests and, when the mixin boundary changes, the bytecode and graphical verification evidence described in `docs/TESTING.md`.
 
-## NeoForge 26.2 integration
+## NeoForge integration
 
-NeoForge 26.2 has a separate isolated build project because its ModDevGradle toolchain and loader metadata differ from the Fabric targets. Its entrypoint registers the F6 key mapping, diagnostics GUI layer, native configuration-screen extension, client tick handling, and resource-load cache invalidation through NeoForge events. It reuses the common configuration, policies, controllers, screens, tests, and client-only boundary while keeping loader-specific wiring and metadata out of the Fabric source sets.
+Each NeoForge version has a separate isolated build project because its ModDevGradle toolchain and loader metadata differ from the Fabric targets. Each entrypoint registers the F6 key mapping, diagnostics GUI layer, native configuration-screen extension, client tick handling, and resource-load cache invalidation through NeoForge events. It reuses the common configuration, policies, controllers, screens, tests, and client-only boundary while keeping loader-specific wiring and metadata out of the Fabric source sets.

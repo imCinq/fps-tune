@@ -22,7 +22,7 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 Update Minecraft compatibility in a dedicated branch and pull request:
 
 1. Add or update the matching profile in `gradle/versions/` with Minecraft, loader, API or NeoForge, build plugin, Java, mappings, and artifact settings documented as compatible by their official projects.
-2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2, or the isolated ModDevGradle NeoForge project for NeoForge 26.2.
+2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2, or an isolated ModDevGradle NeoForge project for NeoForge 1.21.1 or 26.2.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
 5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
@@ -51,4 +51,4 @@ There is no in-mod updater. Updating means downloading the new GitHub Release JA
 
 ## NeoForge target maintenance
 
-Keep `neoforge-26.2` isolated from the Fabric root build. Update `gradle/versions/26.2-neoforge.properties`, `src/26.2-neoforge/java`, `src/26.2-neoforge/resources`, and the NeoForge workflow together. Verify the exact NeoForge 26.2 API event signatures and packaged TOML before merging a loader-specific change.
+Keep `neoforge-1.21.1` and `neoforge-26.2` isolated from the Fabric root build. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
