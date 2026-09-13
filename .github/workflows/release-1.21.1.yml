@@ -54,12 +54,21 @@ jobs:
           project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           test "$GITHUB_REF_NAME" = "v${project_version}-mc1.21.1"
 
-      - name: Build Minecraft 1.21.1 artifact and audit
+      - name: Build Minecraft 1.21.1 Fabric and NeoForge artifacts and audit
         run: |
           mkdir -p release
           ./gradlew clean build --no-daemon -Pmc_target=1.21.1
           cp build/libs/fps-tune-mc1.21.1-*.jar release/
+          ./gradlew :neoforge-1.21.1:clean :neoforge-1.21.1:build --no-daemon
+          cp neoforge-1.21.1/build/libs/fps-tune-neoforge-1.21.1-*.jar release/
+          artifact=$(find neoforge-1.21.1/build/libs -type f -name "fps-tune-neoforge-1.21.1-*.jar" ! -name "*-sources.jar" -print -quit)
+          test -n "$artifact"
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"$project_version\""
+          unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
+          ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
           ./scripts/audit-client-only.sh 1.21.1
+          ./scripts/audit-client-only.sh 1.21.1-neoforge
           ./scripts/audit-repository.sh
 
       - name: Prepare release files
