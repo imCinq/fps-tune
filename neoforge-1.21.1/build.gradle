@@ -46,7 +46,8 @@ sourceSets {
             ]
             def excludedFabricBridgeSources = [
                     'dev/fpstune/FPSTuneClient.java',
-                    'dev/fpstune/FPSTuneHud.java'
+                    'dev/fpstune/FPSTuneHud.java',
+                    'dev/fpstune/mixin/LevelRendererMixin.java'
             ]
             exclude { details ->
                 def normalized = details.file.toPath().normalize()
