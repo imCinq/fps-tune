@@ -1,0 +1,71 @@
+package dev.fpstune;
+
+import dev.fpstune.config.FPSTuneConfig;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+public final class FPSTuneHud {
+    private static final FPSTuneDiagnosticsHudCache CACHE = new FPSTuneDiagnosticsHudCache();
+    private static final ResourceLocation HUD_ID = ResourceLocation.fromNamespaceAndPath(
+            FPSTuneClient.MOD_ID,
+            "diagnostics"
+    );
+
+    private FPSTuneHud() {
+    }
+
+    public static void register(RegisterGuiLayersEvent event) {
+        event.registerBelow(VanillaGuiLayers.CHAT, HUD_ID, FPSTuneHud::render);
+    }
+
+    public static void registerReloadListener(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> CACHE.invalidateWidths());
+    }
+
+    private static void render(GuiGraphics graphics, DeltaTracker tickCounter) {
+        Minecraft client = Minecraft.getInstance();
+        FPSTuneConfig config = FPSTuneClient.config();
+        if (client.player == null) {
+            AdaptiveParticleBudgetController.reset(config);
+            return;
+        }
+        if (client.screen != null) {
+            AdaptiveParticleBudgetController.pause();
+            return;
+        }
+        if (FPSTuneRenderPolicy.shouldLimitParticles(config) && config.adaptiveParticleBudgetEnabled) {
+            AdaptiveParticleBudgetController.observeFrame(
+                    System.nanoTime(),
+                    config,
+                    FPSTuneClient.effectiveAdaptiveTargetFps(config),
+                    ParticleAdmissionMetrics.pressureSnapshot()
+            );
+        }
+        if (!FPSTuneDiagnostics.shouldRender(config)) {
+            return;
+        }
+
+        FPSTuneDiagnosticsHudCache.View hud = CACHE.update(
+                config,
+                ParticleAdmissionMetrics.snapshot(),
+                AdaptiveParticleBudgetController.snapshot(config),
+                client.font::width
+        );
+        String[] lines = hud.lines();
+        int x = 6;
+        int y = 6;
+        int lineHeight = 10;
+        int width = hud.width();
+
+        graphics.fill(x - 4, y - 4, x + width + 4, y + lines.length * lineHeight + 3, 0x90000000);
+        for (int index = 0; index < lines.length; index++) {
+            graphics.drawString(client.font, lines[index], x, y + index * lineHeight, 0xFFFFFFFF, true);
+        }
+    }
+}
