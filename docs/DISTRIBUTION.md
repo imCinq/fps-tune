@@ -2,7 +2,7 @@
 
 ## Distribution policy
 
-GitHub Releases is the canonical source. The hosted release workflow builds one verified artifact for each supported target and publishes SHA-256 checksums for the same 1.2.3 release. Modrinth and CurseForge uploads must use those exact verified JARs; do not rebuild or rename them for platform submission.
+GitHub Releases is the canonical source. The hosted release workflow builds one verified artifact for each supported target and publishes SHA-256 checksums from the same immutable release tag. Modrinth and CurseForge uploads must use those exact verified JARs; do not rebuild or rename them for platform submission.
 
 ## Canonical listing information
 
@@ -12,9 +12,9 @@ GitHub Releases is the canonical source. The hosted release workflow builds one 
 - Category: Optimization
 - License: MIT
 - Environment: Client only
-- Minecraft targets: 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge
-- Java: 21 for 1.21.1/1.21.11 Fabric; 25 for 26.2 Fabric and NeoForge
-- Required dependency: matching Fabric API for Fabric targets; NeoForge loader for the NeoForge target
+- Minecraft targets: 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, and 26.2 Fabric and NeoForge
+- Java: 21 for 1.21.1 Fabric/NeoForge and 1.21.11 Fabric; 25 for 26.2 Fabric/NeoForge
+- Required dependency: matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets
 - Source and issue tracker: the public GitHub repository
 
 Use the copy-ready listing in [docs/MODRINTH_DESCRIPTION.md](MODRINTH_DESCRIPTION.md). It must identify the exact loader and Minecraft target for every file.
