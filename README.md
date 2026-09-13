@@ -52,7 +52,7 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
    Do not install multiple target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
-5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune!� Configure.
+5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune → Configure.
 
 The default particle budget is 300 admitted particles per client tick. Adaptive profiles use Auto to follow Minecraft's configured FPS cap; Advanced settings retain a numeric target for manual control or fallback. Nearby-particle prioritization uses a configured reserve of 100; the effective reserve is capped at half the current budget, so the default budget protects 100 nearby admissions and a 100-particle Adaptive budget protects 50. Weather rendering remains enabled unless you explicitly disable it in the settings, and the diagnostics HUD remains off by default.
 
@@ -99,7 +99,7 @@ In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/re
 | 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% | 6.65 ms | 5.63 ms | -15.3% |
 | 26.2 | 78.69 FPS | 102.78 FPS | +30.6% | 17.61 ms | 14.39 ms | -18.3% |
 
-Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observationsnot a universal FPS guaranteeand the enabled case intentionally renders fewer particles.
+Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
 
 A separate manual smoke test on Minecraft 26.2 used a repeating command block to emit 4,000 `minecraft:flame` particles per activation on an Apple M2 with Java 25.0.1. In the paired captures, the disabled case showed 38 FPS with a dense flame field, while the enabled case showed 58 FPS with materially fewer visible particles:
 
