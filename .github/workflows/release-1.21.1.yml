@@ -57,7 +57,7 @@ jobs:
       - name: Build Minecraft 1.21.1 Fabric and NeoForge artifacts and audit
         run: |
           mkdir -p release
-          ./gradlew clean build --no-daemon -Pmc_target=1.21.1
+          ./gradlew :clean :build --no-daemon -Pmc_target=1.21.1
           cp build/libs/fps-tune-mc1.21.1-*.jar release/
           ./gradlew :neoforge-1.21.1:clean :neoforge-1.21.1:build --no-daemon
           cp neoforge-1.21.1/build/libs/fps-tune-neoforge-1.21.1-*.jar release/
