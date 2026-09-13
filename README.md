@@ -12,11 +12,11 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge; separate JAR per target |
-| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 26.2: 26.2.0.77+ |
+| Minecraft | 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, and 26.2 Fabric and NeoForge; separate JAR per target |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 1.21.1: 21.1.250+; NeoForge 26.2: 26.2.0.77+ |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 |
-| Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for the NeoForge target |
+| Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets |
 | Optional integration | Mod Menu on Fabric; native Mods screen on NeoForge |
 | License | MIT |
 
@@ -38,20 +38,21 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, or NeoForge 26.2.0.77+ for NeoForge 26.2.
-2. Install the matching Fabric API for Fabric targets; NeoForge 26.2 uses the NeoForge loader dependency instead.
+1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, NeoForge 21.1.250+ for NeoForge 1.21.1, or NeoForge 26.2.0.77+ for NeoForge 26.2.
+2. Install the matching Fabric API for Fabric targets; NeoForge targets use the NeoForge loader dependency instead.
 3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
 
    | Minecraft | Matching artifact |
    | --- | --- |
    | 1.21.1 | `fps-tune-mc1.21.1-<version>.jar` |
+   | 1.21.1 NeoForge | `fps-tune-neoforge-1.21.1-<version>.jar` |
    | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
    | 26.2 | `fps-tune-<version>.jar` |
    | 26.2 NeoForge | `fps-tune-neoforge-26.2-<version>.jar` |
 
-   Do not install both target JARs in one instance.
+   Do not install multiple target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
-5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune → Configure.
+5. Press `F6` to toggle the master switch, or install the matching Mod Menu version and choose FPS Tune!� Configure.
 
 The default particle budget is 300 admitted particles per client tick. Adaptive profiles use Auto to follow Minecraft's configured FPS cap; Advanced settings retain a numeric target for manual control or fallback. Nearby-particle prioritization uses a configured reserve of 100; the effective reserve is capped at half the current budget, so the default budget protects 100 nearby admissions and a 100-particle Adaptive budget protects 50. Weather rendering remains enabled unless you explicitly disable it in the settings, and the diagnostics HUD remains off by default.
 
@@ -98,7 +99,7 @@ In a real local stress test on an Apple M2 (macOS 26.6.2, Java 25, no shaders/re
 | 1.21.11 | 210.10 FPS | 215.17 FPS | +2.4% | 6.65 ms | 5.63 ms | -15.3% |
 | 26.2 | 78.69 FPS | 102.78 FPS | +30.6% | 17.61 ms | 14.39 ms | -18.3% |
 
-Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observations—not a universal FPS guarantee—and the enabled case intentionally renders fewer particles.
+Before means FPS Tune was off; after means it was on. The lower p95 frame time is the part players are most likely to notice as smoother motion: the longer frames in the measured tail were less severe, even when the average-FPS gain was small. The test used four alternating phases in one client process, 120 warm-up frames and 600 measured render-loop intervals per phase, with the enabled phases capped at the default 300 particles per client tick. These are machine-specific extreme-workload observationsnot a universal FPS guaranteeand the enabled case intentionally renders fewer particles.
 
 A separate manual smoke test on Minecraft 26.2 used a repeating command block to emit 4,000 `minecraft:flame` particles per activation on an Apple M2 with Java 25.0.1. In the paired captures, the disabled case showed 38 FPS with a dense flame field, while the enabled case showed 58 FPS with materially fewer visible particles:
 
@@ -111,7 +112,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all four targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all five targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
