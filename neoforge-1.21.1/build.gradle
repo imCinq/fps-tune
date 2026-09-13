@@ -36,6 +36,7 @@ sourceSets {
         java {
             srcDirs = [
                     rootProject.file('src/main/java'),
+                    rootProject.file('src/1.21.1/java'),
                     rootProject.file('src/1.21.1-neoforge/java')
             ]
             def excludedRootJavaSources = [
@@ -43,11 +44,19 @@ sourceSets {
                     'dev/fpstune/screen/FPSTuneConfigScreen.java',
                     'dev/fpstune/screen/FPSTuneAdvancedConfigScreen.java'
             ]
+            def excludedFabricBridgeSources = [
+                    'dev/fpstune/FPSTuneClient.java',
+                    'dev/fpstune/FPSTuneHud.java'
+            ]
             exclude { details ->
-                details.file.toPath().normalize().startsWith(rootProject.file('src/main/java').toPath().normalize())
+                def normalized = details.file.toPath().normalize()
+                (normalized.startsWith(rootProject.file('src/main/java').toPath().normalize())
                         && excludedRootJavaSources.any {
-                            details.file.toPath().normalize() == rootProject.file("src/main/java/${it}").toPath().normalize()
-                        }
+                            normalized == rootProject.file("src/main/java/${it}").toPath().normalize()
+                        }) || (normalized.startsWith(rootProject.file('src/1.21.1/java').toPath().normalize())
+                        && excludedFabricBridgeSources.any {
+                            normalized == rootProject.file("src/1.21.1/java/${it}").toPath().normalize()
+                        })
             }
         }
         resources {
