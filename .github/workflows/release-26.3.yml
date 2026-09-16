@@ -1,0 +1,109 @@
+name: Release Minecraft 26.3
+
+on:
+  push:
+    tags:
+      - 'v*-mc26.3'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Build and stage Minecraft 26.3 Fabric draft release
+    environment:
+      name: release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify release tag provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_TYPE" = "tag"
+          test "$(git cat-file -t "$GITHUB_REF")" = "tag"
+          tag_commit=$(git rev-parse "${GITHUB_REF}^{commit}")
+          test "$(git rev-parse HEAD)" = "$tag_commit"
+          git fetch origin main --no-tags
+          git merge-base --is-ancestor "$tag_commit" "origin/main"
+          commit_verified=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${tag_commit}" --jq '.commit.verification.verified')
+          test "$commit_verified" = "true"
+
+      - name: Set up Java 25
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Verify target tag and project version
+        run: |
+          set -euo pipefail
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          test -n "$project_version"
+          test "$GITHUB_REF_NAME" = "v${project_version}-mc26.3"
+
+      - name: Build Minecraft 26.3 Fabric artifacts and audit
+        run: |
+          set -euo pipefail
+          ./gradlew :clean :build --no-daemon -Pmc_target=26.3
+          ./scripts/audit-client-only.sh 26.3
+          ./scripts/audit-repository.sh
+
+      - name: Verify packaged Fabric metadata and stage artifacts
+        run: |
+          set -euo pipefail
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          artifact="build/libs/fps-tune-mc26.3-${project_version}.jar"
+          sources="build/libs/fps-tune-mc26.3-${project_version}-sources.jar"
+          test -f "$artifact"
+          test -f "$sources"
+          unzip -p "$artifact" fabric.mod.json |
+            jq -e --arg version "$project_version" '
+              .id == "fpstune" and
+              .version == $version and
+              .environment == "client" and
+              .depends.minecraft == "26.3" and
+              .depends.java == ">=25" and
+              .icon == "assets/fpstune/icon.png"
+            ' >/dev/null
+          unzip -p "$artifact" assets/fpstune/icon.png >/dev/null
+          unzip -p "$artifact" fpstune.mixins.json |
+            jq -e '.required == true and .compatibilityLevel == "JAVA_25"' >/dev/null
+          mkdir -p release
+          cp "$artifact" "$sources" release/
+
+      - name: Prepare release files
+        run: |
+          set -euo pipefail
+          cd release
+          sha256sum *.jar > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+
+      # Graphical testing is not enforced here. Validate the exact draft JAR
+      # in an approved remote client environment before public publication.
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          version="${version%-mc26.3}"
+          gh release create "$GITHUB_REF_NAME" release/* \
+            --verify-tag \
+            --generate-notes \
+            --draft \
+            --latest=false \
+            --title "FPS Tune $version for Minecraft 26.3 (Fabric)"

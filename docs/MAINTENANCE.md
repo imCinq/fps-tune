@@ -52,3 +52,10 @@ There is no in-mod updater. Updating means downloading the new GitHub Release JA
 ## NeoForge target maintenance
 
 Keep `neoforge-1.21.1` and `neoforge-26.2` isolated from the Fabric root build. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
+
+
+## Fabric 26.3 port
+
+Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The profile selects the non-remapping Loom plugin and outputs `fps-tune-mc26.3-<version>.jar`; retain the existing default `mc_target=26.2` and all older artifact names. No NeoForge 26.3 target is included.
+
+Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertion instruction, plus the precipitation renderer and callers before adapting injections. Preserve successful-admission accounting and client-thread ownership. Deprecated APIs are not automatically broken APIs: migrate a bridge only when required or separately justified. Do not suppress missing mixin hooks to make a launch pass.

@@ -123,3 +123,9 @@ FPS Tune does not silently update itself or contact an update server. A maintain
 The 1.2.3 release also includes `fps-tune-neoforge-26.2-1.2.3.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
 
 The four 1.2.3 primary artifacts are: `fps-tune-mc1.21.1-1.2.3.jar` (1.21.1 Fabric), `fps-tune-mc1.21.11-1.2.3.jar` (1.21.11 Fabric), `fps-tune-1.2.3.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.3.jar` (26.2 NeoForge).
+
+## Fabric 26.3 port (verification in progress)
+
+A separate Fabric 26.3 target is being verified in hosted CI. Its artifact is `fps-tune-mc26.3-<version>.jar`; existing target names and releases remain unchanged. It uses Java 25, Fabric Loader 0.19.5, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1); final-version runtime compatibility must be checked before release.
+
+This target is not yet release-verified. Compilation, mixin bytecode inspection, graphical testing, and exact release-JAR validation are separate gates. Do not install it alongside another FPS Tune target JAR.

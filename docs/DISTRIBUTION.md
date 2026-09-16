@@ -32,6 +32,18 @@ The release contains these four primary files:
 
 Keep v1.1 historical. The four 1.2.3 artifacts are built from the same release tag and accompanied by checksums. Publish only after hosted CI, audits, packaged metadata inspection, and the required graphical smoke tests pass.
 
+## Fabric 26.3 separate release (provisional, unreleased)
+
+The Fabric 26.3 port is not yet release-verified. Keep `mod_version=1.2.4` and use the separate annotated tag `v1.2.4-mc26.3` only after the release PR is merged and the required checks are reviewed. `.github/workflows/release-26.3.yml` builds only this Fabric target and creates a **draft**, non-latest GitHub Release containing:
+
+- `fps-tune-mc26.3-1.2.4.jar` — the primary Fabric 26.3 binary.
+- `fps-tune-mc26.3-1.2.4-sources.jar` — source support file.
+- `SHA256SUMS.txt` — checksums for both JARs.
+
+The target requires Java 25 and matching Fabric Loader/Fabric API dependencies from `gradle/versions/26.3.properties`. Optional Mod Menu compatibility with final Minecraft 26.3 remains provisional; see [COMPATIBILITY.md](COMPATIBILITY.md). There is no NeoForge 26.3 artifact. Keep the default `mc_target=26.2`, existing artifact names, and existing releases unchanged; do not promote or attach these files to an older release.
+
+The new release workflow does **not** itself enforce graphical testing. Before public publication, download the draft assets in an approved remote environment, verify `SHA256SUMS.txt`, inspect the packaged metadata, and complete the required graphical smoke tests using that exact binary, with and without Mod Menu. Record the tested checksum and evidence, and obtain maintainer approval before publishing the draft. Compilation or draft creation alone is not a support claim. Distribute only those same validated bytes; do not rebuild or rename them for later platform uploads.
+
 ## Modrinth and CurseForge upload plan
 
 Create one platform file/version for each exact target. Mark the matching loader and Minecraft version only, mark the matching loader dependency as required, and keep Mod Menu optional for Fabric. On NeoForge, use the native Mods screen and do not list Fabric API as a dependency. Upload only the tested primary JAR; keep source JARs and checksums as GitHub release support files.

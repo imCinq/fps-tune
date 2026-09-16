@@ -1,0 +1,60 @@
+name: Fabric 26.3 client smoke tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: client-26.3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  client:
+    name: Client 26.3 (Mod Menu ${{ matrix.modmenu }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        modmenu: ['present', 'absent']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: true
+      - name: Set up hosted software display
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
+      - name: Run real client integration tests
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 'true'
+          SDL_VIDEODRIVER: x11
+          MODMENU: ${{ matrix.modmenu }}
+        run: |
+          args=()
+          if [[ "$MODMENU" == absent ]]; then args+=(-Pwithout_modmenu); fi
+          xvfb-run -a ./gradlew runClientGameTest --no-daemon -Pmc_target=26.3 -Pclient_smoke_test "${args[@]}"
+      - name: Upload client evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: client-26.3-${{ matrix.modmenu }}
+          path: |
+            build/run/**/screenshots/**
+            build/run/**/logs/latest.log
+            build/run/**/crash-reports/**
+            run/**/screenshots/**
+            run/**/logs/latest.log
+            run/**/crash-reports/**
+          if-no-files-found: warn
+          retention-days: 14

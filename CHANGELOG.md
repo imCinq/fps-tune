@@ -1,5 +1,11 @@
 # Changelog
 
+## FPS Tune v1.2.4 — Fabric 26.3 port (unreleased)
+
+- Add a separate **Fabric 26.3** build target and explicitly named JAR; compatibility verification is in progress.
+- Keep existing target JAR names, configuration, and controller behavior unchanged.
+
+
 ## FPS Tune v1.2.4
 
 - 🧩 Added a Minecraft **1.21.1 NeoForge** target using Java 21 and NeoForge 21.1.250.

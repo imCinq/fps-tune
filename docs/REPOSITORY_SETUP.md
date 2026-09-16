@@ -39,6 +39,14 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 
 For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes that target, and its hosted promotion mode attaches the verified 1.21.1 binary and sources JARs to the existing `v1.1.1` release alongside the other target artifacts. The historical `v1.1.1` tag and source remain unchanged.
 
+## Fabric 26.3 separate draft release (provisional)
+
+The new Fabric target is not yet release-verified. Keep `mod_version=1.2.4`, default `mc_target=26.2`, and all existing target names and releases unchanged. After the release PR and required verification are complete, merge through the normal protected-branch process. Create the annotated target tag `v1.2.4-mc26.3` on a GitHub-verified signed commit reachable from `main`; a lightweight tag is not sufficient.
+
+`.github/workflows/release-26.3.yml` uses the protected `release` environment, checks tag provenance and version consistency, builds and audits only Fabric 26.3, verifies packaged metadata, and creates a **draft**, non-latest GitHub Release containing its binary, sources, and SHA-256 checksums. Ensure the environment's deployment rules permit `v*-mc26.3` tags without removing approval protections. The full-release workflow excludes these tags. There is no NeoForge 26.3 release or promotion into any existing release.
+
+The new workflow does **not** itself enforce graphical testing. Keep the draft unpublished until its exact checksum-verified binary passes the remote graphical validation in [TESTING.md](TESTING.md), including startup with and without Mod Menu, and a maintainer approves publication. Do not announce support based only on compilation or draft creation. Follow [DISTRIBUTION.md](DISTRIBUTION.md) for the exact assets and reuse those validated bytes for any later distribution.
+
 ## Repository safeguards
 
 - Keep `main` protected against force pushes and deletion.

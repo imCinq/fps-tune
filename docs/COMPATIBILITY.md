@@ -45,3 +45,9 @@ Client-only does not mean server-approved. Follow the current rules of every mul
 2. Keep only one FPS Tune JAR in the instance.
 3. Reproduce with FPS Tune disabled using F6.
 4. Report the exact target, loader, Java, FPS Tune, settings integration, and companion-mod versions with a sanitized log.
+
+## Fabric 26.3 verification status
+
+The isolated `26.3` build profile is provisional until hosted compilation, tests, audits, mixin bytecode inspection, and graphical client checks are complete. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
+
+Verify precipitation suppression with Improved Transparency both enabled and disabled, retaining world-border effects. Verify F6 and settings under SDL, HUD cache invalidation on resource reload, Adaptive sampling with diagnostics off, menus/disconnects, and startup both with and without matching Mod Menu. Mod Menu 21.0.0-beta.1 was published for 26.3-rc-1; do not claim final-version integration based on dependency resolution alone.

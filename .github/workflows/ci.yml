@@ -28,6 +28,8 @@ jobs:
             java_version: '21'
           - mc_target: '26.2'
             java_version: '25'
+          - mc_target: '26.3'
+            java_version: '25'
 
     steps:
       - name: Check out source
@@ -48,6 +50,35 @@ jobs:
 
       - name: Build and test
         run: ./gradlew :clean :build --no-daemon -Pmc_target=${{ matrix.mc_target }}
+
+      - name: Inspect Minecraft 26.3 mixin targets
+        if: always() && matrix.mc_target == '26.3'
+        run: |
+          mkdir -p "${{ runner.temp }}/compatibility-evidence"
+          find "$HOME/.gradle/caches" .gradle -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if [[ "$(unzip -p "$candidate" version.json 2>/dev/null | jq -r '.id' 2>/dev/null)" == '26.3' ]] && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class'; then
+              basename "$candidate" > ${{ runner.temp }}/compatibility-evidence/minecraft-jar.txt
+              unzip -p "$candidate" version.json > ${{ runner.temp }}/compatibility-evidence/version.json
+              sha256sum "$candidate" | cut -d " " -f 1 > ${{ runner.temp }}/compatibility-evidence/minecraft-jar.sha256
+              javap -classpath "$candidate" -p -c -s 'com.mojang.blaze3d.platform.InputConstants$Type' > ${{ runner.temp }}/compatibility-evidence/InputType.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > ${{ runner.temp }}/compatibility-evidence/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > ${{ runner.temp }}/compatibility-evidence/WeatherEffectRenderer.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.LevelRenderer > ${{ runner.temp }}/compatibility-evidence/LevelRenderer.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.TrackingEmitter > "${{ runner.temp }}/compatibility-evidence/TrackingEmitter.txt"
+              break
+            fi
+          done
+          test -s ${{ runner.temp }}/compatibility-evidence/ParticleEngine.txt
+          jq -e '.id == "26.3"' ${{ runner.temp }}/compatibility-evidence/version.json
+
+      - name: Upload Minecraft 26.3 compatibility evidence
+        if: always() && matrix.mc_target == '26.3'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: minecraft-26.3-compatibility-evidence
+          path: ${{ runner.temp }}/compatibility-evidence/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Audit client-only boundaries
         run: ./scripts/audit-client-only.sh ${{ matrix.mc_target }}
