@@ -13,6 +13,9 @@ case "$target" in
 	26.2)
 		resource_directory="src/26.2/resources"
 		;;
+	26.3)
+		resource_directory="src/26.3/resources"
+		;;
 	1.21.1)
 		resource_directory="src/1.21.1/resources"
 		;;

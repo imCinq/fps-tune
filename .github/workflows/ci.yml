@@ -28,6 +28,8 @@ jobs:
             java_version: '21'
           - mc_target: '26.2'
             java_version: '25'
+          - mc_target: '26.3'
+            java_version: '25'
 
     steps:
       - name: Check out source
@@ -48,6 +50,29 @@ jobs:
 
       - name: Build and test
         run: ./gradlew :clean :build --no-daemon -Pmc_target=${{ matrix.mc_target }}
+
+      - name: Inspect Minecraft 26.3 mixin targets
+        if: always() && matrix.mc_target == '26.3'
+        run: |
+          mkdir -p compatibility-evidence
+          find "$HOME/.gradle/caches" .gradle -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class'; then
+              echo "$candidate" > compatibility-evidence/minecraft-jar.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > compatibility-evidence/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > compatibility-evidence/WeatherEffectRenderer.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.LevelRenderer > compatibility-evidence/LevelRenderer.txt
+              break
+            fi
+          done
+
+      - name: Upload Minecraft 26.3 compatibility evidence
+        if: always() && matrix.mc_target == '26.3'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: minecraft-26.3-compatibility-evidence
+          path: compatibility-evidence/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Audit client-only boundaries
         run: ./scripts/audit-client-only.sh ${{ matrix.mc_target }}
