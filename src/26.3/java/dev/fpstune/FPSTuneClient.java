@@ -35,7 +35,7 @@ public final class FPSTuneClient implements ClientModInitializer {
 		);
 		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.fpstune.toggle",
-				InputConstants.Type.KEYSYM,
+				InputConstants.Type.KEYBOARD,
 				InputConstants.KEY_F6,
 				category
 		));
