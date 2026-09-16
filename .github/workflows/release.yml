@@ -5,6 +5,7 @@ on:
     tags:
       - 'v*'
       - '!v*-mc1.21.1'
+      - '!v*-mc26.3'
 
 permissions:
   contents: read
