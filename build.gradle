@@ -52,7 +52,9 @@ dependencies {
 		modImplementation "net.fabricmc:fabric-loader:${targetProperty("loader_version")}"
 		modImplementation "net.fabricmc.fabric-api:fabric-api:${targetProperty("fabric_api_version")}"
 		modCompileOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+		if (!providers.gradleProperty("without_modmenu").isPresent()) {
 		modRuntimeOnly "com.terraformersmc:modmenu:${targetProperty("modmenu_version")}"
+		}
 	} else {
 		implementation "net.fabricmc:fabric-loader:${targetProperty("loader_version")}"
 		implementation "net.fabricmc.fabric-api:fabric-api:${targetProperty("fabric_api_version")}"

@@ -40,6 +40,9 @@ public abstract class ParticleEngineMixin {
 		if (!snapshot.limitsParticles()) {
 			return;
 		}
+		// Records every admission attempt, including particles vanilla's own
+		// ParticleLimit then rejects: this is the Adaptive pressure signal, not the
+		// diagnostics accepted/rejected counters (which exclude vanilla rejections).
 		if (snapshot.pressureTrackingEnabled()) {
 			ParticleAdmissionMetrics.recordPressureAttempt();
 		}

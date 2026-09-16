@@ -64,6 +64,7 @@ jobs:
               javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > ${{ runner.temp }}/compatibility-evidence/ParticleEngine.txt
               javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > ${{ runner.temp }}/compatibility-evidence/WeatherEffectRenderer.txt
               javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.LevelRenderer > ${{ runner.temp }}/compatibility-evidence/LevelRenderer.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.TrackingEmitter > "${{ runner.temp }}/compatibility-evidence/TrackingEmitter.txt"
               break
             fi
           done
