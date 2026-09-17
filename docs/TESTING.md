@@ -45,6 +45,8 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 `.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
+The CI matrix builds each supported `mc_target`, including the provisional `mc_target=26.3` Fabric target on Java 25. Graphical client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml`.
+
 ## Release verification
 
 `.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both verify annotated-tag provenance, a signed target commit reachable from `main`, the project version, and matching GitHub Release artifacts. Its manual promotion mode verifies the published 1.21.1 checksums and attaches those artifacts to the existing `v1.1.1` release. Use the verified output from that workflow for later manual distribution submissions.

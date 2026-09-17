@@ -22,7 +22,7 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 Update Minecraft compatibility in a dedicated branch and pull request:
 
 1. Add or update the matching profile in `gradle/versions/` with Minecraft, loader, API or NeoForge, build plugin, Java, mappings, and artifact settings documented as compatible by their official projects.
-2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2, or an isolated ModDevGradle NeoForge project for NeoForge 1.21.1 or 26.2.
+2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for NeoForge 1.21.1 or 26.2.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
 5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
@@ -56,6 +56,6 @@ Keep `neoforge-1.21.1` and `neoforge-26.2` isolated from the Fabric root build. 
 
 ## Fabric 26.3 port
 
-Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The profile selects the non-remapping Loom plugin and outputs `fps-tune-mc26.3-<version>.jar`; retain the existing default `mc_target=26.2` and all older artifact names. No NeoForge 26.3 target is included.
+Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`; retain the existing default `mc_target=26.2` and all older artifact names. No NeoForge 26.3 target is included.
 
 Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertion instruction, plus the precipitation renderer and callers before adapting injections. Preserve successful-admission accounting and client-thread ownership. Deprecated APIs are not automatically broken APIs: migrate a bridge only when required or separately justified. Do not suppress missing mixin hooks to make a launch pass.
