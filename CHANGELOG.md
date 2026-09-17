@@ -1,5 +1,11 @@
 # Changelog
 
+## FPS Tune v1.2.5
+
+- 🌧️ Turning weather rendering off now also suppresses the landing splash particles spawned by rain and snow, not just the falling precipitation streaks.
+- 🎯 Applied the same weather-off gate across **1.21.1 Fabric**, **1.21.11 Fabric**, **26.2 Fabric**, **26.2 NeoForge**, and **26.3 Fabric**.
+- 🔊 Weather still exists in the world: simulation and rain sounds continue to play while weather-off hides the particles.
+
 ## FPS Tune v1.2.4 for Minecraft 26.3 Fabric - 2026-09-16
 
 - 🧩 Added a **Fabric 26.3** target using Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and Mod Menu `21.0.0-beta.1` (provisional).
