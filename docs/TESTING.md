@@ -2,9 +2,9 @@
 
 ## Hosted deterministic checks
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds the five existing target configurations plus the provisional Fabric 26.3 target, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds all six supported target configurations, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
 
-The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for Fabric and NeoForge 1.21.1 plus Fabric 1.21.11, and Java 25 for Fabric and NeoForge 26.2 plus provisional Fabric 26.3.
+The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for Fabric and NeoForge 1.21.1 plus Fabric 1.21.11, and Java 25 for Fabric and NeoForge 26.2 plus Fabric 26.3.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
@@ -15,7 +15,7 @@ Mixin changes require more than hosted unit tests and must be verified in a GitH
 1. Inspect the target Minecraft bytecode.
 2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `WeatherEffectRenderer.render` reached from `LevelRenderer.addWeatherPass` on 1.21.11/26.2, and their render boundaries for the selected target.
 3. Update the mixin and tests together.
-4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases. When weather rendering is disabled, confirm rain and snow disappear while Map/World Border effects remain visible.
+4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases. When weather rendering is disabled, confirm the rain and snow streaks and their landing splash particles disappear while rain/snow sounds continue and Map/World Border effects remain visible.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
 
 ## Mod Menu settings screen
@@ -45,15 +45,15 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 `.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
-The CI matrix builds each supported `mc_target`, including the provisional `mc_target=26.3` Fabric target on Java 25. Graphical client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml`.
+The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Graphical client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml`.
 
 ## Release verification
 
 `.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both verify annotated-tag provenance, a signed target commit reachable from `main`, the project version, and matching GitHub Release artifacts. Its manual promotion mode verifies the published 1.21.1 checksums and attaches those artifacts to the existing `v1.1.1` release. Use the verified output from that workflow for later manual distribution submissions.
 
-## Fabric 26.3 draft-release verification (provisional)
+## Fabric 26.3 draft-release verification
 
-`.github/workflows/release-26.3.yml` handles only `vX.Y.Z-mc26.3` tags; the full-release workflow excludes these tags. For this port, keep internal version `1.2.4` and use annotated tag `v1.2.4-mc26.3`. The workflow verifies the annotated tag, its GitHub-verified signed target commit and `main` ancestry, matching tag/project/packaged versions, client-only Fabric 26.3 metadata, and both audit scripts. It builds only the 26.3 binary and sources JARs and creates a **draft**, non-latest release with SHA-256 checksums. Existing release assets remain unchanged.
+`.github/workflows/release-26.3.yml` handles only `vX.Y.Z-mc26.3` tags; the full-release workflow excludes these tags. For this port, keep internal version `1.2.5` and use annotated tag `v1.2.5-mc26.3`. The workflow verifies the annotated tag, its GitHub-verified signed target commit and `main` ancestry, matching tag/project/packaged versions, client-only Fabric 26.3 metadata, and both audit scripts. It builds only the 26.3 binary and sources JARs and creates a **draft**, non-latest release with SHA-256 checksums. Existing release assets remain unchanged.
 
 This workflow does **not** itself run or enforce graphical testing. Draft creation, compilation, unit tests, and bytecode evidence are separate from runtime verification. Before publishing the draft:
 
