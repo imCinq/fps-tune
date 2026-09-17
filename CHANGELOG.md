@@ -1,9 +1,10 @@
 # Changelog
 
-## FPS Tune v1.2.4 — Fabric 26.3 port (unreleased)
+## FPS Tune v1.2.4 for Minecraft 26.3 Fabric - 2026-09-16
 
-- Add a separate **Fabric 26.3** build target and explicitly named JAR; compatibility verification is in progress.
-- Keep existing target JAR names, configuration, and controller behavior unchanged.
+- 🧩 Added a **Fabric 26.3** target using Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and Mod Menu `21.0.0-beta.1` (provisional).
+- 📦 Added the 26.3 release artifact `fps-tune-mc26.3-1.2.4.jar`, its sources JAR, and `SHA256SUMS` checksums.
+- ✅ Kept existing target JAR names, configuration, and controller behavior unchanged.
 
 
 ## FPS Tune v1.2.4
