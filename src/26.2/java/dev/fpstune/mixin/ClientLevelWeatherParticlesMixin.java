@@ -11,15 +11,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ClientLevel.class)
 public abstract class ClientLevelWeatherParticlesMixin {
 	@Redirect(
-			// The tick-time precipitation particle spawner; streaks are gated separately at render.
-			// Redirect (not HEAD cancel) so rain sound scheduling in the same method keeps playing.
 			method = "tickWeatherEffects",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
 			)
 	)
-	private void fpstune$limitWeatherParticles(
+	private void fpstune$skipWeatherParticles(
 			ClientLevel level,
 			ParticleOptions particle,
 			double x,

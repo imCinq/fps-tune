@@ -3,6 +3,7 @@
   "package": "dev.fpstune.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "ClientLevelWeatherParticlesMixin",
     "ParticleEngineMixin",
     "WeatherEffectRendererMixin"
   ]
