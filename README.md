@@ -12,10 +12,10 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, and 26.2 Fabric and NeoForge; separate JAR per target |
-| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; NeoForge 1.21.1: 21.1.250+; NeoForge 26.2: 26.2.0.77+ |
+| Minecraft | 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric; separate JAR per target |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 26.2: 26.2.0.77+ |
 | Environment | Client only |
-| Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 |
+| Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 and 26.3 |
 | Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets |
 | Optional integration | Mod Menu on Fabric; native Mods screen on NeoForge |
 | License | MIT |
@@ -49,6 +49,7 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
    | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
    | 26.2 | `fps-tune-<version>.jar` |
    | 26.2 NeoForge | `fps-tune-neoforge-26.2-<version>.jar` |
+   | 26.3 | `fps-tune-mc26.3-<version>.jar` |
 
    Do not install multiple target JARs in one instance.
 4. Put the JAR in the instance's `mods` folder and start Minecraft.
@@ -124,8 +125,6 @@ The 1.2.3 release also includes `fps-tune-neoforge-26.2-1.2.3.jar`. Use it only 
 
 The four 1.2.3 primary artifacts are: `fps-tune-mc1.21.1-1.2.3.jar` (1.21.1 Fabric), `fps-tune-mc1.21.11-1.2.3.jar` (1.21.11 Fabric), `fps-tune-1.2.3.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.3.jar` (26.2 NeoForge).
 
-## Fabric 26.3 port (verification in progress)
+## Fabric 26.3
 
-A separate Fabric 26.3 target is being verified in hosted CI. Its artifact is `fps-tune-mc26.3-<version>.jar`; existing target names and releases remain unchanged. It uses Java 25, Fabric Loader 0.19.5, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1); final-version runtime compatibility must be checked before release.
-
-This target is not yet release-verified. Compilation, mixin bytecode inspection, graphical testing, and exact release-JAR validation are separate gates. Do not install it alongside another FPS Tune target JAR.
+Fabric 26.3 is supported and released. The 1.2.4 release on 2026-09-16 includes `fps-tune-mc26.3-1.2.4.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
