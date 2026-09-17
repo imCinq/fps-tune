@@ -30,14 +30,14 @@ Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS 
 
 | Combination | Status | Notes |
 | --- | --- | --- |
-| All five target builds | Hosted build verified | CI compiles and tests the three Fabric and two isolated NeoForge targets. |
-| All five client-only audits | Hosted audit verified | Source, metadata, mixin, and repository-boundary checks pass in CI. |
-| 1.21.1 and 26.2 NeoForge graphical clients | Graphical verification required | The native settings screen, F6 toggle, diagnostics layer, particle control, and precipitation-only weather gate still need a client smoke test before claiming full graphical compatibility. |
+| All six target builds | Hosted build verified | CI compiles and tests the four Fabric and two isolated NeoForge targets. |
+| All six client-only audits | Hosted audit verified | Source, metadata, mixin, and repository-boundary checks pass in CI. |
+| 1.21.1 and 26.2 NeoForge graphical clients | Graphical verification required | The native settings screen, F6 toggle, diagnostics layer, particle control, and weather-off gate (streaks plus landing splash suppressed while rain/snow sounds continue) still need a client smoke test before claiming full graphical compatibility. |
 | FPS Tune without optional settings integration | Verified by build path | The optional Fabric Mod Menu path is not required, and NeoForge uses its native Mods screen. |
 
 ## Runtime boundary
 
-FPS Tune is client-only and disabled by default. It limits optional local particle admission and can suppress only the local rain/snow precipitation render pass. It does not change packets, world simulation, server state, entity behavior, automation, telemetry, or anti-cheat behavior.
+FPS Tune is client-only and disabled by default. It limits optional local particle admission and can suppress the local rain/snow streaks and the landing splash particles they spawn, while weather simulation and rain/snow sounds continue. It does not change packets, world simulation, server state, entity behavior, automation, telemetry, or anti-cheat behavior.
 
 Client-only does not mean server-approved. Follow the current rules of every multiplayer server before enabling any client modification.
 
@@ -50,6 +50,6 @@ Client-only does not mean server-approved. Follow the current rules of every mul
 
 ## Fabric 26.3 verification status
 
-The isolated `26.3` build profile is provisional until hosted compilation, tests, audits, mixin bytecode inspection, and graphical client checks are complete. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
+The isolated `26.3` build profile ships on its own release train. Hosted compilation, tests, audits, mixin bytecode inspection, and graphical client checks still gate each 26.3 target release. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
 
-Verify precipitation suppression with Improved Transparency both enabled and disabled, retaining world-border effects. Verify F6 and settings under SDL, HUD cache invalidation on resource reload, Adaptive sampling with diagnostics off, menus/disconnects, and startup both with and without matching Mod Menu. Mod Menu 21.0.0-beta.1 was published for 26.3-rc-1; do not claim final-version integration based on dependency resolution alone.
+Verify weather-off suppression of precipitation streaks and landing splash (with rain/snow sounds still audible) with Improved Transparency both enabled and disabled, retaining world-border effects. Verify F6 and settings under SDL, HUD cache invalidation on resource reload, Adaptive sampling with diagnostics off, menus/disconnects, and startup both with and without matching Mod Menu. Mod Menu 21.0.0-beta.1 was published for 26.3-rc-1; do not claim final-version integration based on dependency resolution alone.
