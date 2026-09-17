@@ -114,6 +114,8 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all five targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
+Run hosted Java workflows serially: only one model/agent at a time may trigger or run Java builds, tests, or client smoke workflows, to avoid overlapping runners and flaky artifacts.
+
 ## Updating FPS Tune
 
 FPS Tune does not silently update itself or contact an update server. A maintainer updates dependencies and Minecraft compatibility in source, runs the verification checklist, and publishes a tagged GitHub release. Players then replace the older JAR in their `mods` folder and keep only one FPS Tune version installed.
