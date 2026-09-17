@@ -24,7 +24,7 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 - Limits local particle admission during a client tick when enabled.
 - Can reserve part of the current effective budget for particles near the player, so distant cosmetic particles are rejected first during a storm.
-- Can skip the local rain/snow render pass when explicitly enabled.
+- Can suppress the local rain/snow streaks and the landing splash particles they spawn when explicitly enabled; weather simulation and sounds continue.
 - Can show an opt-in local diagnostics HUD with current-tick admission counters.
 - Starts disabled and changes nothing until you opt in with `F6` or the settings screen.
 
@@ -113,7 +113,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all five targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; the hosted CI builds all six targets, runs tests and audits, and uploads artifacts. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
@@ -121,10 +121,10 @@ FPS Tune does not silently update itself or contact an update server. A maintain
 
 ## NeoForge 26.2
 
-The 1.2.3 release also includes `fps-tune-neoforge-26.2-1.2.3.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
+The 1.2.5 release also includes `fps-tune-neoforge-26.2-1.2.5.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
 
-The four 1.2.3 primary artifacts are: `fps-tune-mc1.21.1-1.2.3.jar` (1.21.1 Fabric), `fps-tune-mc1.21.11-1.2.3.jar` (1.21.11 Fabric), `fps-tune-1.2.3.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.3.jar` (26.2 NeoForge).
+The five 1.2.5 primary release artifacts are: `fps-tune-mc1.21.1-1.2.5.jar` (1.21.1 Fabric), `fps-tune-neoforge-1.21.1-1.2.5.jar` (1.21.1 NeoForge), `fps-tune-mc1.21.11-1.2.5.jar` (1.21.11 Fabric), `fps-tune-1.2.5.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.5.jar` (26.2 NeoForge).
 
 ## Fabric 26.3
 
-Fabric 26.3 is supported and released. The 1.2.4 release on 2026-09-16 includes `fps-tune-mc26.3-1.2.4.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
+Fabric 26.3 ships on its own separate release train. The 1.2.5 target release includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
