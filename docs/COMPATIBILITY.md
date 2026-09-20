@@ -32,6 +32,7 @@ Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS 
 | --- | --- | --- |
 | All six target builds | Hosted build verified | CI compiles and tests the four Fabric and two isolated NeoForge targets. |
 | All six client-only audits | Hosted audit verified | Source, metadata, mixin, and repository-boundary checks pass in CI. |
+| 26.3 Fabric client | Hosted smoke tests verified | The real-client workflow covers startup and settings integration with Mod Menu present and absent. |
 | 1.21.1 and 26.2 NeoForge graphical clients | Graphical verification required | The native settings screen, F6 toggle, diagnostics layer, particle control, and weather-off gate (streaks plus landing splash suppressed while rain/snow sounds continue) still need a client smoke test before claiming full graphical compatibility. |
 | FPS Tune without optional settings integration | Verified by build path | The optional Fabric Mod Menu path is not required, and NeoForge uses its native Mods screen. |
 
@@ -48,8 +49,8 @@ Client-only does not mean server-approved. Follow the current rules of every mul
 3. Reproduce with FPS Tune disabled using F6.
 4. Report the exact target, loader, Java, FPS Tune, settings integration, and companion-mod versions with a sanitized log.
 
-## Fabric 26.3 verification status
+## Fabric 26.3 release verification
 
-The isolated `26.3` build profile ships on its own release train. Hosted compilation, tests, audits, mixin bytecode inspection, and graphical client checks still gate each 26.3 target release. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
+The isolated `26.3` build profile ships on its own release train. The current [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release is published as a non-draft target-specific release. The hosted CI matrix verifies compilation, tests, audits, and 26.3 mixin evidence; the separate real-client workflow covers startup and settings integration with Mod Menu present and absent. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
 
-Verify weather-off suppression of precipitation streaks and landing splash (with rain/snow sounds still audible) with Improved Transparency both enabled and disabled, retaining world-border effects. Verify F6 and settings under SDL, HUD cache invalidation on resource reload, Adaptive sampling with diagnostics off, menus/disconnects, and startup both with and without matching Mod Menu. Mod Menu 21.0.0-beta.1 was published for 26.3-rc-1; do not claim final-version integration based on dependency resolution alone.
+The 26.3 release workflow validates the exact tagged JAR and checksums but does not itself run graphical client tests. For future 26.3 releases, repeat the weather-off, F6, settings, HUD cache, Adaptive, menu/disconnect, shutdown, and Mod Menu-present/absent checks in an approved remote client environment before publication. Mod Menu `21.0.0-beta.1` remains optional and is not required to run FPS Tune.
