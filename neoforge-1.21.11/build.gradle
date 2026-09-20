@@ -40,9 +40,7 @@ sourceSets {
                     rootProject.file('src/1.21.11-neoforge/java')
             ]
             def excludedRootJavaSources = [
-                    'dev/fpstune/integration/ModMenuIntegration.java',
-                    'dev/fpstune/screen/FPSTuneConfigScreen.java',
-                    'dev/fpstune/screen/FPSTuneAdvancedConfigScreen.java'
+                    'dev/fpstune/integration/ModMenuIntegration.java'
             ]
             def excludedFabricBridgeSources = [
                     'dev/fpstune/FPSTuneClient.java',
