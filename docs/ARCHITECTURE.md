@@ -24,7 +24,7 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 
 ## Versioned build layout
 
-The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; 1.21.1 provides the older string-category keybinding, HUD callback, and weather bridge, 1.21.11 provides its older keybinding/chat bridge and MultiBufferSource weather bridge, and 26.2 uses the newer client APIs and weather-state bridge. Each Fabric target owns `fabric.mod.json`; each NeoForge target owns `META-INF/neoforge.mods.toml`; every target owns its `fpstune.mixins.json`.
+The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; 1.21.1 provides the older string-category keybinding, HUD callback, and weather bridge, 1.21.11 provides its older keybinding/chat bridge and MultiBufferSource weather bridge, and 26.2 and 26.3 provide their newer target-specific client and weather bridges. Each Fabric target owns `fabric.mod.json`; each NeoForge target owns `META-INF/neoforge.mods.toml`; every target owns its `fpstune.mixins.json`.
 
 Adaptive frame-time sampling and FPS-cap resolution stay in the target-specific `FPSTuneHud`/`FPSTuneClient` bridges because the HUD callbacks, drawing types, and client option mappings differ between supported Minecraft targets. The common adaptive controller receives only monotonic frame intervals, the resolved target, and pressure data; it never depends on Minecraft internals. A future patch that changes the HUD API should therefore require a narrow target-bridge update and target build, not a new renderer mixin.
 
@@ -51,7 +51,7 @@ Mod Menu is an optional client-side integration. The target metadata also provid
 
 ## Mixin boundary
 
-The mixins are client-only and explicitly listed in the selected target's `src/<minecraft-version>/resources/fpstune.mixins.json`. Their targets are version-sensitive. Before changing them, inspect the target Minecraft bytecode and verify the exact shape of `ParticleEngine.add` and `ParticleEngine.tick`, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `WeatherEffectRenderer.render` reached from `LevelRenderer.addWeatherPass` on 1.21.11/26.2. Prefer narrow head cancellation at the precipitation method and explicit admission accounting over broad redirects or ordinal-only assumptions. A controller must not stall worker queues or alter world simulation.
+The mixins are client-only and explicitly listed in the selected target's `src/<minecraft-version>/resources/fpstune.mixins.json`. Their targets are version-sensitive. Before changing them, inspect the target Minecraft bytecode and verify the exact shape of `ParticleEngine.add` and `ParticleEngine.tick`, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `WeatherEffectRenderer.render` reached from `LevelRenderer.addWeatherPass` on 1.21.11, 26.2, and 26.3. Prefer narrow head cancellation at the precipitation method and explicit admission accounting over broad redirects or ordinal-only assumptions. A controller must not stall worker queues or alter world simulation.
 
 ## Packaging
 
