@@ -45,23 +45,23 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 `.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
-The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Graphical client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml`.
+The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Real-client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml` and runs with Mod Menu present and absent.
 
 ## Release verification
 
 `.github/workflows/release.yml` repeats the checks for the full-release tag, while `.github/workflows/release-1.21.1.yml` performs the same hosted verification for `vX.Y.Z-mc1.21.1`; both verify annotated-tag provenance, a signed target commit reachable from `main`, the project version, and matching GitHub Release artifacts. Its manual promotion mode verifies the published 1.21.1 checksums and attaches those artifacts to the existing `v1.1.1` release. Use the verified output from that workflow for later manual distribution submissions.
 
-## Fabric 26.3 draft-release verification
+## Fabric 26.3 target-specific release verification
 
-`.github/workflows/release-26.3.yml` handles only `vX.Y.Z-mc26.3` tags; the full-release workflow excludes these tags. For this port, keep internal version `1.2.5` and use annotated tag `v1.2.5-mc26.3`. The workflow verifies the annotated tag, its GitHub-verified signed target commit and `main` ancestry, matching tag/project/packaged versions, client-only Fabric 26.3 metadata, and both audit scripts. It builds only the 26.3 binary and sources JARs and creates a **draft**, non-latest release with SHA-256 checksums. Existing release assets remain unchanged.
+The current [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release is published separately from the five-artifact root `v1.2.5` release. `.github/workflows/release-26.3.yml` handles only `vX.Y.Z-mc26.3` tags; the full-release workflow excludes these tags. The workflow verifies the annotated tag, its GitHub-verified signed target commit and `main` ancestry, matching tag/project/packaged versions, client-only Fabric 26.3 metadata, and both audit scripts. It builds only the 26.3 binary and sources JARs and stages a **draft**, non-latest release with SHA-256 checksums. Existing release assets remain unchanged.
 
-This workflow does **not** itself run or enforce graphical testing. Draft creation, compilation, unit tests, and bytecode evidence are separate from runtime verification. Before publishing the draft:
+This release workflow does **not** itself run or enforce graphical testing. Draft creation, compilation, unit tests, and bytecode evidence are separate from runtime verification. For a future 26.3 target-specific release, publish the draft only after:
 
 1. In a GitHub-hosted or other owner-approved remote graphical environment, download the draft assets and verify `sha256sum -c SHA256SUMS.txt`.
 2. Install that exact binary with the matching Minecraft 26.3/Fabric dependencies; a development `runClient` launch alone does not verify the packaged release JAR.
 3. Repeat the particle, weather, diagnostics, Adaptive, and settings cases above, including F6 under SDL; precipitation with Improved Transparency enabled and disabled while retaining world-border effects; HUD cache invalidation on resource reload; and Adaptive sampling with diagnostics off. Verify menus, world loading, disconnects, and shutdown.
-4. Verify startup both with and without matching Mod Menu. The pinned beta integration remains provisional until its final-26.3 runtime behavior is checked.
-5. Record the exact binary checksum, dependency versions, sanitized logs/screenshots, and results. Keep the release draft and target provisional until the required validation passes and a maintainer approves public publication.
+4. Verify startup both with and without matching Mod Menu. Mod Menu `21.0.0-beta.1` is optional and must not be treated as a required dependency.
+5. Record the exact binary checksum, dependency versions, sanitized logs/screenshots, and results. A maintainer must approve publication after the required validation passes.
 
 Do not infer a working graphical environment from `ubuntu-latest` or Xvfb alone: verify the display and rendering backend actually support the target client. No graphical testing or Java/Gradle execution may run on the owner's device.
 
