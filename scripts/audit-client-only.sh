@@ -10,6 +10,9 @@ case "$target" in
 	1.21.1-neoforge)
 		resource_directory="src/1.21.1-neoforge/resources"
 		;;
+	1.21.11-neoforge)
+		resource_directory="src/1.21.11-neoforge/resources"
+		;;
 	26.2)
 		resource_directory="src/26.2/resources"
 		;;
