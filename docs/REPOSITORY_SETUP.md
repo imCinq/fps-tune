@@ -31,21 +31,21 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 
 ## Release flow
 
-1. Update `mod_version` in `gradle.properties`; the target metadata files in `src/1.21.1/resources/`, `src/1.21.11/resources/`, and `src/26.2/resources/` use the expanded version placeholder. Make this change through a GitHub pull request.
+1. Update `mod_version` in `gradle.properties`; the target metadata under `src/<target>/resources/` uses the expanded version placeholder. Make this change through a GitHub pull request.
 2. Update `CHANGELOG.md` in the same pull request and wait for hosted verification.
 3. Merge the release pull request into `main` after the required GitHub Actions checks pass.
 4. Create and push an annotated tag matching the project version using GitHub's release/tag interface. For a target-specific patch, use the target suffix documented below.
-5. The release workflows rebuild the supported target profiles, rerun the audits, check that the tag matches the project version, and create GitHub Releases containing one binary and one sources JAR per Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
+5. The applicable release workflow rebuilds the selected target profiles, reruns the audits, checks that the tag matches the project version, and stages or publishes one binary and one sources JAR per included Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
 
 For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes that target, and its hosted promotion mode attaches the verified 1.21.1 binary and sources JARs to the existing `v1.1.1` release alongside the other target artifacts. The historical `v1.1.1` tag and source remain unchanged.
 
-## Fabric 26.3 separate draft release (provisional)
+## Fabric 26.3 target-specific release
 
-The new Fabric target is not yet release-verified. Keep `mod_version=1.2.4`, default `mc_target=26.2`, and all existing target names and releases unchanged. After the release PR and required verification are complete, merge through the normal protected-branch process. Create the annotated target tag `v1.2.4-mc26.3` on a GitHub-verified signed commit reachable from `main`; a lightweight tag is not sufficient.
+Fabric 26.3 uses internal version `1.2.5`, default `mc_target=26.2`, and the annotated target tag `v1.2.5-mc26.3`. The current exact release is published at [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3); it remains separate from the five-artifact root `v1.2.5` release. There is no NeoForge 26.3 release or promotion into the root release.
 
-`.github/workflows/release-26.3.yml` uses the protected `release` environment, checks tag provenance and version consistency, builds and audits only Fabric 26.3, verifies packaged metadata, and creates a **draft**, non-latest GitHub Release containing its binary, sources, and SHA-256 checksums. Ensure the environment's deployment rules permit `v*-mc26.3` tags without removing approval protections. The full-release workflow excludes these tags. There is no NeoForge 26.3 release or promotion into any existing release.
+`.github/workflows/release-26.3.yml` uses the protected `release` environment, checks tag provenance and version consistency, builds and audits only Fabric 26.3, verifies packaged metadata, and stages a **draft**, non-latest GitHub Release containing its binary, sources, and SHA-256 checksums. The full-release workflow excludes these tags. The draft is a staging step; publish the exact assets only after the required remote client validation and maintainer review.
 
-The new workflow does **not** itself enforce graphical testing. Keep the draft unpublished until its exact checksum-verified binary passes the remote graphical validation in [TESTING.md](TESTING.md), including startup with and without Mod Menu, and a maintainer approves publication. Do not announce support based only on compilation or draft creation. Follow [DISTRIBUTION.md](DISTRIBUTION.md) for the exact assets and reuse those validated bytes for any later distribution.
+The release workflow does **not** itself enforce graphical testing. The separate `.github/workflows/client-26.3.yml` workflow runs the real-client smoke matrix with Mod Menu present and absent. Follow [TESTING.md](TESTING.md) for the complete validation sequence, and [DISTRIBUTION.md](DISTRIBUTION.md) for the exact assets and reuse those validated bytes for later distribution.
 
 ## Repository safeguards
 
