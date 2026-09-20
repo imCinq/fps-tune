@@ -50,7 +50,7 @@ jobs:
           if [[ "${{ matrix.modmenu }}" == 'absent' ]]; then
             args+=(-Pwithout_modmenu)
           fi
-          xvfb-run -a ./gradlew runClientGameTest --no-daemon -Pmc_target=1.21.11 -Pclient_smoke_test "${{args[@]}"
+          xvfb-run -a ./gradlew runClientGameTest --no-daemon -Pmc_target=1.21.11 -Pclient_smoke_test "${args[@]}"
 
       - name: Upload Fabric smoke evidence
         if: always()
