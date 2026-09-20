@@ -9,7 +9,7 @@ FPS Tune is disabled by default. It changes only what your client renders; it do
 - Limits new particle admissions per client tick when enabled. The default budget is 300 particles per client tick.
 - Can reserve part of that budget for particles near the player, so distant cosmetic particles are rejected first during a storm.
 - Can optionally adapt that particle budget to recent local frame times, lowering it when frames stay slow and raising it slowly when performance recovers.
-- Can disable the local rain and snow render pass when you explicitly choose that visual trade-off.
+- Can suppress the local precipitation streaks and the landing splash particles they spawn when you explicitly disable weather rendering; weather simulation and sounds continue.
 - Can show an opt-in local diagnostics HUD with current-tick admission counters.
 - Provides a vanilla settings screen through the optional Mod Menu integration.
 - Provides `F6` as a quick toggle for the master switch.
@@ -24,7 +24,7 @@ Client-only does not mean server-approved. Check the current rules of every mult
 
 ## Installation
 
-1. Install the loader matching your target: Fabric Loader plus matching Fabric API for Fabric targets, or NeoForge 26.2.0.77+ for the NeoForge target.
+1. Install the loader matching your target: Fabric Loader 0.16.14+ for 1.21.1, 0.18.6+ for 1.21.11, 0.19.3+ for 26.2, or 0.19.5+ for 26.3; NeoForge 21.1.250+ for 1.21.1 or 26.2.0.77+ for 26.2.
 2. Download the FPS Tune file for the exact Minecraft version you are running.
 3. Put that one file in the instance's `mods` folder and launch Minecraft.
 
@@ -36,7 +36,7 @@ Supported targets currently have separate files:
 | 1.21.11 | `fps-tune-mc1.21.11-<version>.jar` |
 | 26.2 | `fps-tune-<version>.jar` |
 
-Do not install both target files in the same instance. Mod Menu is optional on Fabric; the NeoForge build uses the native Mods screen, and FPS Tune runs without optional integrations.
+Do not install multiple target JARs in the same instance. Mod Menu is optional on Fabric; the NeoForge build uses the native Mods screen, and FPS Tune runs without optional integrations.
 
 ## Settings
 
@@ -54,7 +54,7 @@ FPS Tune starts disabled. Press `F6` to toggle the master switch, or open `FPS T
 | Automatic particle limit | Off | Slowly adjusts the particle limit toward your target FPS. |
 | Adaptive target | 120 FPS | Target used by Adaptive mode. |
 | Adaptive range | 100–2,000 | Minimum and maximum particle budgets used by Adaptive mode. |
-| Weather rendering | On | Keeps the vanilla rain and snow render pass enabled. |
+| Weather rendering | On | Keeps the local precipitation streaks and landing splash particles enabled. |
 
 Settings are stored locally in `config/fpstune.properties`. The master switch gates all render changes; particle reduction, nearby-particle protection, and the automatic particle limit work together, while the performance overlay and rain/snow display are separate controls. You can keep weather visible while limiting particles, protect nearby particles during a storm, or suppress weather during an especially heavy scene.
 
@@ -90,4 +90,4 @@ FPS Tune is released under the MIT License. It has no telemetry, analytics, cust
 
 ## Loader compatibility
 
-The 1.2.3 release has four exact target files: 1.21.1 Fabric, 1.21.11 Fabric, 26.2 Fabric, and 26.2 NeoForge. Select the file matching both Minecraft and loader. Never install the Fabric and NeoForge 26.2 files together.
+The v1.2.5 release family provides six exact target files: 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The Fabric 26.3 file is published in the separate target-specific GitHub release `v1.2.5-mc26.3`. Select the file matching both Minecraft and loader. Never install multiple FPS Tune target JARs together.

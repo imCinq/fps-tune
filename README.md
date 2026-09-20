@@ -4,7 +4,7 @@
   <img src="src/main/resources/assets/fpstune/icon.png" alt="FPS Tune logo" width="192">
 </p>
 
-FPS Tune is a client-side Fabric and NeoForge frame-time stability toolkit for Minecraft 1.21.1, 1.21.11, and 26.2. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
+FPS Tune is a client-side Fabric and NeoForge frame-time stability toolkit for Minecraft 1.21.1, 1.21.11, 26.2, and 26.3. It applies opt-in controls to optional local rendering workloads when visual scenes become unusually heavy.
 
 It is designed to protect the floor of the frame-time graph during particle storms and weather-heavy scenes, not to promise a universal FPS increase or replace broad rendering optimizers.
 
@@ -38,7 +38,7 @@ FPS Tune cannot guarantee approval by any multiplayer server or anti-cheat. Chec
 
 ## Install
 
-1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, NeoForge 21.1.250+ for NeoForge 1.21.1, or NeoForge 26.2.0.77+ for NeoForge 26.2.
+1. Install the loader matching the target: Fabric Loader 0.16.14+ for 1.21.1, Fabric Loader 0.18.6+ for 1.21.11, Fabric Loader 0.19.3+ for Fabric 26.2, Fabric Loader 0.19.5+ for Fabric 26.3, NeoForge 21.1.250+ for NeoForge 1.21.1, or NeoForge 26.2.0.77+ for NeoForge 26.2.
 2. Install the matching Fabric API for Fabric targets; NeoForge targets use the NeoForge loader dependency instead.
 3. Download the matching JAR from the [GitHub Releases page](https://github.com/imCinq/fps-tune/releases):
 
@@ -127,4 +127,4 @@ The five 1.2.5 primary release artifacts are: `fps-tune-mc1.21.1-1.2.5.jar` (1.2
 
 ## Fabric 26.3
 
-Fabric 26.3 ships on its own separate release train. The 1.2.5 target release includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
+Fabric 26.3 is published as a separate target-specific GitHub release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3), which includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
