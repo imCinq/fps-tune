@@ -1,0 +1,123 @@
+name: 1.21.11 client smoke tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: client-1-21-11-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fabric:
+    name: Fabric 1.21.11 (Mod Menu ${{ matrix.modmenu }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        modmenu: ['present', 'absent']
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 21
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Install client smoke dependencies
+        run: sudo apt-get update && sudo apt-get install --yes xvfb libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
+
+      - name: Run Fabric client integration tests
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 'true'
+          SDL_VIDEODRIVER: x11
+        run: |
+          args=()
+          if [[ "${{ matrix.modmenu }}" == 'absent' ]]; then
+            args+=(-Pwithout_modmenu)
+          fi
+          xvfb-run -a ./gradlew runClientGameTest --no-daemon -Pmc_target=1.21.11 -Pclient_smoke_test "${{args[@]}"
+
+      - name: Upload Fabric smoke evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a0 # v7.0.1
+        with:
+          name: client-1.21.11-fabric-${{ matrix.modmenu }}
+          path: |
+            build/run/**
+            run/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  neoforge:
+    name: NeoForge 1.21.11 client startup
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 21
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Install client smoke dependencies
+        run: sudo apt-get update && sudo apt-get install --yes xvfb libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
+
+      - name: Start NeoForge client and verify mod registration
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 'true'
+          SDL_VIDEODRIVER: x11
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=15s 180s xvfb-run -a ./gradlew :neoforge-1.21.11:runClient --no-daemon > "$RUNNER_TEMP/neoforge-1.21.11-client.log" 2>&1
+          status=$?
+          set -e
+          if [[ "$status" -ne 0 && "$status" -ne 124 && "$status" -ne 143 ]]; then
+            cat "$RUNNER_TEMP/neoforge-1.21.11-client.log"
+            exit "$status"
+          fi
+          grep -Fq "FPS Tune NeoForge client integration registered." "$RUNNER_TEMP/neoforge-1.21.11-client.log"
+          if grep -Fq "Mixin apply failed" "$RUNNER_TEMP/neoforge-1.21.11-client.log"; then
+            cat "$RUNNER_TEMP/neoforge-1.21.11-client.log"
+            exit 1
+          fi
+          if grep -Fq "NoSuchMethodError" "$RUNNER_TEMP/neoforge-1.21.11-client.log"; then
+            cat "$RUNNER_TEMP/neoforge-1.21.11-client.log"
+            exit 1
+          fi
+
+      - name: Upload NeoForge smoke evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a0 # v7.0.1
+        with:
+          name: client-1.21.11-neoforge
+          path: |
+            ${{ runner.temp }}/neoforge-1.21.11-client.log
+            neoforge-1.21.11/run/**
+          if-no-files-found: warn
+          retention-days: 14
