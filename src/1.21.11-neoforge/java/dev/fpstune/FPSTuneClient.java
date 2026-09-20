@@ -75,7 +75,7 @@ public final class FPSTuneClient {
             AdaptiveParticleBudgetController.reset(config);
             ConfigStore.save(Minecraft.getInstance().gameDirectory.toPath(), config);
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendSystemMessage(Component.literal(
+                Minecraft.getInstance().gui.getChat().addMessage(Component.literal(
                         "FPS Tune render controls " + (config.enabled ? "enabled" : "disabled")
                 ));
             }
