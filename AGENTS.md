@@ -19,7 +19,7 @@ FPS Tune has versioned targets rather than one universal JAR:
 - Minecraft 1.21.1 NeoForge uses Java 21, NeoForge `21.1.250`, and the isolated ModDevGradle project.
 - Minecraft 1.21.11 uses Java 21, Fabric Loader 0.18.6, Fabric API `0.141.6+1.21.11`, and the remapping Loom plugin.
 - Minecraft 26.2 uses Java 25, Fabric Loader 0.19.3, Fabric API `0.158.0+26.2`, and the non-remapping Loom plugin.
-- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Optional Mod Menu integration remains provisional. No NeoForge 26.3 target is included.
+- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Mod Menu `21.0.0-beta.1` is optional and not required. No NeoForge 26.3 target is included.
 
 The compatibility profiles are declared in `gradle/versions/`, with matching Fabric metadata in `src/1.21.1/resources/`, `src/1.21.11/resources/`, `src/26.2/resources/`, and `src/26.3/resources/`, plus NeoForge metadata in `src/1.21.1-neoforge/resources/` and `src/26.2-neoforge/resources/`.
 
@@ -72,7 +72,7 @@ Follow the relevant validation defined by the linked sources. Report only checks
 
 The six supported target configurations are 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The main `v1.2.5` release contains the five baseline artifacts; Fabric 26.3 is published in the target-specific `v1.2.5-mc26.3` release. Retain the default `mc_target=26.2` and all existing artifact names and releases.
 
-The separate Fabric 26.3 release uses internal version `1.2.5`, annotated tag `v1.2.5-mc26.3`, and `fps-tune-mc26.3-1.2.5.jar`. `.github/workflows/release-26.3.yml` publishes a non-draft target-specific release with binary/sources JARs and checksums; it does not itself enforce graphical testing. The published asset remains subject to the required approved-remote graphical validation and maintainer approval process. Do not promote these assets into the root `v1.2.5` release. See `docs/TESTING.md` and `docs/DISTRIBUTION.md`.
+The separate Fabric 26.3 release uses internal version `1.2.5`, annotated tag `v1.2.5-mc26.3`, and `fps-tune-mc26.3-1.2.5.jar`. `.github/workflows/release-26.3.yml` validates and stages a target-specific draft with binary/sources JARs and checksums; it does not itself enforce graphical testing. The current exact asset was reviewed through the hosted client smoke process and then published as the non-draft [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release. Do not promote these assets into the root `v1.2.5` release. See `docs/TESTING.md` and `docs/DISTRIBUTION.md`.
 
 Hosted target commands are:
 
