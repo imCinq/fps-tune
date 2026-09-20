@@ -10,6 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
 import net.minecraft.core.particles.ParticleTypes;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 /** Real client integration checks, excluded from release artifacts. */
 @SuppressWarnings("UnstableApiUsage")
 public final class FPSTuneClientGameTest implements FabricClientGameTest {
@@ -17,7 +21,6 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		context.runOnClient(client -> check(!FPSTuneClient.config().enabled, "fresh install must be disabled"));
 		try (TestSingleplayerContext world = context.worldBuilder().create()) {
-			world.getConnection().waitForChunksRender();
 			context.getInput().pressKey(InputConstants.KEY_F6);
 			context.runOnClient(client -> check(FPSTuneClient.config().enabled, "F6 enables controls under SDL"));
 			context.getInput().pressKey(InputConstants.KEY_F6);
@@ -53,21 +56,23 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 				config = config.copy();
 				config.weatherRenderingEnabled = false;
 				FPSTuneClient.applyConfig(client.gameDirectory.toPath(), config);
-				try (WeatherEffectRenderer weather = new WeatherEffectRenderer()) {
-					// A null render state is deliberately a sentinel: only the injected
-					// HEAD cancellation may return without vanilla dereferencing it.
-					weather.render(null, null);
+					WeatherEffectRenderer weather = new WeatherEffectRenderer();
+					Method render = weatherRenderMethod();
+					render.trySetAccessible();
+					// Null/default arguments are deliberate sentinels: only the injected
+					// HEAD cancellation may return without vanilla dereferencing them.
+					invokeWeatherRender(weather, render);
 					config = config.copy();
 					config.enabled = false;
 					FPSTuneClient.applyConfig(client.gameDirectory.toPath(), config);
 					boolean vanillaReached = false;
 					try {
-						weather.render(null, null);
+						invokeWeatherRender(weather, render);
 					} catch (NullPointerException expected) {
 						vanillaReached = true;
 					}
 					check(vanillaReached, "master off must restore vanilla weather execution");
-				}
+
 			});
 
 			context.setScreen(() -> new FPSTuneConfigScreen(null));
@@ -102,6 +107,64 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 			client.particleEngine.createParticle(ParticleTypes.FLAME,
 					client.player.getX() + distance, client.player.getY() + 1, client.player.getZ(), 0, 0, 0);
 		}
+	}
+
+	private static Method weatherRenderMethod() {
+		return Arrays.stream(WeatherEffectRenderer.class.getDeclaredMethods())
+				.filter(method -> method.getName().equals("render") && method.getParameterCount() == 3)
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("1.21.11 weather render target is missing"));
+	}
+
+	private static void invokeWeatherRender(WeatherEffectRenderer weather, Method render) {
+		Object[] arguments = Arrays.stream(render.getParameterTypes())
+				.map(FPSTuneClientGameTest::defaultValue)
+				.toArray();
+		try {
+			render.invoke(weather, arguments);
+		} catch (InvocationTargetException exception) {
+			Throwable cause = exception.getCause();
+			if (cause instanceof RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			if (cause instanceof Error error) {
+				throw error;
+			}
+			throw new AssertionError("weather render invocation failed", cause);
+		} catch (ReflectiveOperationException exception) {
+			throw new AssertionError("weather render reflection failed", exception);
+		}
+	}
+
+	private static Object defaultValue(Class<?> type) {
+		if (!type.isPrimitive()) {
+			return null;
+		}
+		if (type == boolean.class) {
+			return false;
+		}
+		if (type == byte.class) {
+			return (byte) 0;
+		}
+		if (type == short.class) {
+			return (short) 0;
+		}
+		if (type == int.class) {
+			return 0;
+		}
+		if (type == long.class) {
+			return 0L;
+		}
+		if (type == float.class) {
+			return 0F;
+		}
+		if (type == double.class) {
+			return 0D;
+		}
+		if (type == char.class) {
+			return '\0';
+		}
+		throw new AssertionError("unsupported primitive weather argument: " + type);
 	}
 
 	private static void check(boolean condition, String message) {
