@@ -240,6 +240,30 @@ jobs:
       - name: Build and test
         run: ./gradlew :neoforge-1.21.11:clean :neoforge-1.21.11:build --no-daemon
 
+      - name: Inspect Minecraft 1.21.11 NeoForge mixin targets
+        run: |
+          mkdir -p "${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge"
+          find "$HOME/.gradle/caches" .gradle -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class' && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/renderer/WeatherEffectRenderer.class'; then
+              basename "$candidate" > ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/minecraft-jar.txt
+              sha256sum "$candidate" | cut -d " " -f 1 > ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/minecraft-jar.sha256
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/WeatherEffectRenderer.txt
+              break
+            fi
+          done
+          test -s ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/ParticleEngine.txt
+          test -s ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/WeatherEffectRenderer.txt
+
+      - name: Upload Minecraft 1.21.11 NeoForge compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: minecraft-1.21.11-neoforge-compatibility-evidence
+          path: ${{ runner.temp }}/compatibility-evidence-1.21.11-neoforge/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Verify packaged NeoForge metadata
         run: |
           artifact=$(find neoforge-1.21.11/build/libs -type f -name "fps-tune-neoforge-1.21.11-*.jar" ! -name "*-sources.jar" -print -quit)
