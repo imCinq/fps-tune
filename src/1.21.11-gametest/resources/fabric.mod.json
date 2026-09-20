@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "fpstune-client-test",
+  "version": "1.0.0",
+  "name": "FPS Tune client integration tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "dev.fpstune.FPSTuneClientGameTest"
+    ]
+  },
+  "depends": {
+    "fpstune": "*",
+    "minecraft": "1.21.11"
+  }
+}
