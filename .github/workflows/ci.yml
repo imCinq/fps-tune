@@ -80,6 +80,35 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+
+      - name: Inspect Minecraft 1.21.11 mixin targets
+        if: always() && matrix.mc_target == '1.21.11'
+        run: |
+          mkdir -p ${{ runner.temp }}/compatibility-evidence-1.21.11
+          find "$HOME/.gradle/caches" .gradle -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if [[ "$(unzip -p "$candidate" version.json 2>/dev/null | jq -r '.id' 2>/dev/null)" == '1.21.11' ]] && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class' && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/renderer/WeatherEffectRenderer.class'; then
+              basename "$candidate" > ${{ runner.temp }}/compatibility-evidence-1.21.11/minecraft-jar.txt
+              unzip -p "$candidate" version.json > ${{ runner.temp }}/compatibility-evidence-1.21.11/version.json
+              sha256sum "$candidate" | cut -d " " -f 1 > ${{ runner.temp }}/compatibility-evidence-1.21.11/minecraft-jar.sha256
+              javap -classpath "$candidate" -p -c -s 'com.mojang.blaze3d.platform.InputConstants$Type' > ${{ runner.temp }}/compatibility-evidence-1.21.11/InputType.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > ${{ runner.temp }}/compatibility-evidence-1.21.11/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > ${{ runner.temp }}/compatibility-evidence-1.21.11/WeatherEffectRenderer.txt
+              break
+            fi
+          done
+          test -s ${{ runner.temp }}/compatibility-evidence-1.21.11/ParticleEngine.txt
+          test -s ${{ runner.temp }}/compatibility-evidence-1.21.11/WeatherEffectRenderer.txt
+          jq -e '.id == "1.21.11"' ${{ runner.temp }}/compatibility-evidence-1.21.11/version.json
+
+      - name: Upload Minecraft 1.21.11 compatibility evidence
+        if: always() && matrix.mc_target == '1.21.11'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a0 # v7.0.1
+        with:
+          name: minecraft-1.21.11-compatibility-evidence
+          path: ${{ runner.temp }}/compatibility-evidence-1.21.11/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Audit client-only boundaries
         run: ./scripts/audit-client-only.sh ${{ matrix.mc_target }}
 
