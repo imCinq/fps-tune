@@ -45,7 +45,7 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 `.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
-The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Real-client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml` and runs with Mod Menu present and absent. Fabric 1.21.11 uses the same hosted client integration coverage in `.github/workflows/client-1-21-11.yml`, with Mod Menu present and absent. NeoForge 1.21.11 uses the same workflow for a hosted client startup smoke that verifies the client-only mod registration and rejects mixin or linkage failures.
+The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Real-client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml` and runs with Mod Menu present and absent. Fabric 1.21.11 uses target-safe hosted client integration coverage in `.github/workflows/client-1-21-11.yml`, with Mod Menu present and absent. It verifies client initialization, configuration application, the particle-engine tick boundary, weather-render suppression, and the settings screen; it does not depend on the 1.21.11 synthetic-world builder, which timed out on the hosted runner before client-world readiness. NeoForge 1.21.11 uses the same workflow for a hosted client startup smoke that verifies the client-only mod registration and rejects mixin or linkage failures.
 
 ## Release verification
 
