@@ -2,7 +2,7 @@
 
 ## Distribution policy
 
-GitHub Releases is the canonical source. The hosted release workflow builds one verified artifact for each supported target and publishes SHA-256 checksums from the same immutable release tag. Modrinth and CurseForge uploads must use those exact verified JARs; do not rebuild or rename them for platform submission.
+GitHub Releases is the canonical source. The applicable hosted release workflow builds one verified artifact for each supported target included in that release and publishes SHA-256 checksums from the same immutable release tag. Modrinth and CurseForge uploads must use those exact verified JARs; do not rebuild or rename them for platform submission.
 
 ## Canonical listing information
 
@@ -41,7 +41,7 @@ Fabric 26.3 is published as a separate, non-draft target-specific release becaus
 - `fps-tune-mc26.3-1.2.5-sources.jar` — source support file.
 - `SHA256SUMS.txt` — checksums for both JARs.
 
-The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` remains an optional provisional integration. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
+The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration and is not required; the hosted client smoke workflow covers both Mod Menu present and absent. The 26.3 release workflow stages a draft before the exact tagged assets are reviewed and published. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
 
 ## Modrinth and CurseForge upload plan
 
