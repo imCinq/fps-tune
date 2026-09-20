@@ -1,16 +1,18 @@
 # Changelog
 
-## FPS Tune v1.2.5
+## FPS Tune v1.2.5 - 2026-09-17
 
-- 🌧️ Turning weather rendering off now also suppresses the landing splash particles spawned by rain and snow, not just the falling precipitation streaks.
-- 🎯 Applied the same weather-off gate across **1.21.1 Fabric**, **1.21.11 Fabric**, **26.2 Fabric**, **26.2 NeoForge**, and **26.3 Fabric**.
-- 🔊 Weather still exists in the world: simulation and rain sounds continue to play while weather-off hides the particles.
+- 🌧️ Fixed weather-off behavior on 1.21.1 so rain and snow landing splash particles are suppressed while weather sounds continue ([#42](https://github.com/imCinq/fps-tune/pull/42)).
+- 🌧️ Applied the weather splash fix to 1.21.11/26.3 and documented the target-specific behavior ([#43](https://github.com/imCinq/fps-tune/pull/43)).
+- 🌧️ Applied the weather splash fix to the 26.2 family while preserving rain and snow sounds ([#44](https://github.com/imCinq/fps-tune/pull/44)).
+- 📦 Published the weather splash fix in the v1.2.5 release ([#45](https://github.com/imCinq/fps-tune/pull/45)).
+- 🔊 Weather simulation and rain/snow sounds continue while weather-off hides local precipitation streaks and landing splash particles.
 
-## FPS Tune v1.2.4 for Minecraft 26.3 Fabric - 2026-09-16
+## FPS Tune v1.2.5 for Minecraft 26.3 Fabric - 2026-09-17
 
-- 🧩 Added a **Fabric 26.3** target using Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and Mod Menu `21.0.0-beta.1` (provisional).
-- 📦 Added the 26.3 release artifact `fps-tune-mc26.3-1.2.4.jar`, its sources JAR, and `SHA256SUMS` checksums.
-- ✅ Kept existing target JAR names, configuration, and controller behavior unchanged.
+- 🧩 Published the separate target-specific release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) for Minecraft 26.3 using Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`.
+- 📦 Published `fps-tune-mc26.3-1.2.5.jar`, its sources JAR, and `SHA256SUMS.txt`.
+- 🧪 Hosted client smoke coverage exercises startup with Mod Menu present and absent; Mod Menu remains optional.
 
 
 ## FPS Tune v1.2.4

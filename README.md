@@ -123,8 +123,8 @@ FPS Tune does not silently update itself or contact an update server. A maintain
 
 The 1.2.5 release also includes `fps-tune-neoforge-26.2-1.2.5.jar`. Use it only with NeoForge 26.2 and Java 25; it uses the native NeoForge Mods screen, does not require Fabric API or Mod Menu, and must not be installed alongside the Fabric 26.2 JAR.
 
-The five 1.2.5 primary release artifacts are: `fps-tune-mc1.21.1-1.2.5.jar` (1.21.1 Fabric), `fps-tune-neoforge-1.21.1-1.2.5.jar` (1.21.1 NeoForge), `fps-tune-mc1.21.11-1.2.5.jar` (1.21.11 Fabric), `fps-tune-1.2.5.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.5.jar` (26.2 NeoForge).
+The root `v1.2.5` release contains five primary artifacts: `fps-tune-mc1.21.1-1.2.5.jar` (1.21.1 Fabric), `fps-tune-neoforge-1.21.1-1.2.5.jar` (1.21.1 NeoForge), `fps-tune-mc1.21.11-1.2.5.jar` (1.21.11 Fabric), `fps-tune-1.2.5.jar` (26.2 Fabric), and `fps-tune-neoforge-26.2-1.2.5.jar` (26.2 NeoForge). The sixth target artifact, `fps-tune-mc26.3-1.2.5.jar`, is published in the separate [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release.
 
 ## Fabric 26.3
 
-Fabric 26.3 is published as a separate target-specific GitHub release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3), which includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is the provisional optional integration dependency (published for 26.3-rc-1). Do not install it alongside another FPS Tune target JAR.
+Fabric 26.3 is published as the separate, non-draft target-specific GitHub release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3), which includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration, not a required dependency; the hosted client smoke matrix covers both Mod Menu present and absent. Do not install it alongside another FPS Tune target JAR.
