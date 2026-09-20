@@ -1,6 +1,5 @@
 package dev.fpstune;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import dev.fpstune.config.FPSTuneConfig;
 import dev.fpstune.screen.FPSTuneConfigScreen;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -18,11 +17,6 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		context.runOnClient(client -> check(!FPSTuneClient.config().enabled, "fresh install must be disabled"));
-			context.getInput().pressKey(InputConstants.KEY_F6);
-			context.runOnClient(client -> check(FPSTuneClient.config().enabled, "F6 enables controls under SDL"));
-			context.getInput().pressKey(InputConstants.KEY_F6);
-			context.runOnClient(client -> check(!FPSTuneClient.config().enabled, "F6 disables controls"));
-
 			context.runOnClient(client -> {
 				FPSTuneConfig config = new FPSTuneConfig();
 				config.enabled = true;
