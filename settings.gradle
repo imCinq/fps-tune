@@ -9,3 +9,4 @@ rootProject.name = "fps-tune"
 
 include(":neoforge-26.2")
 include(":neoforge-1.21.1")
+include(":neoforge-1.21.11")
