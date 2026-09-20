@@ -1,0 +1,35 @@
+license="MIT"
+issueTrackerURL="https://github.com/imCinq/fps-tune/issues"
+
+[[mods]]
+modId="fpstune"
+version="${mod_version}"
+displayName="FPS Tune"
+displayURL="https://github.com/imCinq/fps-tune"
+logoFile="assets/fpstune/icon.png"
+authors="Cinq"
+description='''An opt-in, client-only performance mod that reduces particle workload to improve frame-time consistency in unusually heavy scenes. It intentionally trades some visual density for smoother performance.
+
+FPS Tune limits optional local rendering work only. It does not change gameplay, world simulation, packets, server state, automation, telemetry, update checks, or anti-cheat behavior. It starts disabled by default and can be toggled with F6.
+
+When enabled, it can limit new particle admissions per client tick, protect nearby particles, adjust the particle budget toward the configured target FPS, and independently hide local rain and snow rendering. The visual trade-off is intentional: fewer effects may be visible during unusually dense scenes.
+
+Configuration is available from the NeoForge Mods screen. All settings are local to this Minecraft client.
+'''
+
+[[mixins]]
+config="fpstune.mixins.json"
+
+[[dependencies.fpstune]]
+modId="neoforge"
+type="required"
+versionRange="[${neo_version},)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.fpstune]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="CLIENT"
