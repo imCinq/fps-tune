@@ -30,7 +30,7 @@ Update Minecraft compatibility in a dedicated branch and pull request:
 7. Add tests for any changed admission behavior and build every supported target.
 8. Run a graphical client in a GitHub-hosted or other owner-approved remote environment with FPS Tune disabled and enabled for the new target.
 9. In that remote environment, test a controlled particle storm, diagnostics overlay, Adaptive budget behavior, and optional weather-off suppression (streaks plus landing splash hidden while rain/snow sounds continue), then verify that normal particles, menus, world loading, disconnects, and shutdown remain stable.
-10. Update the target `fabric.mod.json`, `README.md`, `AGENTS.md`, `docs/COMPATIBILITY.md`, `docs/DISTRIBUTION.md`, and `CHANGELOG.md`. Recheck the optional Mod Menu settings screen when its API or Minecraft compatibility changes.
+10. Update the target metadata (`fabric.mod.json` or `META-INF/neoforge.mods.toml`), `README.md`, `AGENTS.md`, `docs/COMPATIBILITY.md`, `docs/DISTRIBUTION.md`, and `CHANGELOG.md`. Recheck the optional Mod Menu settings screen when its API or Minecraft compatibility changes.
 
 Do not claim support for a Minecraft version based only on compilation.
 
@@ -42,7 +42,7 @@ Do not claim support for a Minecraft version based only on compilation.
 4. For a full release, set the same version in `gradle.properties`, `CHANGELOG.md`, and the release tag. For a target-specific patch, keep the internal version and use the documented target tag.
 5. Merge through a pull request with the required CI check.
 6. Create an annotated `vX.Y.Z` tag for a full release, or the documented target-specific tag such as `v1.1.1-mc1.21.1`, and push it.
-7. Let the matching release workflow rebuild from the annotated tag, verify its signed target commit and `main` ancestry, and publish JARs plus SHA-256 checksums. For the 1.21.1 patch, run the hosted promotion mode in `release-1.21.1.yml` to attach the already verified target JARs to the existing `v1.1.1` release.
+7. Let the matching release workflow rebuild from the annotated tag, verify its signed target commit and `main` ancestry, and stage or publish JARs plus SHA-256 checksums. Target-specific workflows may create a draft first; publish only after the required remote client validation and maintainer review. For the 1.21.1 patch, run the hosted promotion mode in `release-1.21.1.yml` to attach the already verified target JARs to the existing `v1.1.1` release.
 8. Download the release artifact, verify its checksum, and smoke-test that exact JAR before announcing it.
 
 ## Player update behavior
