@@ -1,6 +1,7 @@
 package dev.fpstune.screen;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
@@ -25,7 +26,7 @@ final class FPSTuneSettingsIcons {
 
 	private static Component withIcon(String glyph, int color, Component label) {
 		return Component.literal(glyph)
-				.withStyle(Style.EMPTY.withFont(FONT).withColor(TextColor.fromRgb(color)))
+				.withStyle(Style.EMPTY.withFont(new FontDescription.Resource(FONT)).withColor(TextColor.fromRgb(color)))
 				.append(Component.literal(" "))
 				.append(label);
 	}
