@@ -24,8 +24,8 @@ For Fabric targets with Mod Menu, repeat the click-through on each matching Mod 
 
 1. Open the Mods screen, select FPS Tune, and open Configure.
 2. Confirm the FPS Tune details pane shows a wrapped long-form overview with clear sections for behavior, boundaries, setup, and the intentional visual trade-off.
-3. Confirm the main screen groups the master switch and profile under Performance, and rain/snow plus performance overlay under Visual options. Check that the precipitation, profile, and graph glyphs appear beside their text labels at the supported GUI scales.
-4. Open Advanced settings and confirm the grouped particle and Adaptive controls reflect `config/fpstune.properties`; confirm nearby controls dim when nearby priority is off, and target/min/max controls dim when Adaptive is off. Confirm the target selector shows Auto or a numeric target.
+3. Confirm the main screen groups the master switch and profile under Performance, and rain/snow plus performance overlay under Visual options. At supported GUI scales, check that precipitation, profile, and graph glyphs render beside normally readable labels (no tofu boxes in the text).
+4. Open Advanced settings and confirm the grouped particle and Adaptive controls reflect `config/fpstune.properties`; confirm nearby controls dim when nearby priority is off, and target/min/max controls dim when Adaptive is off. Confirm the target selector shows Auto or a numeric target, and the Back action is centered beneath the two-column controls.
 5. Change values, return with Back, close the main screen with Cancel or Escape, and confirm the file and runtime settings are unchanged.
 6. Change values, return with Back, close the main screen with Done, and confirm the file is updated and the new values apply without restarting the client.
 

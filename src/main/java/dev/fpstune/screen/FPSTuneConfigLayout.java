@@ -159,6 +159,10 @@ final class FPSTuneConfigLayout {
 			return ADVANCED_HEADING_HEIGHT;
 		}
 
+		int backButtonX() {
+			return left + (contentWidth - BUTTON_WIDTH) / 2;
+		}
+
 		List<Bounds> interactiveBounds() {
 			return List.of(
 					bounds(left, firstControlY, columnWidth, WIDGET_HEIGHT),
@@ -171,7 +175,7 @@ final class FPSTuneConfigLayout {
 					bounds(right, thirdControlY, columnWidth, WIDGET_HEIGHT),
 					bounds(right, fourthControlY, columnWidth, WIDGET_HEIGHT),
 					bounds(left, resetY, resetButtonWidth, WIDGET_HEIGHT),
-					bounds(left, buttonY, BUTTON_WIDTH, WIDGET_HEIGHT)
+					bounds(backButtonX(), buttonY, BUTTON_WIDTH, WIDGET_HEIGHT)
 			);
 		}
 

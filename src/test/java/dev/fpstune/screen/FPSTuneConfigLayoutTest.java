@@ -35,6 +35,7 @@ final class FPSTuneConfigLayoutTest {
 		assertEquals(44, layout.top());
 		assertEquals(180, layout.resetY());
 		assertEquals(220, layout.buttonY());
+		assertEquals((427 - FPSTuneConfigLayout.BUTTON_WIDTH) / 2, layout.backButtonX());
 		assertTrue(layout.allWidgetsWithin(427, FPSTuneConfigLayout.MINIMUM_GUI_HEIGHT));
 	}
 
