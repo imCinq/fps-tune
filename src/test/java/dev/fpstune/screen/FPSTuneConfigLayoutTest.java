@@ -14,7 +14,14 @@ final class FPSTuneConfigLayoutTest {
 		);
 
 		assertEquals(48, layout.top());
+		assertEquals(70, layout.performanceHeadingY());
+		assertEquals(84, layout.profileY());
+		assertEquals(132, layout.visualsHeadingY());
+		assertEquals(148, layout.weatherY());
+		assertEquals(172, layout.diagnosticsY());
+		assertEquals(196, layout.advancedY());
 		assertEquals(220, layout.buttonY());
+		assertTrue(layout.advancedY() + FPSTuneConfigLayout.WIDGET_HEIGHT <= layout.buttonY());
 		assertTrue(layout.allWidgetsWithin(427, FPSTuneConfigLayout.MINIMUM_GUI_HEIGHT));
 	}
 

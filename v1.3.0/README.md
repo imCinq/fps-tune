@@ -17,6 +17,14 @@ The later stage will add:
 
 Minecraft 1.21.1 and 26.2 remain historical v1.2.x targets during this staged migration. They are not included in the v1.3.0 release plan.
 
+## Planned settings-screen update
+
+Redesign FPS Tune's existing Mod Menu configuration screen, not the global Mods list:
+
+- Group the master switch and profile under Performance; group rain/snow and the performance overlay under Visual options.
+- Add small, native-style bitmap glyphs for the profile, precipitation, and overlay labels.
+- Keep the existing options, Advanced settings, and draft-only-until-Done save behavior.
+
 ## Release rule
 
 Do not publish a stable v1.3.0 tag until all five planned target artifacts pass hosted build, test, audit, packaging, bytecode, and required client smoke verification.
