@@ -43,6 +43,19 @@ Fabric 26.3 is published as a separate, non-draft target-specific release becaus
 
 The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration and is not required; the hosted client smoke workflow covers both Mod Menu present and absent. The 26.3 release workflow stages a draft before the exact tagged assets are reviewed and published. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
 
+## Planned GitHub Release v1.3.0
+
+The planned v1.3.0 release contains exactly these four artifacts:
+
+| Minecraft | Loader | Planned primary file |
+| --- | --- | --- |
+| 26.3 | Fabric | `fps-tune-mc26.3-<version>.jar` |
+| 26.3 | NeoForge | `fps-tune-neoforge-26.3-<version>.jar` |
+| 1.21.11 | Fabric | `fps-tune-mc1.21.11-<version>.jar` |
+| 1.21.11 | NeoForge | `fps-tune-neoforge-1.21.11-<version>.jar` |
+
+Minecraft 26.3 Quilt is deferred and is not a v1.3.0 artifact. The 1.21.1 and 26.2 artifacts remain historical v1.2.x downloads and are also excluded from v1.3.0. Do not stage or publish v1.3.0 until all four exact target artifacts pass the hosted release checks and required client verification. Keep using the verified bytes from the tagged build for every destination.
+
 ## Modrinth and CurseForge upload plan
 
 Create one platform file/version for each exact target. Mark the matching loader and Minecraft version only, mark the matching loader dependency as required, and keep Mod Menu optional for Fabric. On NeoForge, use the native Mods screen and do not list Fabric API as a dependency. Upload only the tested primary JAR; keep source JARs and checksums as GitHub release support files.

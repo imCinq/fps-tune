@@ -13,14 +13,14 @@ The compile also verifies the optional Mod Menu API integration. The settings sc
 Mixin changes require more than hosted unit tests and must be verified in a GitHub-hosted or other owner-approved remote client environment:
 
 1. Inspect the target Minecraft bytecode.
-2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `WeatherEffectRenderer.render` reached from `LevelRenderer.addWeatherPass` on 1.21.11/26.2, and their render boundaries for the selected target.
+2. Confirm the expected `ParticleEngine.add` and `ParticleEngine.tick` shapes, plus `LevelRenderer.renderSnowAndRain` on 1.21.1 or `WeatherEffectRenderer.render` reached from `LevelRenderer.addWeatherPass` on 1.21.11/26.2/26.3, and their render boundaries for the selected target.
 3. Update the mixin and tests together.
 4. Run graphical `runClient` smoke tests for the selected target with FPS Tune disabled, particle admission enabled, weather rendering disabled, diagnostics enabled, and Adaptive mode enabled as separate configuration cases. When weather rendering is disabled, confirm the rain and snow streaks and their landing splash particles disappear while rain/snow sounds continue and Map/World Border effects remain visible.
 5. Record any compatibility change in `CHANGELOG.md` and `docs/MAINTENANCE.md`.
 
 ## Mod Menu settings screen
 
-For Fabric targets with Mod Menu, repeat the click-through on each matching Mod Menu version. For NeoForge 1.21.1 and 26.2, repeat the same settings checks from the native Mods screen extension:
+For Fabric targets with Mod Menu, repeat the click-through on each matching Mod Menu version. For NeoForge 1.21.1, 1.21.11, and 26.2, repeat the same settings checks from the native Mods screen extension. Repeat them for NeoForge 26.3 after its project and client smoke workflow exist:
 
 1. Open the Mods screen, select FPS Tune, and open Configure.
 2. Confirm the FPS Tune details pane shows a wrapped long-form overview with clear sections for behavior, boundaries, setup, and the intentional visual trade-off.
@@ -36,6 +36,14 @@ With Adaptive mode enabled, use a repeatable particle storm to confirm that the 
 Also launch the built FPS Tune JAR without Mod Menu to confirm the optional entrypoint does not affect normal client startup.
 
 If bytecode structure changes, stop and redesign the injection rather than forcing a stale hook. Never gate a worker queue in a way that can leave pending render work permanently unscheduled.
+
+## v1.3.0 release verification
+
+The planned release set is Minecraft 26.3 Fabric, 26.3 NeoForge, 1.21.11 Fabric, and 1.21.11 NeoForge. Quilt 26.3 is deferred; 1.21.1 and 26.2 remain historical artifacts and are excluded from v1.3.0.
+
+Before creating the stable v1.3.0 tag, run the hosted build, tests, audits, packaging/metadata checks, and target-specific bytecode evidence for all four release targets. Run client smoke verification on the exact packaged JAR for each target, including the redesigned settings screen, F6, particle/weather controls, overlay behavior, menu/disconnect/shutdown stability, and the appropriate optional Mod Menu or native NeoForge Mods-screen path. Visually review layout and glyphs in-game. NeoForge 26.3 is currently at a beta development baseline; re-check its official version for the release candidate, and if it remains beta, obtain the owner's decision before publishing a stable FPS Tune release.
+
+Keep historical-target builds separate from the v1.3.0 release artifact matrix. Do not claim the four-target release is ready until every required check for all four targets passes.
 
 ## Repository audits
 
@@ -67,4 +75,4 @@ Do not infer a working graphical environment from `ubuntu-latest` or Xvfb alone:
 
 ## NeoForge targets
 
-Each NeoForge target must pass its isolated build task (`:neoforge-1.21.1:build`, `:neoforge-1.21.11:build`, or `:neoforge-26.2:build`), matching client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata.
+Each existing NeoForge target must pass its isolated build task (`:neoforge-1.21.1:build`, `:neoforge-1.21.11:build`, or `:neoforge-26.2:build`), matching client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata. Once implemented, NeoForge 26.3 must meet the same checks through its isolated build task.
