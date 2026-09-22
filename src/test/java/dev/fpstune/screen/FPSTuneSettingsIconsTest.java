@@ -1,11 +1,13 @@
 package dev.fpstune.screen;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Identifier;
+import net.minecraft.network.chat.Style;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class FPSTuneSettingsIconsTest {
 	@Test
@@ -15,12 +17,15 @@ final class FPSTuneSettingsIconsTest {
 				FPSTuneSettingsIcons.profile(Component.literal("Profile")),
 				FPSTuneSettingsIcons.overlay(Component.literal("Performance overlay"))
 		}) {
-			assertNull(component.getStyle().getFont(), "the wrapper must not set the icon-only font");
+			assertEquals(Style.EMPTY, component.getStyle(), "the wrapper must not set the icon-only font");
 			assertEquals(3, component.getSiblings().size());
 
-			assertNotNull(component.getSiblings().get(0).getStyle().getFont(), "the glyph uses the icon font");
-			assertNull(component.getSiblings().get(1).getStyle().getFont(), "the spacer uses the normal font");
-			assertNull(component.getSiblings().get(2).getStyle().getFont(), "the label uses the normal font");
+			assertTrue(
+					component.getSiblings().get(0).getStyle().getFont() instanceof FontDescription.Resource,
+					"the glyph uses the icon font"
+			);
+			assertEquals(Style.EMPTY, component.getSiblings().get(1).getStyle(), "the spacer uses the normal font");
+			assertEquals(Style.EMPTY, component.getSiblings().get(2).getStyle(), "the label uses the normal font");
 		}
 	}
 }
