@@ -2,7 +2,6 @@ package dev.fpstune.screen;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
-import net.minecraft.network.chat.Identifier;
 import net.minecraft.network.chat.Style;
 import org.junit.jupiter.api.Test;
 
