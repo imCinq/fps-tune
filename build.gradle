@@ -92,6 +92,13 @@ sourceSets {
 			}
 		}
 	}
+	test {
+		java {
+			if (targetMinecraft == "26.3") {
+				srcDir "src/26.3-test/java"
+			}
+		}
+	}
 }
 
 processResources {
