@@ -2,10 +2,9 @@
 
 ## FPS Tune v1.3.0
 
-- 🧩 Added Minecraft **26.3 NeoForge** and **1.21.11 NeoForge** targets alongside Fabric 26.3 and Fabric 1.21.11.
+- 🧩 Added Minecraft **1.21.11 NeoForge** alongside Fabric 1.21.11 and Fabric 26.3. NeoForge 26.3 remains a beta preview and is deferred from the stable release until its loader reaches stable.
 - 🎨 Refreshed the settings screen with grouped Performance and Visual options; scoped icon fonts to glyphs so labels stay readable, and centered Back below Advanced settings.
-- 🧪 Added target-specific regression coverage and hosted build, test, audit, packaging, bytecode, and client-startup checks for the four-target release candidate.
-- ⚠️ NeoForge 26.3 currently uses the 26.3.0.7-beta development baseline; check the loader release status and compatible version before publication.
+- 🧪 Added target-specific regression coverage and hosted build, test, audit, packaging, bytecode, and client-startup checks for the three-target stable release candidate; NeoForge 26.3 retains preview build and smoke coverage.
 
 ## FPS Tune v1.2.5 - 2026-09-17
 

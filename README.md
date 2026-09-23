@@ -12,8 +12,8 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | Published v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. Planned v1.3.0: 26.3 and 1.21.11 on Fabric and NeoForge. Separate JAR per target. |
-| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 1.21.11: 21.11.45+; NeoForge 26.2: 26.2.0.77+; NeoForge 26.3 candidate baseline: 26.3.0.7-beta. |
+| Minecraft | Published v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. Planned stable v1.3.0: 26.3 Fabric, 1.21.11 Fabric and NeoForge. NeoForge 26.3 remains a beta preview and is deferred until its loader is stable. Separate JAR per target. |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 1.21.11: 21.11.45+; NeoForge 26.2: 26.2.0.77+; NeoForge 26.3 preview baseline: 26.3.0.7-beta (excluded from stable v1.3.0). |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 and 26.3 |
 | Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets |
@@ -113,7 +113,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; hosted CI builds all eight repository target profiles (four Fabric and four isolated NeoForge builds), runs tests and audits, and uploads artifacts. The planned v1.3.0 release contains four targets. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; hosted CI builds all eight repository target profiles (four Fabric and four isolated NeoForge builds), runs tests and audits, and uploads artifacts. The planned stable v1.3.0 release contains three targets; hosted CI continues to validate all eight repository build profiles. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
@@ -131,13 +131,12 @@ Fabric 26.3 is published as the separate, non-draft target-specific GitHub relea
 
 ## Planned v1.3.0 targets
 
-The next release candidate contains exactly four primary JARs. It is not published yet.
+The stable v1.3.0 release candidate contains exactly three primary JARs. It is not published yet.
 
 | Minecraft | Loader | Planned artifact |
 | --- | --- | --- |
 | 26.3 | Fabric | fps-tune-mc26.3-1.3.0.jar |
-| 26.3 | NeoForge | fps-tune-neoforge-26.3-1.3.0.jar |
 | 1.21.11 | Fabric | fps-tune-mc1.21.11-1.3.0.jar |
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.3.0.jar |
 
-NeoForge 26.3 is built against 26.3.0.7-beta on Java 25. If the loader still requires a beta at release time, confirm that choice before publishing FPS Tune v1.3.0.
+NeoForge 26.3 remains a Java 25 beta preview built against 26.3.0.7-beta. It stays in implementation and CI validation, but its release artifact is deferred until the NeoForge loader reaches stable.

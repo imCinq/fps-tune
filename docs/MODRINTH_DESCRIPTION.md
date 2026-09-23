@@ -94,4 +94,4 @@ The v1.2.5 release family provides six exact target files: 1.21.1 Fabric, 1.21.1
 
 ## Planned v1.3.0 files
 
-The next release will add a four-target version with these primary JARs: fps-tune-mc26.3-1.3.0.jar (26.3 Fabric), fps-tune-neoforge-26.3-1.3.0.jar (26.3 NeoForge), fps-tune-mc1.21.11-1.3.0.jar (1.21.11 Fabric), and fps-tune-neoforge-1.21.11-1.3.0.jar (1.21.11 NeoForge). Do not present these as published downloads until the v1.3.0 release is published. NeoForge 26.3 uses a beta development baseline; verify its current version and release decision before uploading.
+The stable v1.3.0 release will add these three primary JARs: fps-tune-mc26.3-1.3.0.jar (26.3 Fabric), fps-tune-mc1.21.11-1.3.0.jar (1.21.11 Fabric), and fps-tune-neoforge-1.21.11-1.3.0.jar (1.21.11 NeoForge). Do not present these as published downloads until the v1.3.0 release is published. NeoForge 26.3 remains a beta preview and is deferred until the loader reaches stable.
