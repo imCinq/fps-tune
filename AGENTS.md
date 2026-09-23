@@ -19,9 +19,9 @@ FPS Tune has versioned targets rather than one universal JAR:
 - Minecraft 1.21.1 NeoForge uses Java 21, NeoForge `21.1.250`, and the isolated ModDevGradle project.
 - Minecraft 1.21.11 Fabric uses Java 21, Fabric Loader 0.18.6, Fabric API `0.141.6+1.21.11`, and the remapping Loom plugin. NeoForge 1.21.11 uses Java 21 and an isolated ModDevGradle project with NeoForge 21.11.45.
 - Minecraft 26.2 uses Java 25, Fabric Loader 0.19.3, Fabric API `0.158.0+26.2`, and the non-remapping Loom plugin.
-- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Mod Menu `21.0.0-beta.1` is optional and not required. NeoForge 26.3 is planned for v1.3.0 in a separate isolated project; verify the upstream loader/toolchain version before pinning it. Quilt 26.3 is deferred.
+- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Mod Menu `21.0.0-beta.1` is optional. NeoForge 26.3 uses Java 25 in an isolated ModDevGradle 2.0.147 project, currently built against NeoForge `26.3.0.7-beta`; re-check the upstream version at release-candidate time. Quilt 26.3 is deferred from v1.3.0.
 
-The compatibility profiles are declared in `gradle/versions/`, with matching Fabric metadata in `src/1.21.1/resources/`, `src/1.21.11/resources/`, `src/26.2/resources/`, and `src/26.3/resources/`, plus NeoForge metadata in `src/1.21.1-neoforge/resources/`, `src/1.21.11-neoforge/resources/`, and `src/26.2-neoforge/resources/`. Add the 26.3 NeoForge profile and metadata only with its isolated project.
+The compatibility profiles are declared in `gradle/versions/`, with matching Fabric metadata in `src/1.21.1/resources/`, `src/1.21.11/resources/`, `src/26.2/resources/`, and `src/26.3/resources/`, plus NeoForge metadata in `src/1.21.1-neoforge/resources/`, `src/1.21.11-neoforge/resources/`, `src/26.2-neoforge/resources/`, and `src/26.3-neoforge/resources/`. NeoForge 26.3 remains an isolated ModDevGradle project.
 
 - Prefer narrow, measurable changes over broad rendering rewrites.
 - Keep the mod client-only and disabled by default.
@@ -84,4 +84,5 @@ Hosted target commands are:
 ./gradlew :neoforge-1.21.1:clean :neoforge-1.21.1:build
 ./gradlew :neoforge-1.21.11:clean :neoforge-1.21.11:build
 ./gradlew :neoforge-26.2:clean :neoforge-26.2:build
+./gradlew :neoforge-26.3:clean :neoforge-26.3:build
 ```
