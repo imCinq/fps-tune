@@ -45,18 +45,20 @@ The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3
 
 ## Planned GitHub Release v1.3.0
 
-The planned v1.3.0 release contains exactly these four artifacts. The current NeoForge 26.3 profile uses Java 25, NeoForge `26.3.0.7-beta`, and ModDevGradle `2.0.147`; confirm the loader's release state before approving a stable FPS Tune release.
+The v1.3.0 release candidate is version 1.3.0 and contains exactly these four primary JARs:
 
-| Minecraft | Loader | Planned primary file |
+| Minecraft | Loader | Primary file |
 | --- | --- | --- |
-| 26.3 | Fabric | `fps-tune-mc26.3-<version>.jar` |
-| 26.3 | NeoForge | `fps-tune-neoforge-26.3-<version>.jar` |
-| 26.3 | NeoForge | `fps-tune-neoforge-26.3-<version>.jar` |
-| 1.21.11 | Fabric | `fps-tune-mc1.21.11-<version>.jar` |
-| 1.21.11 | NeoForge | `fps-tune-neoforge-1.21.11-<version>.jar` |
-| 1.21.11 | NeoForge | `fps-tune-neoforge-1.21.11-<version>.jar` |
+| 26.3 | Fabric | fps-tune-mc26.3-1.3.0.jar |
+| 26.3 | NeoForge | fps-tune-neoforge-26.3-1.3.0.jar |
+| 1.21.11 | Fabric | fps-tune-mc1.21.11-1.3.0.jar |
+| 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.3.0.jar |
 
-Minecraft 26.3 Quilt is deferred and is not a v1.3.0 artifact. The 1.21.1 and 26.2 artifacts remain historical v1.2.x downloads and are also excluded from v1.3.0. Do not stage or publish v1.3.0 until all four exact target artifacts pass the hosted release checks and required client verification. Keep using the verified bytes from the tagged build for every destination.
+The tagged .github/workflows/release.yml builds those four targets, checks packaged loader metadata and resources, runs the target audits, and stages binary/source JARs with SHA-256 checksums. On a tag it creates a **draft, non-latest GitHub Release**; an authorized maintainer must review and publish the draft manually. Release assets are individual JARs and a checksum file, not a ZIP download.
+
+NeoForge 26.3 currently uses Java 25, ModDevGradle 2.0.147, and the NeoForge 26.3.0.7-beta build baseline. The v1.3.0 candidate was also manually tested on NeoForge 26.3.0.8-beta. Re-check the upstream version at release-candidate time and confirm the stable-release decision if that target still requires a beta loader.
+
+Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0. Reuse only the verified bytes from the tagged build for every destination.
 
 ## Modrinth and CurseForge upload plan
 
