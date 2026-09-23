@@ -66,6 +66,10 @@ jobs:
           set -euo pipefail
           ./gradlew :clean :build --no-daemon -Pmc_target=26.3
           ./scripts/audit-client-only.sh 26.3
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          mkdir -p release
+          cp "build/libs/fps-tune-mc26.3-$project_version.jar" release/
+          cp "build/libs/fps-tune-mc26.3-$project_version-sources.jar" release/
           ./gradlew :neoforge-26.3:clean :neoforge-26.3:build --no-daemon
           ./scripts/audit-client-only.sh 26.3-neoforge
 
@@ -80,6 +84,9 @@ jobs:
           set -euo pipefail
           ./gradlew :clean :build --no-daemon -Pmc_target=1.21.11
           ./scripts/audit-client-only.sh 1.21.11
+          project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          cp "build/libs/fps-tune-mc1.21.11-$project_version.jar" release/
+          cp "build/libs/fps-tune-mc1.21.11-$project_version-sources.jar" release/
           ./gradlew :neoforge-1.21.11:clean :neoforge-1.21.11:build --no-daemon
           ./scripts/audit-client-only.sh 1.21.11-neoforge
           ./scripts/audit-repository.sh
@@ -90,12 +97,12 @@ jobs:
           project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           mkdir -p release
 
-          fabric_26_3="build/libs/fps-tune-mc26.3-$project_version.jar"
-          fabric_26_3_sources="build/libs/fps-tune-mc26.3-$project_version-sources.jar"
+          fabric_26_3="release/fps-tune-mc26.3-$project_version.jar"
+          fabric_26_3_sources="release/fps-tune-mc26.3-$project_version-sources.jar"
           neoforge_26_3="neoforge-26.3/build/libs/fps-tune-neoforge-26.3-$project_version.jar"
           neoforge_26_3_sources="neoforge-26.3/build/libs/fps-tune-neoforge-26.3-$project_version-sources.jar"
-          fabric_1_21_11="build/libs/fps-tune-mc1.21.11-$project_version.jar"
-          fabric_1_21_11_sources="build/libs/fps-tune-mc1.21.11-$project_version-sources.jar"
+          fabric_1_21_11="release/fps-tune-mc1.21.11-$project_version.jar"
+          fabric_1_21_11_sources="release/fps-tune-mc1.21.11-$project_version-sources.jar"
           neoforge_1_21_11="neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version.jar"
           neoforge_1_21_11_sources="neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version-sources.jar"
 
@@ -105,7 +112,9 @@ jobs:
               exit 1
             fi
             echo "Staging $file"
-            cp "$file" release/
+            if [[ "$file" != release/* ]]; then
+              cp "$file" release/
+            fi
           done
 
           verify_fabric() {
