@@ -43,6 +43,8 @@ The planned release set is Minecraft 26.3 Fabric, 26.3 NeoForge, 1.21.11 Fabric,
 
 Before creating the stable v1.3.0 tag, run the hosted build, tests, audits, packaging/metadata checks, and target-specific bytecode evidence for all four release targets. Run client smoke verification on the exact packaged JAR for each target, including the redesigned settings screen, F6, particle/weather controls, overlay behavior, menu/disconnect/shutdown stability, and the appropriate optional Mod Menu or native NeoForge Mods-screen path. Visually review layout and glyphs in-game. NeoForge 26.3 is currently at a beta development baseline; re-check its official version for the release candidate, and if it remains beta, obtain the owner's decision before publishing a stable FPS Tune release.
 
+Candidate status on the last verified source commit: [CI build/test/audit/package run 35840744457](https://github.com/imCinq/fps-tune/actions/runs/35840744457), [26.3 client smoke run 35840744415](https://github.com/imCinq/fps-tune/actions/runs/35840744415), and [1.21.11 client smoke run 35840744435](https://github.com/imCinq/fps-tune/actions/runs/35840744435) passed. Manual client checks have been reported good for Fabric 26.3, NeoForge 26.3, and Fabric 1.21.11; NeoForge 1.21.11 still needs a manual exact-JAR and native-settings-screen check.
+
 Keep historical-target builds separate from the v1.3.0 release artifact matrix. Do not claim the four-target release is ready until every required check for all four targets passes.
 
 ## Repository audits
