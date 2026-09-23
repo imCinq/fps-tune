@@ -34,10 +34,10 @@ Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS 
 
 | Combination | Status | Notes |
 | --- | --- | --- |
-| All eight target builds | Pending hosted CI for NeoForge 26.3 | CI compiles and tests the four Fabric and four isolated NeoForge targets. |
-| All eight client-only audits | Pending hosted CI for NeoForge 26.3 | Source, metadata, mixin, and repository-boundary checks run in CI. |
-| 26.3 Fabric client | Hosted smoke tests verified | The real-client workflow covers startup and settings integration with Mod Menu present and absent. |
-| 26.3 NeoForge client | Pending hosted startup smoke | The workflow checks native NeoForge client startup, target mixin application, and linkage failures. |
+| All eight target builds | Hosted build, tests, and package verification passed on 2026-09-23 | The four Fabric and four isolated NeoForge targets passed in [CI run 35836864605](https://github.com/imCinq/fps-tune/actions/runs/35836864605). |
+| All eight client-only audits | Hosted audits passed on 2026-09-23 | Source, metadata, mixin, and repository-boundary checks passed in [CI run 35836864605](https://github.com/imCinq/fps-tune/actions/runs/35836864605). |
+| 26.3 Fabric client | Hosted smoke tests verified | The real-client workflow covers startup and settings integration with Mod Menu present and absent in [client smoke run 35836864634](https://github.com/imCinq/fps-tune/actions/runs/35836864634). |
+| 26.3 NeoForge client | Hosted startup smoke passed on 2026-09-23 | Native NeoForge client registration completed, with no mixin or linkage errors, in [client smoke run 35836864634](https://github.com/imCinq/fps-tune/actions/runs/35836864634). |
 | 1.21.1 and 26.2 NeoForge graphical clients | Graphical verification required | The native settings screen, F6 toggle, diagnostics layer, particle control, and weather-off gate (streaks plus landing splash suppressed while rain/snow sounds continue) still need a client smoke test before claiming full graphical compatibility. |
 | FPS Tune without optional settings integration | Verified by build path | The optional Fabric Mod Menu path is not required, and NeoForge uses its native Mods screen. |
 
