@@ -35,7 +35,7 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 2. Update `CHANGELOG.md` in the same pull request and wait for hosted verification.
 3. Merge the release pull request into `main` after the required GitHub Actions checks pass.
 4. Create and push an annotated tag matching the project version using GitHub's release/tag interface. For a target-specific patch, use the target suffix documented below.
-5. The applicable release workflow rebuilds the selected target profiles, reruns the audits, checks that the tag matches the project version, and stages or publishes one binary and one sources JAR per included Minecraft target. Use only the matching verified JAR for any later manual Modrinth or CurseForge submission.
+5. The release workflow rebuilds and audits the exact target set for the tag, verifies packaged metadata and checksums, then stages a draft GitHub Release with individual binary/source JARs. Review and publish that draft manually only after the release gates pass. Use only the matching verified primary JAR for later Modrinth or CurseForge submission.
 
 For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes that target, and its hosted promotion mode attaches the verified 1.21.1 binary and sources JARs to the existing `v1.1.1` release alongside the other target artifacts. The historical `v1.1.1` tag and source remain unchanged.
 
@@ -43,7 +43,7 @@ For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create
 
 The planned v1.3.0 release contains exactly four targets: Minecraft 26.3 Fabric, 26.3 NeoForge, 1.21.11 Fabric, and 1.21.11 NeoForge. Quilt 26.3 is deferred to a later release. Existing 1.21.1 and 26.2 artifacts remain historical downloads but are not in the v1.3.0 release matrix.
 
-The current v1.3.0 branch adds NeoForge 26.3 as an isolated hosted build and client-startup target alongside the two Fabric targets and NeoForge 1.21.11. Its current toolchain baseline is NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25. Re-check the official NeoForge distribution for the release candidate. If only a beta remains available at release time, get the owner's decision before publishing a stable FPS Tune release.
+The current v1.3.0 branch contains isolated build and startup targets for all four release targets. Hosted builds, tests, audits, package checks, bytecode inspection, and client-startup smoke checks passed on the recorded candidate commit. NeoForge 26.3 uses `26.3.0.7-beta` as its build baseline; the manual client check used `26.3.0.8-beta`. Re-check the upstream distribution for the release candidate. If the NeoForge target still requires a beta loader, obtain an explicit release decision before publishing a stable FPS Tune release. The unified release workflow stages a draft and does not publish it.
 
 ## Fabric 26.3 target-specific release
 
