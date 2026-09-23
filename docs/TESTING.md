@@ -2,9 +2,9 @@
 
 ## Hosted deterministic checks
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds all seven staged target configurations, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger the CI workflow with `workflow_dispatch`; the hosted matrix builds all eight staged target configurations, runs the committed tests and audits, and uploads the verified artifact. Do not invoke Java, any JDK, Gradle, the Gradle Wrapper, or project dependencies on the owner's device.
 
-The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for Fabric and NeoForge 1.21.1, Fabric and NeoForge 1.21.11, and Java 25 for Fabric and NeoForge 26.2 plus Fabric 26.3.
+The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for Fabric and NeoForge 1.21.1, Fabric and NeoForge 1.21.11, and Java 25 for Fabric and NeoForge 26.2/26.3.
 
 The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
 
@@ -20,7 +20,7 @@ Mixin changes require more than hosted unit tests and must be verified in a GitH
 
 ## Mod Menu settings screen
 
-For Fabric targets with Mod Menu, repeat the click-through on each matching Mod Menu version. For NeoForge 1.21.1, 1.21.11, and 26.2, repeat the same settings checks from the native Mods screen extension. Repeat them for NeoForge 26.3 after its project and client smoke workflow exist:
+For Fabric targets with Mod Menu, repeat the click-through on each matching Mod Menu version. For NeoForge 1.21.1, 1.21.11, 26.2, and 26.3, repeat the same settings checks from the native Mods screen extension:
 
 1. Open the Mods screen, select FPS Tune, and open Configure.
 2. Confirm the FPS Tune details pane shows a wrapped long-form overview with clear sections for behavior, boundaries, setup, and the intentional visual trade-off.
@@ -53,7 +53,7 @@ Keep historical-target builds separate from the v1.3.0 release artifact matrix. 
 
 `.github/workflows/ci.yml` repeats the build and audits on GitHub Actions and uploads the verified artifacts. The workflow is the clean-checkout verification signal; report its hosted results in the pull request.
 
-The CI matrix builds each supported `mc_target`, including the `mc_target=26.3` Fabric target on Java 25. Real-client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml` and runs with Mod Menu present and absent. Fabric 1.21.11 uses target-safe hosted client integration coverage in `.github/workflows/client-1-21-11.yml`, with Mod Menu present and absent. It verifies client initialization, configuration application, the particle-engine tick boundary, weather-render suppression, and the settings screen; it does not depend on the 1.21.11 synthetic-world builder, which timed out on the hosted runner before client-world readiness. NeoForge 1.21.11 uses the same workflow for a hosted client startup smoke that verifies the client-only mod registration and rejects mixin or linkage failures.
+The CI matrix builds each supported profile: Fabric targets use `mc_target`, while every NeoForge profile has an isolated Gradle project. NeoForge 26.3 builds on Java 25. Real-client smoke coverage for that target is defined in `.github/workflows/client-26.3.yml` and runs with Mod Menu present and absent. Fabric 1.21.11 uses target-safe hosted client integration coverage in `.github/workflows/client-1-21-11.yml`, with Mod Menu present and absent. It verifies client initialization, configuration application, the particle-engine tick boundary, weather-render suppression, and the settings screen; it does not depend on the 1.21.11 synthetic-world builder, which timed out on the hosted runner before client-world readiness. NeoForge 1.21.11 uses the same workflow for a hosted client startup smoke that verifies the client-only mod registration and rejects mixin or linkage failures. NeoForge 26.3 adds the same isolated startup smoke to `.github/workflows/client-26.3.yml`.
 
 ## Release verification
 
@@ -75,4 +75,4 @@ Do not infer a working graphical environment from `ubuntu-latest` or Xvfb alone:
 
 ## NeoForge targets
 
-Each existing NeoForge target must pass its isolated build task (`:neoforge-1.21.1:build`, `:neoforge-1.21.11:build`, or `:neoforge-26.2:build`), matching client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata. Once implemented, NeoForge 26.3 must meet the same checks through its isolated build task.
+Each NeoForge target must pass its isolated build task (`:neoforge-1.21.1:build`, `:neoforge-1.21.11:build`, `:neoforge-26.2:build`, or `:neoforge-26.3:build`), matching client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata. NeoForge 26.3 follows the same checks through its isolated build task and hosted client startup smoke; these checks do not replace visual review on the matching client.

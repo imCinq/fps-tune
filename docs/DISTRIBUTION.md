@@ -12,8 +12,8 @@ GitHub Releases is the canonical source. The applicable hosted release workflow 
 - Category: Optimization
 - License: MIT
 - Environment: Client only
-- Minecraft targets: 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric
-- Java: 21 for 1.21.1 Fabric/NeoForge and 1.21.11 Fabric; 25 for 26.2 Fabric/NeoForge and 26.3 Fabric
+- Minecraft targets: 1.21.1 Fabric and NeoForge, 1.21.11 Fabric and NeoForge, 26.2 Fabric and NeoForge, and 26.3 Fabric and NeoForge
+- Java: 21 for 1.21.1 Fabric/NeoForge and 1.21.11 Fabric/NeoForge; 25 for 26.2 and 26.3 Fabric/NeoForge
 - Required dependency: matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets
 - Source and issue tracker: the public GitHub repository
 
@@ -45,13 +45,15 @@ The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3
 
 ## Planned GitHub Release v1.3.0
 
-The planned v1.3.0 release contains exactly these four artifacts:
+The planned v1.3.0 release contains exactly these four artifacts. The current NeoForge 26.3 profile uses Java 25, NeoForge `26.3.0.7-beta`, and ModDevGradle `2.0.147`; confirm the loader's release state before approving a stable FPS Tune release.
 
 | Minecraft | Loader | Planned primary file |
 | --- | --- | --- |
 | 26.3 | Fabric | `fps-tune-mc26.3-<version>.jar` |
 | 26.3 | NeoForge | `fps-tune-neoforge-26.3-<version>.jar` |
+| 26.3 | NeoForge | `fps-tune-neoforge-26.3-<version>.jar` |
 | 1.21.11 | Fabric | `fps-tune-mc1.21.11-<version>.jar` |
+| 1.21.11 | NeoForge | `fps-tune-neoforge-1.21.11-<version>.jar` |
 | 1.21.11 | NeoForge | `fps-tune-neoforge-1.21.11-<version>.jar` |
 
 Minecraft 26.3 Quilt is deferred and is not a v1.3.0 artifact. The 1.21.1 and 26.2 artifacts remain historical v1.2.x downloads and are also excluded from v1.3.0. Do not stage or publish v1.3.0 until all four exact target artifacts pass the hosted release checks and required client verification. Keep using the verified bytes from the tagged build for every destination.

@@ -22,7 +22,7 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 Update Minecraft compatibility in a dedicated branch and pull request:
 
 1. Add or update the matching profile in `gradle/versions/` with Minecraft, loader, API or NeoForge, build plugin, Java, mappings, and artifact settings documented as compatible by their official projects.
-2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for each target. Existing isolated projects cover 1.21.1, 1.21.11, and 26.2; the planned 26.3 NeoForge target must get its own project after its compatible toolchain is confirmed.
+2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for each target. Each target has its own isolated project, including `neoforge-26.3` with NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
 5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2/26.3 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
@@ -51,11 +51,11 @@ There is no in-mod updater. Updating means downloading the new GitHub Release JA
 
 ## NeoForge target maintenance
 
-Keep each NeoForge project isolated from the Fabric root build. Existing projects include `neoforge-1.21.1`, `neoforge-1.21.11`, and `neoforge-26.2`; the planned `neoforge-26.3` target must follow the same isolation. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
+Keep each NeoForge project isolated from the Fabric root build. Projects include `neoforge-1.21.1`, `neoforge-1.21.11`, `neoforge-26.2`, and `neoforge-26.3`; each has a matching profile, versioned Java/resources directories, and hosted checks. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
 
 
 ## Fabric 26.3 port
 
-Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`. During v1.3.0 development, `mc_target=26.3` is the default; retain explicit profiles for historical targets until the release transition is complete. NeoForge 26.3 is a separate planned v1.3.0 target and must not be treated as supported until its isolated project passes the full verification gate. Quilt is deferred from v1.3.0.
+Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`. During v1.3.0 development, `mc_target=26.3` is the default; retain explicit profiles for historical targets until the release transition is complete. NeoForge 26.3 is a separate v1.3.0 target with its own isolated project; it is not ready for release until its hosted checks and required client verification pass. Quilt is deferred from v1.3.0.
 
 Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertion instruction, plus the precipitation renderer and callers before adapting injections. Preserve successful-admission accounting and client-thread ownership. Deprecated APIs are not automatically broken APIs: migrate a bridge only when required or separately justified. Do not suppress missing mixin hooks to make a launch pass.
