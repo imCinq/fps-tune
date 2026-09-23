@@ -11,7 +11,7 @@ The v1.3.0 release is planned for exactly these four loader/version targets:
 - Minecraft 1.21.11 Fabric
 - Minecraft 1.21.11 NeoForge
 
-Implementation work for the first three targets is present in the current PR; release artifacts still need to be built and verified. NeoForge 26.3 is the next implementation target. As of 2026-09-22, the available NeoForge 26.3 development baseline is `26.3.0.1-beta`; re-check the official distribution and pin the appropriate version when adding its isolated project and again for the release candidate. If the loader is still beta at v1.3.0 release time, confirm that release choice before publishing a stable FPS Tune release.
+Implementation work for all four targets is in this PR. NeoForge 26.3 uses an isolated project with NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25, matching the current official 26.3 ModDevGradle template. Hosted build, audit, package, and client-startup checks for NeoForge 26.3 are pending. Re-check the official distribution for the release candidate; if the loader is still beta then, confirm that release choice before publishing a stable FPS Tune release.
 
 ## Deferred targets
 

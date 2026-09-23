@@ -43,7 +43,7 @@ For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create
 
 The planned v1.3.0 release contains exactly four targets: Minecraft 26.3 Fabric, 26.3 NeoForge, 1.21.11 Fabric, and 1.21.11 NeoForge. Quilt 26.3 is deferred to a later release. Existing 1.21.1 and 26.2 artifacts remain historical downloads but are not in the v1.3.0 release matrix.
 
-The current v1.3.0 branch prepares the two Fabric targets and NeoForge 1.21.11. NeoForge 26.3 is the remaining implementation target; add it as a separate hosted build and release path. Re-check the official NeoForge distribution when pinning the loader and for the release candidate. If only a beta remains available at release time, get the owner's decision before publishing a stable FPS Tune release.
+The current v1.3.0 branch adds NeoForge 26.3 as an isolated hosted build and client-startup target alongside the two Fabric targets and NeoForge 1.21.11. Its current toolchain baseline is NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25. Re-check the official NeoForge distribution for the release candidate. If only a beta remains available at release time, get the owner's decision before publishing a stable FPS Tune release.
 
 ## Fabric 26.3 target-specific release
 
