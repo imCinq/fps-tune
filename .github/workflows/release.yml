@@ -100,38 +100,58 @@ jobs:
           neoforge_1_21_11_sources="neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version-sources.jar"
 
           for file in "$fabric_26_3" "$fabric_26_3_sources" "$neoforge_26_3" "$neoforge_26_3_sources" "$fabric_1_21_11" "$fabric_1_21_11_sources" "$neoforge_1_21_11" "$neoforge_1_21_11_sources"; do
-            test -f "$file"
+            if [[ ! -f "$file" ]]; then
+              echo "Required release input is missing: $file" >&2
+              exit 1
+            fi
+            echo "Staging $file"
             cp "$file" release/
           done
 
           verify_fabric() {
-            local jar="$1" mc="$2" java_floor="$3"
-            unzip -p "$jar" fabric.mod.json |
-              jq -e --arg version "$project_version" --arg mc "$mc" --arg java_floor "$java_floor" '
+            local jar="$1" mc="$2" java_floor="$3" metadata
+            echo "Verifying Fabric metadata: $jar"
+            if ! metadata=$(unzip -p "$jar" fabric.mod.json) ||
+              ! jq -e --arg version "$project_version" --arg mc "$mc" --arg java_floor "$java_floor" '
                 .id == "fpstune" and
                 .version == $version and
                 .environment == "client" and
                 .depends.minecraft == $mc and
                 .depends.java == (">=" + $java_floor) and
                 .icon == "assets/fpstune/icon.png"
-              ' >/dev/null
+              ' <<<"$metadata" >/dev/null; then
+              echo "Fabric metadata validation failed for $jar" >&2
+              unzip -p "$jar" fabric.mod.json >&2 || true
+              exit 1
+            fi
             unzip -p "$jar" assets/fpstune/icon.png >/dev/null
             unzip -p "$jar" fpstune.mixins.json | jq -e '.required == true' >/dev/null
+            echo "Verified Fabric metadata: $jar"
+          }
+
+          require_neoforge_metadata() {
+            local metadata="$1" expected="$2" label="$3"
+            if ! grep -Fq -- "$expected" <<<"$metadata"; then
+              echo "NeoForge metadata for $label is missing: $expected" >&2
+              printf '%s\n' "$metadata" >&2
+              exit 1
+            fi
           }
 
           verify_neoforge() {
-            local jar="$1" mc="$2" loader="$3"
-            local metadata
+            local jar="$1" mc="$2" loader="$3" metadata
+            echo "Verifying NeoForge metadata: $jar"
             metadata=$(unzip -p "$jar" META-INF/neoforge.mods.toml)
-            grep -Fq "version=\"$project_version\"" <<<"$metadata"
-            grep -Fq "versionRange=\"[$loader,)\"" <<<"$metadata"
-            grep -Fq "versionRange=\"[$mc]\"" <<<"$metadata"
+            require_neoforge_metadata "$metadata" "version=\"$project_version\"" "$jar"
+            require_neoforge_metadata "$metadata" "versionRange=\"[$loader,)\"" "$jar"
+            require_neoforge_metadata "$metadata" "versionRange=\"[$mc]\"" "$jar"
             unzip -p "$jar" assets/fpstune/icon.png >/dev/null
             unzip -p "$jar" fpstune.mixins.json >/dev/null
             if unzip -l "$jar" | grep -Fq "fabric.mod.json"; then
               echo "NeoForge artifact contains Fabric metadata: $jar" >&2
               exit 1
             fi
+            echo "Verified NeoForge metadata: $jar"
           }
 
           verify_fabric "release/$(basename "$fabric_26_3")" "26.3" "25"
@@ -140,7 +160,11 @@ jobs:
           verify_neoforge "release/$(basename "$neoforge_1_21_11")" "1.21.11" "21.11.45"
 
           jar_count=$(find release -maxdepth 1 -type f -name '*.jar' | wc -l | tr -d '[:space:]')
-          test "$jar_count" = "8"
+          if [[ "$jar_count" != "8" ]]; then
+            echo "Expected eight JAR files (four runtime and four sources); found $jar_count" >&2
+            find release -maxdepth 1 -type f -print >&2
+            exit 1
+          fi
           (
             cd release
             sha256sum *.jar > SHA256SUMS.txt
