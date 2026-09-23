@@ -20,7 +20,7 @@ NeoForge 26.3 remains a beta preview. Its implementation, hosted build, and star
 
 ## Hosted verification
 
-The existing candidate CI and client-smoke runs passed, but the previous release assembly contained four targets. The revised three-target release workflow must pass on the updated PR head and verify exactly three runtime JARs, three source JARs, and SHA-256 checksums. The PR's current GitHub Actions runs are the source of truth for the final candidate.
+On revised candidate commit `3ac19ae8c84d11f6c026ec5f81daba733e9a460e`, [CI run 35851542171](https://github.com/imCinq/fps-tune/actions/runs/35851542171), [three-target release assembly run 35851542091](https://github.com/imCinq/fps-tune/actions/runs/35851542091), [26.3 client smoke run 35851542157](https://github.com/imCinq/fps-tune/actions/runs/35851542157), and [1.21.11 client smoke run 35851542004](https://github.com/imCinq/fps-tune/actions/runs/35851542004) passed. The release assembly verified exactly three runtime JARs, three source JARs, packaged metadata, and SHA-256 checksums. The 26.3 smoke also covers NeoForge 26.3 startup as a beta preview; it does not add that preview JAR to the release package.
 
 Hosted checks cover startup and package structure; they do not replace visual confirmation of each exact packaged JAR.
 
