@@ -34,12 +34,14 @@ Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS 
 
 | Combination | Status | Notes |
 | --- | --- | --- |
-| All eight target builds | Hosted build, tests, and package verification passed on 2026-09-23 | The four Fabric and four isolated NeoForge targets passed in [CI run 35836864605](https://github.com/imCinq/fps-tune/actions/runs/35836864605). |
-| All eight client-only audits | Hosted audits passed on 2026-09-23 | Source, metadata, mixin, and repository-boundary checks passed in [CI run 35836864605](https://github.com/imCinq/fps-tune/actions/runs/35836864605). |
-| 26.3 Fabric client | Hosted smoke tests verified | The real-client workflow covers startup and settings integration with Mod Menu present and absent in [client smoke run 35836864634](https://github.com/imCinq/fps-tune/actions/runs/35836864634). |
-| 26.3 NeoForge client | Hosted startup smoke passed on 2026-09-23 | Native NeoForge client registration completed, with no mixin or linkage errors, in [client smoke run 35836864634](https://github.com/imCinq/fps-tune/actions/runs/35836864634). |
-| 1.21.1 and 26.2 NeoForge graphical clients | Graphical verification required | The native settings screen, F6 toggle, diagnostics layer, particle control, and weather-off gate (streaks plus landing splash suppressed while rain/snow sounds continue) still need a client smoke test before claiming full graphical compatibility. |
-| FPS Tune without optional settings integration | Verified by build path | The optional Fabric Mod Menu path is not required, and NeoForge uses its native Mods screen. |
+| All eight target builds and audits | Hosted build, tests, packaging, and audits passed on the v1.3.0 source commit | The four Fabric and four isolated NeoForge profiles passed in [CI run 35840744457](https://github.com/imCinq/fps-tune/actions/runs/35840744457). |
+| 26.3 Fabric client | Hosted smoke passed with Mod Menu present and absent | See [26.3 client smoke run 35840744415](https://github.com/imCinq/fps-tune/actions/runs/35840744415). |
+| 26.3 NeoForge client | Hosted startup smoke passed | NeoForge client registration completed in [26.3 client smoke run 35840744415](https://github.com/imCinq/fps-tune/actions/runs/35840744415). |
+| 1.21.11 Fabric client | Hosted smoke passed with Mod Menu present and absent | See [1.21.11 client smoke run 35840744435](https://github.com/imCinq/fps-tune/actions/runs/35840744435). |
+| 1.21.11 NeoForge client | Hosted startup smoke passed | NeoForge client registration completed in [1.21.11 client smoke run 35840744435](https://github.com/imCinq/fps-tune/actions/runs/35840744435). |
+| Manual candidate checks | Good reported for Fabric 26.3, NeoForge 26.3, and Fabric 1.21.11 | A manual NeoForge 1.21.11 check has not been reported. |
+| Historical 1.21.1 and 26.2 clients | Excluded from v1.3.0 | Preserve the existing v1.2.x release assets. |
+| FPS Tune without optional settings integration | Verified by build path | Mod Menu is optional on Fabric; NeoForge uses its native Mods screen. |
 
 ## Runtime boundary
 
