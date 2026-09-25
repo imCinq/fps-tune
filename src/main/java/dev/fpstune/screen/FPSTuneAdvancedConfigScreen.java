@@ -197,7 +197,7 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 				.build());
 
 		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, button -> returnToMain())
-				.bounds(left, layout.buttonY(), FPSTuneConfigLayout.BUTTON_WIDTH, 20)
+				.bounds(layout.backButtonX(), layout.buttonY(), FPSTuneConfigLayout.BUTTON_WIDTH, 20)
 				.build());
 
 		updateWidgetStates();

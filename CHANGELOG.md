@@ -1,5 +1,11 @@
 # Changelog
 
+## FPS Tune v1.3.0
+
+- 🧩 Added Minecraft **1.21.11 NeoForge** alongside Fabric 1.21.11 and Fabric 26.3. NeoForge 26.3 remains a beta preview and is deferred from the stable release until its loader reaches stable.
+- 🎨 Refreshed the settings screen with grouped Performance and Visual options; scoped icon fonts to glyphs so labels stay readable, and centered Back below Advanced settings.
+- 🧪 Added target-specific regression coverage and hosted build, test, audit, packaging, bytecode, and client-startup checks for the three-target stable release candidate; NeoForge 26.3 retains preview build and smoke coverage.
+
 ## FPS Tune v1.2.5 - 2026-09-17
 
 - 🌧️ Fixed weather-off behavior on 1.21.1 so rain and snow landing splash particles are suppressed while weather sounds continue ([#42](https://github.com/imCinq/fps-tune/pull/42)).

@@ -91,3 +91,7 @@ FPS Tune is released under the MIT License. It has no telemetry, analytics, cust
 ## Loader compatibility
 
 The v1.2.5 release family provides six exact target files: 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The Fabric 26.3 file is published in the separate target-specific GitHub release `v1.2.5-mc26.3`. Select the file matching both Minecraft and loader. Never install multiple FPS Tune target JARs together.
+
+## Planned v1.3.0 files
+
+The stable v1.3.0 release will add these three primary JARs: fps-tune-mc26.3-1.3.0.jar (26.3 Fabric), fps-tune-mc1.21.11-1.3.0.jar (1.21.11 Fabric), and fps-tune-neoforge-1.21.11-1.3.0.jar (1.21.11 NeoForge). Do not present these as published downloads until the v1.3.0 release is published. NeoForge 26.3 remains a beta preview and is deferred until the loader reaches stable.

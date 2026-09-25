@@ -22,10 +22,10 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 Update Minecraft compatibility in a dedicated branch and pull request:
 
 1. Add or update the matching profile in `gradle/versions/` with Minecraft, loader, API or NeoForge, build plugin, Java, mappings, and artifact settings documented as compatible by their official projects.
-2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for NeoForge 1.21.1 or 26.2.
+2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for each target. Each target has its own isolated project, including `neoforge-26.3` with NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
-5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
+5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2/26.3 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.
 6. Adapt a mixin only when the new bytecode requires it, and avoid hooks that can stall render-worker queues.
 7. Add tests for any changed admission behavior and build every supported target.
 8. Run a graphical client in a GitHub-hosted or other owner-approved remote environment with FPS Tune disabled and enabled for the new target.
@@ -51,11 +51,11 @@ There is no in-mod updater. Updating means downloading the new GitHub Release JA
 
 ## NeoForge target maintenance
 
-Keep `neoforge-1.21.1` and `neoforge-26.2` isolated from the Fabric root build. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
+Keep each NeoForge project isolated from the Fabric root build. Projects include `neoforge-1.21.1`, `neoforge-1.21.11`, `neoforge-26.2`, and `neoforge-26.3`; each has a matching profile, versioned Java/resources directories, and hosted checks. Update the matching `gradle/versions/<version>-neoforge.properties`, versioned Java/resources directories, and NeoForge workflow together. Verify the exact target-version API event signatures and packaged TOML before merging a loader-specific change.
 
 
 ## Fabric 26.3 port
 
-Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`; retain the existing default `mc_target=26.2` and all older artifact names. No NeoForge 26.3 target is included.
+Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`. During v1.3.0 development, `mc_target=26.3` is the default; retain explicit profiles for historical targets until the release transition is complete. NeoForge 26.3 remains a beta preview in an isolated project with hosted build, audit, and startup-smoke coverage; it is excluded from stable v1.3.0 until the loader reaches stable. Quilt is deferred from v1.3.0.
 
 Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertion instruction, plus the precipitation renderer and callers before adapting injections. Preserve successful-admission accounting and client-thread ownership. Deprecated APIs are not automatically broken APIs: migrate a bridge only when required or separately justified. Do not suppress missing mixin hooks to make a launch pass.

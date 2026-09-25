@@ -61,6 +61,15 @@ public final class FPSTuneConfigScreen extends Screen {
 				(checkbox, value) -> draftConfig.enabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.enabled.tooltip"))).build());
 
+		addRenderableOnly(new StringWidget(
+				left,
+				layout.performanceHeadingY(),
+				contentWidth,
+				12,
+				Component.translatable("section.fpstune.performance"),
+				font
+		));
+
 		PerformanceProfile currentProfile = profileFor(draftConfig);
 		addRenderableWidget(CycleButton.<PerformanceProfile>builder(
 				FPSTuneConfigScreen::formatProfile,
@@ -70,7 +79,7 @@ public final class FPSTuneConfigScreen extends Screen {
 				layout.profileY(),
 				contentWidth,
 				20,
-				Component.translatable("option.fpstune.profile"),
+				FPSTuneSettingsIcons.profile(Component.translatable("option.fpstune.profile")),
 				(button, value) -> applyProfile(draftConfig, value)
 		));
 
@@ -81,15 +90,24 @@ public final class FPSTuneConfigScreen extends Screen {
 				font
 		).setMaxWidth(contentWidth).setCentered(true));
 
+		addRenderableOnly(new StringWidget(
+				left,
+				layout.visualsHeadingY(),
+				contentWidth,
+				12,
+				Component.translatable("section.fpstune.visuals"),
+				font
+		));
+
 		addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.weather_rendering"),
+				FPSTuneSettingsIcons.precipitation(Component.translatable("option.fpstune.weather_rendering")),
 				font
 		).pos(left, layout.weatherY()).maxWidth(contentWidth).selected(draftConfig.weatherRenderingEnabled).onValueChange(
 				(checkbox, value) -> draftConfig.weatherRenderingEnabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.weather_rendering.tooltip"))).build());
 
 		addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.diagnostics_hud"),
+				FPSTuneSettingsIcons.overlay(Component.translatable("option.fpstune.diagnostics_hud")),
 				font
 		).pos(left, layout.diagnosticsY()).maxWidth(contentWidth).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
 				(checkbox, value) -> draftConfig.diagnosticsHudEnabled = value

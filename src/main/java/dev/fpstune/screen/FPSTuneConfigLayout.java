@@ -19,10 +19,14 @@ final class FPSTuneConfigLayout {
 
 	private static final int DESCRIPTION_Y = 20;
 	private static final int BASIC_INITIAL_TOP = 48;
-	private static final int BASIC_MINIMUM_LAYOUT_HEIGHT = 178;
-	private static final int BASIC_CONTROL_STEP = 25;
-	private static final int BASIC_PROFILE_HELP_OFFSET = 49;
-	private static final int BASIC_ADVANCED_OFFSET = 132;
+	private static final int BASIC_MINIMUM_LAYOUT_HEIGHT = 192;
+	private static final int BASIC_PERFORMANCE_HEADING_OFFSET = 22;
+	private static final int BASIC_PROFILE_OFFSET = 36;
+	private static final int BASIC_PROFILE_HELP_OFFSET = 59;
+	private static final int BASIC_VISUALS_HEADING_OFFSET = 84;
+	private static final int BASIC_WEATHER_OFFSET = 100;
+	private static final int BASIC_DIAGNOSTICS_OFFSET = 124;
+	private static final int BASIC_ADVANCED_OFFSET = 148;
 	private static final int ADVANCED_INITIAL_TOP = 44;
 	private static final int ADVANCED_MINIMUM_LAYOUT_HEIGHT = 176;
 	private static final int ADVANCED_HEADING_HEIGHT = 12;
@@ -53,10 +57,12 @@ final class FPSTuneConfigLayout {
 				left,
 				top,
 				top,
-				top + BASIC_CONTROL_STEP,
+				top + BASIC_PERFORMANCE_HEADING_OFFSET,
+				top + BASIC_PROFILE_OFFSET,
 				top + BASIC_PROFILE_HELP_OFFSET,
-				top + BASIC_CONTROL_STEP * 3,
-				top + BASIC_CONTROL_STEP * 4,
+				top + BASIC_VISUALS_HEADING_OFFSET,
+				top + BASIC_WEATHER_OFFSET,
+				top + BASIC_DIAGNOSTICS_OFFSET,
 				top + BASIC_ADVANCED_OFFSET,
 				buttonY,
 				actionButtonWidth,
@@ -106,8 +112,10 @@ final class FPSTuneConfigLayout {
 			int left,
 			int top,
 			int enabledY,
+			int performanceHeadingY,
 			int profileY,
 			int profileHelpY,
+			int visualsHeadingY,
 			int weatherY,
 			int diagnosticsY,
 			int advancedY,
@@ -151,6 +159,10 @@ final class FPSTuneConfigLayout {
 			return ADVANCED_HEADING_HEIGHT;
 		}
 
+		int backButtonX() {
+			return left + (contentWidth - BUTTON_WIDTH) / 2;
+		}
+
 		List<Bounds> interactiveBounds() {
 			return List.of(
 					bounds(left, firstControlY, columnWidth, WIDGET_HEIGHT),
@@ -163,7 +175,7 @@ final class FPSTuneConfigLayout {
 					bounds(right, thirdControlY, columnWidth, WIDGET_HEIGHT),
 					bounds(right, fourthControlY, columnWidth, WIDGET_HEIGHT),
 					bounds(left, resetY, resetButtonWidth, WIDGET_HEIGHT),
-					bounds(left, buttonY, BUTTON_WIDTH, WIDGET_HEIGHT)
+					bounds(backButtonX(), buttonY, BUTTON_WIDTH, WIDGET_HEIGHT)
 			);
 		}
 

@@ -92,6 +92,13 @@ sourceSets {
 			}
 		}
 	}
+	test {
+		java {
+			if (targetMinecraft == "26.3") {
+				srcDir "src/26.3-test/java"
+			}
+		}
+	}
 }
 
 processResources {
@@ -136,7 +143,7 @@ publishing {
 }
 
 // Opt-in, isolated client integration tests; never included in the distributed mod.
-if (targetMinecraft == "26.3" && providers.gradleProperty("client_smoke_test").isPresent()) {
+if (targetMinecraft in ["1.21.11", "26.3"] && providers.gradleProperty("client_smoke_test").isPresent()) {
 	fabricApi {
 		configureTests {
 			createSourceSet = true
@@ -145,6 +152,6 @@ if (targetMinecraft == "26.3" && providers.gradleProperty("client_smoke_test").i
 			enableClientGameTests = true
 		}
 	}
-	sourceSets.gametest.java.setSrcDirs(["src/26.3-gametest/java"])
-	sourceSets.gametest.resources.setSrcDirs(["src/26.3-gametest/resources"])
+	sourceSets.gametest.java.setSrcDirs(["src/${targetMinecraft}-gametest/java"])
+	sourceSets.gametest.resources.setSrcDirs(["src/${targetMinecraft}-gametest/resources"])
 }

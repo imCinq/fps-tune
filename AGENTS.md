@@ -1,6 +1,6 @@
 # FPS Tune
 
-FPS Tune is a focused, client-side Fabric and NeoForge performance mod for Minecraft 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
+FPS Tune is a focused, client-side Fabric and NeoForge performance mod. Existing v1.2.x artifacts cover Minecraft 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric. The planned stable v1.3.0 release includes 26.3 Fabric and 1.21.11 Fabric/NeoForge. NeoForge 26.3 remains a beta preview in implementation and CI, deferred from stable v1.3.0 until the loader reaches stable; Quilt 26.3 is also deferred, and 1.21.1/26.2 are excluded. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
 
 ## Remote-only development
 
@@ -17,11 +17,11 @@ FPS Tune has versioned targets rather than one universal JAR:
 
 - Minecraft 1.21.1 Fabric uses Java 21, Fabric Loader 0.16.14, Fabric API `0.116.15+1.21.1`, and the remapping Loom plugin.
 - Minecraft 1.21.1 NeoForge uses Java 21, NeoForge `21.1.250`, and the isolated ModDevGradle project.
-- Minecraft 1.21.11 uses Java 21, Fabric Loader 0.18.6, Fabric API `0.141.6+1.21.11`, and the remapping Loom plugin.
+- Minecraft 1.21.11 Fabric uses Java 21, Fabric Loader 0.18.6, Fabric API `0.141.6+1.21.11`, and the remapping Loom plugin. NeoForge 1.21.11 uses Java 21 and an isolated ModDevGradle project with NeoForge 21.11.45.
 - Minecraft 26.2 uses Java 25, Fabric Loader 0.19.3, Fabric API `0.158.0+26.2`, and the non-remapping Loom plugin.
-- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Mod Menu `21.0.0-beta.1` is optional and not required. No NeoForge 26.3 target is included.
+- Minecraft 26.3 Fabric uses Java 25, Fabric Loader 0.19.5, Fabric API `0.160.6+26.3`, and the non-remapping Loom plugin. Mod Menu `21.0.0-beta.1` is optional. NeoForge 26.3 is a Java 25 beta preview in an isolated ModDevGradle 2.0.147 project, currently built against `26.3.0.7-beta`; retain its build and smoke coverage, but defer its release artifact until the loader reaches stable. Quilt 26.3 is deferred from v1.3.0.
 
-The compatibility profiles are declared in `gradle/versions/`, with matching Fabric metadata in `src/1.21.1/resources/`, `src/1.21.11/resources/`, `src/26.2/resources/`, and `src/26.3/resources/`, plus NeoForge metadata in `src/1.21.1-neoforge/resources/` and `src/26.2-neoforge/resources/`.
+The compatibility profiles are declared in `gradle/versions/`, with matching Fabric metadata in `src/1.21.1/resources/`, `src/1.21.11/resources/`, `src/26.2/resources/`, and `src/26.3/resources/`, plus NeoForge metadata in `src/1.21.1-neoforge/resources/`, `src/1.21.11-neoforge/resources/`, `src/26.2-neoforge/resources/`, and `src/26.3-neoforge/resources/`. NeoForge 26.3 remains an isolated ModDevGradle project.
 
 - Prefer narrow, measurable changes over broad rendering rewrites.
 - Keep the mod client-only and disabled by default.
@@ -70,7 +70,7 @@ Temporary experiments and graphical smoke-test artifacts belong outside the comm
 
 Follow the relevant validation defined by the linked sources. Report only checks actually performed, and distinguish compilation, unit tests, packaging, bytecode inspection, graphical client testing, hosted CI, and release verification.
 
-The six supported target configurations are 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The main `v1.2.5` release contains the five baseline artifacts; Fabric 26.3 is published in the target-specific `v1.2.5-mc26.3` release. Retain the default `mc_target=26.2` and all existing artifact names and releases.
+The published v1.2.5 release family contains six historical targets: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. The main `v1.2.5` release contains five baseline artifacts; Fabric 26.3 is in the target-specific `v1.2.5-mc26.3` release. The stable v1.3.0 release scope is exactly 26.3 Fabric and 1.21.11 Fabric/NeoForge; NeoForge 26.3 is beta preview-only until its loader reaches stable, Quilt is deferred, and 1.21.1/26.2 are not included. Preserve historical artifacts; do not change their names.
 
 The separate Fabric 26.3 release uses internal version `1.2.5`, annotated tag `v1.2.5-mc26.3`, and `fps-tune-mc26.3-1.2.5.jar`. `.github/workflows/release-26.3.yml` validates and stages a target-specific draft with binary/sources JARs and checksums; it does not itself enforce graphical testing. The current exact asset was reviewed through the hosted client smoke process and then published as the non-draft [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release. Do not promote these assets into the root `v1.2.5` release. See `docs/TESTING.md` and `docs/DISTRIBUTION.md`.
 
@@ -82,5 +82,7 @@ Hosted target commands are:
 ./gradlew :clean :build -Pmc_target=26.2
 ./gradlew :clean :build -Pmc_target=26.3
 ./gradlew :neoforge-1.21.1:clean :neoforge-1.21.1:build
+./gradlew :neoforge-1.21.11:clean :neoforge-1.21.11:build
 ./gradlew :neoforge-26.2:clean :neoforge-26.2:build
+./gradlew :neoforge-26.3:clean :neoforge-26.3:build
 ```

@@ -12,8 +12,8 @@ GitHub Releases is the canonical source. The applicable hosted release workflow 
 - Category: Optimization
 - License: MIT
 - Environment: Client only
-- Minecraft targets: 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric
-- Java: 21 for 1.21.1 Fabric/NeoForge and 1.21.11 Fabric; 25 for 26.2 Fabric/NeoForge and 26.3 Fabric
+- Minecraft targets: 1.21.1 Fabric and NeoForge, 1.21.11 Fabric and NeoForge, 26.2 Fabric and NeoForge, and 26.3 Fabric and NeoForge
+- Java: 21 for 1.21.1 Fabric/NeoForge and 1.21.11 Fabric/NeoForge; 25 for 26.2 and 26.3 Fabric/NeoForge
 - Required dependency: matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets
 - Source and issue tracker: the public GitHub repository
 
@@ -42,6 +42,22 @@ Fabric 26.3 is published as a separate, non-draft target-specific release becaus
 - `SHA256SUMS.txt` — checksums for both JARs.
 
 The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration and is not required; the hosted client smoke workflow covers both Mod Menu present and absent. The 26.3 release workflow stages a draft before the exact tagged assets are reviewed and published. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
+
+## Planned GitHub Release v1.3.0
+
+The stable v1.3.0 release candidate is version 1.3.0 and contains exactly these three primary JARs:
+
+| Minecraft | Loader | Primary file |
+| --- | --- | --- |
+| 26.3 | Fabric | fps-tune-mc26.3-1.3.0.jar |
+| 1.21.11 | Fabric | fps-tune-mc1.21.11-1.3.0.jar |
+| 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.3.0.jar |
+
+The tagged `.github/workflows/release.yml` builds those three targets, checks packaged loader metadata and resources, runs the target audits, and stages exactly three runtime JARs, three source JARs, and SHA-256 checksums. On a tag it creates a **draft, non-latest GitHub Release**; an authorized maintainer must review and publish the draft manually. Release assets are individual JARs and a checksum file, not a ZIP download.
+
+NeoForge 26.3 remains a beta preview using Java 25, ModDevGradle 2.0.147, and the NeoForge 26.3.0.7-beta build baseline; the preview was also manually tested on 26.3.0.8-beta. Its implementation, build, and startup smoke remain in the project, but its release artifact is deferred until the NeoForge loader reaches stable.
+
+Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0. Reuse only the verified bytes from the tagged build for every destination.
 
 ## Modrinth and CurseForge upload plan
 
