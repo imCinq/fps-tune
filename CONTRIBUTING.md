@@ -11,6 +11,6 @@ FPS Tune targets Minecraft 1.21.1 and 1.21.11 with Java 21, plus Minecraft 26.2 
 
 Verification:
 
-Open a pull request or trigger the GitHub Actions CI workflow manually. The hosted matrix builds all three Minecraft targets, runs the unit tests and repository audits, and uploads the verified artifacts. Do not install, download, or run Java, any JDK, Gradle, the Gradle Wrapper distribution, or project dependencies on the owner's device.
+Open a pull request or trigger the GitHub Actions CI workflow manually. The hosted matrix builds all eight target profiles (four Fabric and four NeoForge), runs the unit tests and repository audits, and uploads the verified artifacts. Do not install, download, or run Java, any JDK, Gradle, the Gradle Wrapper distribution, or project dependencies on the owner's device.
 
 Mixin changes must also be checked against the affected Minecraft client bytecode for each changed target and tested in a GitHub-hosted or other owner-approved remote graphical client environment.

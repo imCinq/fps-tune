@@ -1,6 +1,6 @@
 # Changelog
 
-## FPS Tune v1.3.0
+## FPS Tune v1.3.0 - 2026-09-25
 
 - 🧩 Added Minecraft **1.21.11 NeoForge** alongside Fabric 1.21.11 and Fabric 26.3. NeoForge 26.3 remains a beta preview and is deferred from the stable release until its loader reaches stable.
 - 🎨 Refreshed the settings screen with grouped Performance and Visual options; scoped icon fonts to glyphs so labels stay readable, and centered Back below Advanced settings.
