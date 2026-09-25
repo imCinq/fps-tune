@@ -194,6 +194,9 @@ jobs:
     permissions:
       actions: read
       contents: write
+    env:
+      # This job has no checkout, so gh needs the repository explicitly.
+      GH_REPO: ${{ github.repository }}
 
     steps:
       - name: Download verified files from this workflow run
