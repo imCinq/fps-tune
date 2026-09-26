@@ -48,6 +48,34 @@ final class FPSTuneSettingsIcons {
 		return withIcon("\uE008", 0x9FB7FF, label);
 	}
 
+	static Component particleLimit(Component label) {
+		return withIcon("\uE009", 0xF5A3C7, label);
+	}
+
+	static Component adaptive(Component label) {
+		return withIcon("\uE00A", 0x7FD6C2, label);
+	}
+
+	static Component nearby(Component label) {
+		return withIcon("\uE00B", 0xFF9E7A, label);
+	}
+
+	static Component nearbyReserve(Component label) {
+		return withIcon("\uE00C", 0xFF9E7A, label);
+	}
+
+	static Component targetFps(Component label) {
+		return withIcon("\uE00D", 0x7FD6C2, label);
+	}
+
+	static Component minimum(Component label) {
+		return withIcon("\uE00E", 0x7FD6C2, label);
+	}
+
+	static Component maximum(Component label) {
+		return withIcon("\uE00F", 0x7FD6C2, label);
+	}
+
 	private static Component withIcon(String glyph, int color, Component label) {
 		return Component.empty()
 				.append(Component.literal(glyph)
