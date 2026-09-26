@@ -39,15 +39,15 @@ Dependabot pull requests are review-only until compatibility, tests, bytecode ta
 
 For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create the annotated target tag `v1.1.1-mc1.21.1`. The dedicated `release-1.21.1.yml` workflow publishes that target, and its hosted promotion mode attaches the verified 1.21.1 binary and sources JARs to the existing `v1.1.1` release alongside the other target artifacts. The historical `v1.1.1` tag and source remain unchanged.
 
-## v1.3.0 release target plan
+## v1.3.0 release targets
 
-The planned stable v1.3.0 release contains exactly three targets: Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 remains a beta preview and is deferred until its loader reaches stable. Quilt 26.3 is also deferred; existing 1.21.1 and 26.2 artifacts remain historical downloads outside the v1.3.0 matrix.
+The published stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release contains exactly three targets: Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 remains a beta preview and is deferred until its loader reaches stable. Quilt 26.3 is also deferred; existing 1.21.1 and 26.2 artifacts remain historical downloads outside the v1.3.0 matrix.
 
-The branch retains implementation, isolated build, and hosted startup-smoke coverage for NeoForge 26.3, but that beta preview is not a v1.3.0 release target. Its current build baseline is `26.3.0.7-beta`; the manual client check used `26.3.0.8-beta`. The unified release workflow packages the three stable targets and stages a draft only when an authorized version tag is pushed.
+The repository retains implementation, isolated build, and hosted startup-smoke coverage for NeoForge 26.3, but that beta preview is not a v1.3.0 release target. Its current build baseline is `26.3.0.7-beta`; the manual client check used `26.3.0.8-beta`. The unified release workflow packages the three stable targets and stages a draft only when an authorized version tag is pushed.
 
 ## Fabric 26.3 target-specific release
 
-Fabric 26.3 was released under internal version `1.2.5`, when the default was `mc_target=26.2`, with annotated target tag `v1.2.5-mc26.3`. During v1.3.0 development, `mc_target=26.3` is the default. The current exact release is published at [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3); it remains separate from the five-artifact root `v1.2.5` release. This describes the historical v1.2.5 release only; stable v1.3.0 adds NeoForge 1.21.11 and retains Fabric 26.3. NeoForge 26.3 is deferred until its loader reaches stable.
+Fabric 26.3 was released under internal version `1.2.5`, when the default was `mc_target=26.2`, with annotated target tag `v1.2.5-mc26.3`. Since v1.3.0, `mc_target=26.3` is the default. The current exact release is published at [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3); it remains separate from the five-artifact root `v1.2.5` release. This describes the historical v1.2.5 release only; stable v1.3.0 adds NeoForge 1.21.11 and retains Fabric 26.3. NeoForge 26.3 is deferred until its loader reaches stable.
 
 `.github/workflows/release-26.3.yml` uses the protected `release` environment, checks tag provenance and version consistency, builds and audits only Fabric 26.3, verifies packaged metadata, and stages a **draft**, non-latest GitHub Release containing its binary, sources, and SHA-256 checksums. The full-release workflow excludes these tags. The draft is a staging step; publish the exact assets only after the required remote client validation and maintainer review.
 

@@ -45,7 +45,7 @@ Before creating the stable v1.3.0 tag, run hosted builds, tests, audits, packagi
 
 On revised candidate commit `3ac19ae8c84d11f6c026ec5f81daba733e9a460e`, [CI run 35851542171](https://github.com/imCinq/fps-tune/actions/runs/35851542171), [three-target release assembly run 35851542091](https://github.com/imCinq/fps-tune/actions/runs/35851542091), [26.3 client smoke run 35851542157](https://github.com/imCinq/fps-tune/actions/runs/35851542157), and [1.21.11 client smoke run 35851542004](https://github.com/imCinq/fps-tune/actions/runs/35851542004) passed. Manual checks have been reported good for Fabric 26.3, NeoForge 26.3 beta preview, and Fabric 1.21.11; NeoForge 1.21.11 still needs a manual exact-JAR and native-settings-screen check.
 
-Keep historical-target builds separate from the v1.3.0 release artifact matrix. The revised three-target package check passed; confirm the required manual NeoForge 1.21.11 exact-JAR and settings-screen behavior before release.
+Keep historical-target builds separate from the v1.3.0 release artifact matrix. The revised three-target package check passed; the manual NeoForge 1.21.11 exact-JAR and native settings-screen check is not yet recorded here; record its result in this section and in `COMPATIBILITY.md` once confirmed.
 
 ## Repository audits
 

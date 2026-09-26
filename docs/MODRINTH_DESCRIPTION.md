@@ -24,7 +24,7 @@ Client-only does not mean server-approved. Check the current rules of every mult
 
 ## Installation
 
-1. Install the loader matching your target: Fabric Loader 0.16.14+ for 1.21.1, 0.18.6+ for 1.21.11, 0.19.3+ for 26.2, or 0.19.5+ for 26.3; NeoForge 21.1.250+ for 1.21.1 or 26.2.0.77+ for 26.2.
+1. Install the loader matching your target: Fabric Loader 0.16.14+ for 1.21.1, 0.18.6+ for 1.21.11, 0.19.3+ for 26.2, or 0.19.5+ for 26.3; NeoForge 21.1.250+ for 1.21.1, 21.11.45+ for 1.21.11, or 26.2.0.77+ for 26.2.
 2. Download the FPS Tune file for the exact Minecraft version you are running.
 3. Put that one file in the instance's `mods` folder and launch Minecraft.
 
@@ -90,8 +90,8 @@ FPS Tune is released under the MIT License. It has no telemetry, analytics, cust
 
 ## Loader compatibility
 
-The v1.2.5 release family provides six exact target files: 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The Fabric 26.3 file is published in the separate target-specific GitHub release `v1.2.5-mc26.3`. Select the file matching both Minecraft and loader. Never install multiple FPS Tune target JARs together.
+The historical v1.2.5 release family provides six exact target files: 1.21.1 Fabric, 1.21.1 NeoForge, 1.21.11 Fabric, 26.2 Fabric, 26.2 NeoForge, and 26.3 Fabric. The Fabric 26.3 file is published in the separate target-specific GitHub release `v1.2.5-mc26.3`. Select the file matching both Minecraft and loader. Never install multiple FPS Tune target JARs together.
 
-## Planned v1.3.0 files
+## v1.3.0 files
 
-The stable v1.3.0 release will add these three primary JARs: fps-tune-mc26.3-1.3.0.jar (26.3 Fabric), fps-tune-mc1.21.11-1.3.0.jar (1.21.11 Fabric), and fps-tune-neoforge-1.21.11-1.3.0.jar (1.21.11 NeoForge). Do not present these as published downloads until the v1.3.0 release is published. NeoForge 26.3 remains a beta preview and is deferred until the loader reaches stable.
+The current stable v1.3.0 release provides three primary JARs: fps-tune-mc26.3-1.3.0.jar (26.3 Fabric), fps-tune-mc1.21.11-1.3.0.jar (1.21.11 Fabric), and fps-tune-neoforge-1.21.11-1.3.0.jar (1.21.11 NeoForge). NeoForge 26.3 remains a beta preview and is deferred until the loader reaches stable.
