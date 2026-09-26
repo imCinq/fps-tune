@@ -6,6 +6,7 @@ import dev.fpstune.config.FPSTuneConfig;
 import dev.fpstune.screen.FPSTuneConfigScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
@@ -139,7 +140,9 @@ public final class FPSTuneClient {
             return false;
         }
         Minecraft client = Minecraft.getInstance();
-        if (client.player == null) {
+        // Measure from what the player is looking through, which differs in spectator view.
+        Entity viewer = client.getCameraEntity();
+        if (viewer == null) {
             return false;
         }
 
@@ -147,9 +150,9 @@ public final class FPSTuneClient {
         double centerX = (bounds.minX + bounds.maxX) * 0.5;
         double centerY = (bounds.minY + bounds.maxY) * 0.5;
         double centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
-        double deltaX = client.player.getX() - centerX;
-        double deltaY = client.player.getY() - centerY;
-        double deltaZ = client.player.getZ() - centerZ;
+        double deltaX = viewer.getX() - centerX;
+        double deltaY = viewer.getY() - centerY;
+        double deltaZ = viewer.getZ() - centerZ;
         return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ <= radiusSquared;
     }
 

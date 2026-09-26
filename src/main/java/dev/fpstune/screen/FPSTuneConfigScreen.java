@@ -229,7 +229,8 @@ public final class FPSTuneConfigScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		closeWithoutSaving();
+		// Escape keeps changes, like vanilla option screens; Cancel is the way to discard.
+		saveAndClose();
 	}
 
 	private void closeWithoutSaving() {

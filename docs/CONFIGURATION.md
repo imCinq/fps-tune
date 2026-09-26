@@ -38,7 +38,7 @@ With Mod Menu installed:
 4. Open Advanced settings for the Particles, Weather and Display tabs. Dependent options dim when their parent switch is off, and Show more reveals nearby-particle protection and automatic-adjustment limits. Changing any value that a profile controls switches the profile to Custom.
 5. Each tab's Reset this tab button restores only that tab's defaults in the draft. Choose Done on the main screen to apply and save.
 
-Back or Escape from Advanced settings returns to the main screen with the draft changes. Cancel or Escape from the main screen discards the entire draft and leaves the active configuration unchanged. Mod Menu is optional; FPS Tune runs without it.
+Back or Escape from Advanced settings returns to the main screen with the draft changes. Escape from the main screen saves like Done; Cancel discards the entire draft and leaves the active configuration unchanged. Mod Menu is optional; FPS Tune runs without it.
 
 The default `F6` keybind toggles only the master `enabled` switch and saves that change immediately. It does not change the individual controller settings. It then shows a short message, by default above the hotbar, with a colored ON/OFF and a one-line summary of what changes, for example "FPS Tune ON · Fewer particles in busy scenes · Rain and snow hidden". The Display tab can move this message to chat or turn it off (`toggleFeedback`).
 
