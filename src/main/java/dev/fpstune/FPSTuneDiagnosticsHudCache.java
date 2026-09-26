@@ -60,7 +60,7 @@ public final class FPSTuneDiagnosticsHudCache {
 			int targetFps,
 			AdaptiveParticleBudgetController.Direction direction,
 			boolean autoTarget,
-			boolean weatherSuppressed
+			FPSTuneConfig.WeatherMode weatherMode
 	) {
 		private static DisplayKey from(
 				FPSTuneConfig config,
@@ -71,7 +71,7 @@ public final class FPSTuneDiagnosticsHudCache {
 				return new DisplayKey(
 						false, false, 0, 0, false, 0, 0, false,
 						0, 0, 0, 0, AdaptiveParticleBudgetController.Direction.HOLDING,
-						false, false
+						false, FPSTuneConfig.WeatherMode.VANILLA
 				);
 			}
 
@@ -101,7 +101,7 @@ public final class FPSTuneDiagnosticsHudCache {
 					adaptiveEnabled ? safeAdaptive.targetFps() : 0,
 					adaptiveEnabled ? safeAdaptive.direction() : AdaptiveParticleBudgetController.Direction.FIXED,
 					adaptiveEnabled && config.adaptiveTargetAuto,
-					controlsEnabled && !config.weatherRendered()
+					controlsEnabled ? config.weatherMode : FPSTuneConfig.WeatherMode.VANILLA
 			);
 		}
 	}
