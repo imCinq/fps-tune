@@ -7,7 +7,7 @@ FPS Tune targets Minecraft 1.21.1 and 1.21.11 with Java 21, plus Minecraft 26.2 
 - Keep the optimization disabled by default.
 - Keep Mod Menu integration optional and local; use native client widgets unless a reviewed dependency is necessary.
 - Add tests for bug fixes and behavior changes.
-- Update `PRIVACY.md` if any new data is read, stored, or transmitted.
+- Update `docs/PRIVACY.md` if any new data is read, stored, or transmitted.
 
 Verification:
 

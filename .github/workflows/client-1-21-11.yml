@@ -118,6 +118,6 @@ jobs:
           name: client-1.21.11-neoforge
           path: |
             ${{ runner.temp }}/neoforge-1.21.11-client.log
-            neoforge-1.21.11/run/**
+            neoforge/1.21.11/run/**
           if-no-files-found: warn
           retention-days: 14

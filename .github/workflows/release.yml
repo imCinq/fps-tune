@@ -99,8 +99,8 @@ jobs:
           fabric_26_3_sources="release/fps-tune-mc26.3-$project_version-sources.jar"
           fabric_1_21_11="release/fps-tune-mc1.21.11-$project_version.jar"
           fabric_1_21_11_sources="release/fps-tune-mc1.21.11-$project_version-sources.jar"
-          neoforge_1_21_11="neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version.jar"
-          neoforge_1_21_11_sources="neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version-sources.jar"
+          neoforge_1_21_11="neoforge/1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version.jar"
+          neoforge_1_21_11_sources="neoforge/1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version-sources.jar"
 
           for file in "$fabric_26_3" "$fabric_26_3_sources" "$fabric_1_21_11" "$fabric_1_21_11_sources" "$neoforge_1_21_11" "$neoforge_1_21_11_sources"; do
             if [[ ! -f "$file" ]]; then
