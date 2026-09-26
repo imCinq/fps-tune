@@ -27,6 +27,7 @@ public final class FPSTuneConfigScreen extends Screen {
 
 	private static final List<FPSTuneConfig.WeatherMode> WEATHER_OPTIONS = List.of(
 			FPSTuneConfig.WeatherMode.VANILLA,
+			FPSTuneConfig.WeatherMode.REDUCED,
 			FPSTuneConfig.WeatherMode.OFF
 	);
 
@@ -136,10 +137,7 @@ public final class FPSTuneConfigScreen extends Screen {
 		setInitialFocus(enabled);
 	}
 
-	/**
-	 * Rain and snow choice shared by the main screen and the Weather tab. Lighter
-	 * joins the list once the reduced weather renderer exists.
-	 */
+	/** Rain and snow choice shared by the main screen and the Weather tab. */
 	static CycleButton<FPSTuneConfig.WeatherMode> weatherButton(FPSTuneConfig config, int x, int y, int width) {
 		List<FPSTuneConfig.WeatherMode> values = WEATHER_OPTIONS.contains(config.weatherMode)
 				? WEATHER_OPTIONS
