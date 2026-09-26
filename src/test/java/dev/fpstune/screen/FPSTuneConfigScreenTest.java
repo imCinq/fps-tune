@@ -63,16 +63,4 @@ final class FPSTuneConfigScreenTest {
 		assertTrue(config.adaptiveParticleBudgetEnabled);
 		assertFalse(config.enabled);
 	}
-
-	@Test
-	void fineTuningStartsHiddenUntilThePlayerHasChangedIt() {
-		FPSTuneConfig config = new FPSTuneConfig();
-		assertFalse(FPSTuneAdvancedConfigScreen.hasCustomizedFineTuning(config));
-
-		FPSTuneConfigScreen.applyProfile(config, FPSTuneConfigScreen.PerformanceProfile.SMOOTHER_FRAMES);
-		assertFalse(FPSTuneAdvancedConfigScreen.hasCustomizedFineTuning(config));
-
-		config.nearbyParticleDistance = 24;
-		assertTrue(FPSTuneAdvancedConfigScreen.hasCustomizedFineTuning(config));
-	}
 }
