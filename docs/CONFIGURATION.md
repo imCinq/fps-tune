@@ -18,9 +18,9 @@ FPS Tune is disabled by default. Its settings control only local client renderin
 | `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback when the client limit is unavailable, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lower bound for the Adaptive-mode budget, clamped to `0..10000`. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Upper bound for the Adaptive-mode budget, clamped to `0..10000`. |
-| `activeParticleCapEnabled` | `false` | Limits how many particles can be alive at once. Stored from `configVersion=5`; the controller arrives in v1.4.0. |
+| `activeParticleCapEnabled` | `false` | Skips new particles while the number already on screen is at the limit. Part of the particle controls. |
 | `maxActiveParticles` | `4000` | Live-particle limit when the cap is on, clamped to `256..16384`. |
-| `distantParticleLimitEnabled` | `false` | Skips new particles far from the player. Stored from `configVersion=5`; the controller arrives in v1.4.0. |
+| `distantParticleLimitEnabled` | `false` | Skips new particles far from the player. Part of the particle controls. |
 | `particleMaxDistance` | `48` | Distance in blocks beyond which new particles are skipped when the limit is on, clamped to `16..128`. |
 | `weatherMode` | `VANILLA` | `VANILLA`, `REDUCED` or `OFF`. `OFF` suppresses local rain and snow rendering while FPS Tune is active; `REDUCED` currently renders like `VANILLA`. |
 | `toggleFeedback` | `ACTION_BAR` | Where the `F6` toggle message appears: `ACTION_BAR`, `CHAT` or `NONE`. |
@@ -34,6 +34,7 @@ With Mod Menu installed:
 1. Open the Mods screen.
 2. Select FPS Tune and choose Configure.
 3. On the main screen, choose whether to enable FPS Tune, pick a profile (the line under it explains the choice), and use the quick switches for particles, rain and snow, and the performance overlay.
+   Profiles: Balanced (the defaults), Smoother frames (150 per tick with automatic adjustment up to 300), Maximum FPS (100 per tick, at most 2000 particles on screen, particles beyond 32 blocks skipped), More particles (600 per tick), and Custom when any profile-owned value was changed by hand.
 4. Open Advanced settings for the Particles, Weather and Display tabs. Dependent options dim when their parent switch is off, and Show more reveals nearby-particle protection and automatic-adjustment limits. Changing any value that a profile controls switches the profile to Custom.
 5. Each tab's Reset this tab button restores only that tab's defaults in the draft. Choose Done on the main screen to apply and save.
 
@@ -82,6 +83,8 @@ When `enabled=true` and `particleAdmissionEnabled=true`, FPS Tune counts success
 When `prioritizeNearbyParticles=true`, `nearbyParticleReserve` divides the current effective budget into two deterministic capacities. The effective reserve is capped at half that budget. General particles can consume the non-reserved portion. Particles whose bounding-box center is within `nearbyParticleDistance` blocks of the local player can use the reserved portion and any unused non-reserved capacity. The total number admitted still cannot exceed the current effective budget; this policy only changes which candidates are admitted first. If the nearby reserve fills up, additional nearby particles may still use remaining general capacity.
 
 The nearby classification is calculated on the client from the local player position. It does not inspect server data, identify gameplay-important particles, or transmit any information. Disabling the priority switch or setting the reserve to zero keeps the limiter as a simple total admission budget.
+
+When `activeParticleCapEnabled=true`, FPS Tune also estimates how many particles are alive: the particles in the engine when the client particle tick starts, plus every particle admitted since the previous tick started. Once that estimate reaches `maxActiveParticles`, new particles are skipped. The estimate can only be high, never low, so the cap errs towards fewer particles; particles already on screen are never removed. When `distantParticleLimitEnabled=true`, new particles whose bounding-box center is farther than `particleMaxDistance` blocks from the local player are skipped. Both checks run before the per-tick budget, so skipped particles do not use it up or count as Adaptive pressure, and both require `enabled=true` and `particleAdmissionEnabled=true`. They count as rejected in the performance overlay.
 
 When `diagnosticsHudEnabled=true`, the HUD shows whether FPS Tune is enabled, the current-tick admitted and rejected counts, the nearby admitted count and reserve, the current fixed/adaptive budget, and whether weather rendering is vanilla or suppressed. When the overlay is disabled, detailed admission counters are not updated in the particle hot path. It is hidden while a screen is open and is off by default. It does not show an active-particle count because the current controller intentionally limits admissions rather than owning particle lifetime/removal.
 
