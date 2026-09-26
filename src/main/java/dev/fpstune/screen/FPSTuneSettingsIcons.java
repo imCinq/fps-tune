@@ -40,6 +40,10 @@ final class FPSTuneSettingsIcons {
 		return withIcon("\uE006", 0xC8C8C8, label);
 	}
 
+	static Component message(Component label) {
+		return withIcon("\uE007", 0xE8D08A, label);
+	}
+
 	private static Component withIcon(String glyph, int color, Component label) {
 		return Component.empty()
 				.append(Component.literal(glyph)

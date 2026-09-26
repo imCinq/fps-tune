@@ -39,7 +39,7 @@ With Mod Menu installed:
 
 Back or Escape from Advanced settings returns to the main screen with the draft changes. Cancel or Escape from the main screen discards the entire draft and leaves the active configuration unchanged. Mod Menu is optional; FPS Tune runs without it.
 
-The default `F6` keybind toggles only the master `enabled` switch and saves that change immediately. It does not change the individual controller settings.
+The default `F6` keybind toggles only the master `enabled` switch and saves that change immediately. It does not change the individual controller settings. It then shows a short message, by default above the hotbar, with a colored ON/OFF and a one-line summary of what changes, for example "FPS Tune ON · Fewer particles in busy scenes · Rain and snow hidden". The Display tab can move this message to chat or turn it off (`toggleFeedback`).
 
 ## Configuration file
 
