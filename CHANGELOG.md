@@ -1,6 +1,6 @@
 # Changelog
 
-## FPS Tune v1.4.0
+## FPS Tune v1.4.0 - 2026-09-26
 
 - ⚙️ **New settings page.** The main screen now has a profile with a one-line explanation, and quick switches for particles, rain and snow, and the overlay. Advanced settings are in vanilla-style **Particles / Weather / Display** tabs, each with a Reset button, and rarely used values sit behind *Show more*. Clearer wording and icons throughout.
 - 🎯 **Max particles on screen** (off by default): new particles are skipped once this many are showing. Particles already on screen are never removed.
