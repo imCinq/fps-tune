@@ -8,6 +8,10 @@ pluginManagement {
 rootProject.name = "fps-tune"
 
 include(":neoforge-26.2")
+project(":neoforge-26.2").projectDir = file("neoforge/26.2")
 include(":neoforge-26.3")
+project(":neoforge-26.3").projectDir = file("neoforge/26.3")
 include(":neoforge-1.21.1")
+project(":neoforge-1.21.1").projectDir = file("neoforge/1.21.1")
 include(":neoforge-1.21.11")
+project(":neoforge-1.21.11").projectDir = file("neoforge/1.21.11")

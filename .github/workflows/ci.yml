@@ -158,7 +158,7 @@ jobs:
       - name: Inspect Minecraft 26.3 NeoForge mixin targets
         run: |
           mkdir -p "${{ runner.temp }}/compatibility-evidence-26.3-neoforge"
-          find "$HOME/.gradle/caches" .gradle neoforge-26.3/build -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+          find "$HOME/.gradle/caches" .gradle neoforge/26.3/build -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
             if jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class' && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/renderer/WeatherEffectRenderer.class'; then
               basename "$candidate" > ${{ runner.temp }}/compatibility-evidence-26.3-neoforge/minecraft-jar.txt
               sha256sum "$candidate" | cut -d " " -f 1 > ${{ runner.temp }}/compatibility-evidence-26.3-neoforge/minecraft-jar.sha256
@@ -183,7 +183,7 @@ jobs:
 
       - name: Verify packaged NeoForge metadata
         run: |
-          artifact=$(find neoforge-26.3/build/libs -type f -name "fps-tune-neoforge-26.3-*.jar" ! -name "*-sources.jar" -print -quit)
+          artifact=$(find neoforge/26.3/build/libs -type f -name "fps-tune-neoforge-26.3-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
           expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           test -n "$expected_version"
@@ -201,7 +201,7 @@ jobs:
       - name: Prepare verified artifacts
         run: |
           mkdir -p ci-artifacts
-          cp neoforge-26.3/build/libs/fps-tune-neoforge-26.3-*.jar ci-artifacts/
+          cp neoforge/26.3/build/libs/fps-tune-neoforge-26.3-*.jar ci-artifacts/
           cd ci-artifacts
           sha256sum *.jar > SHA256SUMS.txt
 
@@ -240,7 +240,7 @@ jobs:
 
       - name: Verify packaged NeoForge metadata
         run: |
-          artifact=$(find neoforge-26.2/build/libs -type f -name "fps-tune-neoforge-26.2-*.jar" ! -name "*-sources.jar" -print -quit)
+          artifact=$(find neoforge/26.2/build/libs -type f -name "fps-tune-neoforge-26.2-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
           expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           test -n "$expected_version"
@@ -258,7 +258,7 @@ jobs:
       - name: Prepare verified artifacts
         run: |
           mkdir -p ci-artifacts
-          cp neoforge-26.2/build/libs/fps-tune-neoforge-26.2-*.jar ci-artifacts/
+          cp neoforge/26.2/build/libs/fps-tune-neoforge-26.2-*.jar ci-artifacts/
           cd ci-artifacts
           sha256sum *.jar > SHA256SUMS.txt
 
@@ -297,7 +297,7 @@ jobs:
 
       - name: Verify packaged NeoForge metadata
         run: |
-          artifact=$(find neoforge-1.21.1/build/libs -type f -name "fps-tune-neoforge-1.21.1-*.jar" ! -name "*-sources.jar" -print -quit)
+          artifact=$(find neoforge/1.21.1/build/libs -type f -name "fps-tune-neoforge-1.21.1-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
           expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           test -n "$expected_version"
@@ -315,7 +315,7 @@ jobs:
       - name: Prepare verified artifacts
         run: |
           mkdir -p ci-artifacts
-          cp neoforge-1.21.1/build/libs/fps-tune-neoforge-1.21.1-*.jar ci-artifacts/
+          cp neoforge/1.21.1/build/libs/fps-tune-neoforge-1.21.1-*.jar ci-artifacts/
           cd ci-artifacts
           sha256sum *.jar > SHA256SUMS.txt
 
@@ -378,7 +378,7 @@ jobs:
 
       - name: Verify packaged NeoForge metadata
         run: |
-          artifact=$(find neoforge-1.21.11/build/libs -type f -name "fps-tune-neoforge-1.21.11-*.jar" ! -name "*-sources.jar" -print -quit)
+          artifact=$(find neoforge/1.21.11/build/libs -type f -name "fps-tune-neoforge-1.21.11-*.jar" ! -name "*-sources.jar" -print -quit)
           test -n "$artifact"
           expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           test -n "$expected_version"
@@ -396,7 +396,7 @@ jobs:
       - name: Prepare verified artifacts
         run: |
           mkdir -p ci-artifacts
-          cp neoforge-1.21.11/build/libs/fps-tune-neoforge-1.21.11-*.jar ci-artifacts/
+          cp neoforge/1.21.11/build/libs/fps-tune-neoforge-1.21.11-*.jar ci-artifacts/
           cd ci-artifacts
           sha256sum *.jar > SHA256SUMS.txt
 

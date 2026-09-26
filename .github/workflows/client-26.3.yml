@@ -110,6 +110,6 @@ jobs:
           name: client-26.3-neoforge
           path: |
             ${{ runner.temp }}/neoforge-26.3-client.log
-            neoforge-26.3/run/**
+            neoforge/26.3/run/**
           if-no-files-found: warn
           retention-days: 14
