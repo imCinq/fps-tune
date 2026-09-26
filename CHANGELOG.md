@@ -1,5 +1,16 @@
 # Changelog
 
+## FPS Tune v1.4.0
+
+- ⚙️ **New settings page.** The main screen now has a profile with a one-line explanation, and quick switches for particles, rain and snow, and the overlay. Advanced settings are in vanilla-style **Particles / Weather / Display** tabs, each with a Reset button, and rarely used values sit behind *Show more*. Clearer wording and icons throughout.
+- 🎯 **Max particles on screen** (off by default): new particles are skipped once this many are showing. Particles already on screen are never removed.
+- 🔭 **Hide far-away particles** (off by default): new particles beyond the chosen distance are skipped.
+- 🚀 New **Maximum FPS** profile: a lower per-tick limit, a 2000-particle cap, and particles beyond 32 blocks skipped.
+- 🌦️ **Rain and snow: Normal / Lighter / Hidden.** Lighter draws precipitation in a smaller circle around you and skips half the landing splashes. Your old on/off setting carries over.
+- ⌨️ **F6 message:** a colored ON/OFF with a one-line summary of what changes, shown above the hotbar by default. It can also go to chat or be turned off.
+- 🔊 Fixed hiding rain and snow on **1.21.11** so rain sounds keep playing, as they already did on 26.3.
+- 🗂️ Config version 5. Older settings files are upgraded automatically, and FPS Tune stays off by default.
+
 ## FPS Tune v1.3.0 - 2026-09-25
 
 - 🧩 Added Minecraft **1.21.11 NeoForge** alongside Fabric 1.21.11 and Fabric 26.3. NeoForge 26.3 remains a beta preview and is deferred from the stable release until its loader reaches stable.

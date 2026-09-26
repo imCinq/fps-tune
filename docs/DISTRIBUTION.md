@@ -43,6 +43,18 @@ Fabric 26.3 is published as a separate, non-draft target-specific release becaus
 
 The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration and is not required; the hosted client smoke workflow covers both Mod Menu present and absent. The 26.3 release workflow stages a draft before the exact tagged assets are reviewed and published. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
 
+## Planned GitHub Release v1.4.0
+
+The v1.4.0 release candidate uses the same tagged `.github/workflows/release.yml` process and the same three targets as v1.3.0, with these primary JARs:
+
+| Minecraft | Loader | Primary file |
+| --- | --- | --- |
+| 26.3 | Fabric | fps-tune-mc26.3-1.4.0.jar |
+| 1.21.11 | Fabric | fps-tune-mc1.21.11-1.4.0.jar |
+| 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
+
+The `v1.4.0` tag creates a draft, non-latest release. Before publishing it, a maintainer must complete the manual checks: settings screens and every tab on Mod Menu and the NeoForge Mods screen at a small window and GUI scale 4, Lighter and Hidden weather with rain sounds on 1.21.11 and 26.3, the particle cap and far-away limit, and the F6 message.
+
 ## GitHub Release v1.3.0
 
 The current stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release was published on 2026-09-25 and contains exactly these three primary JARs:

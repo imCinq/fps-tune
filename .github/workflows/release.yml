@@ -1,4 +1,4 @@
-name: v1.3.0 release build
+name: Stable release build
 
 on:
   pull_request:
