@@ -6,7 +6,7 @@ Use GitHub Actions for the complete verification checklist. Open a pull request 
 
 The hosted Gradle build compiles the selected target and runs the committed unit tests. Current tests cover configuration recovery, atomic writes, legacy defaults and Auto-target migration, enabled/disabled behavior, independent controller gates, fixed, snapshot-backed, and nearby-priority budget boundaries, dynamic nearby reserves, pressure-gated Adaptive budget streaks/cooldowns, bounded emergency reductions, changing effective targets, current-tick diagnostics metrics, scoped Advanced settings reset behavior, and a 100,000-particle admission simulation. The target builds also compile the cross-version proximity bridge and its allocation-free-equivalent bounding-box math. The hosted CI matrix runs with Java 21 for Fabric and NeoForge 1.21.1, Fabric and NeoForge 1.21.11, and Java 25 for Fabric and NeoForge 26.2/26.3.
 
-The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths should be checked as separate UI behaviors.
+The compile also verifies the optional Mod Menu API integration. The settings screen uses a copied configuration, so its Done, Cancel, and Escape paths (Escape saves like Done) should be checked as separate UI behaviors.
 
 ## Mixin verification
 
@@ -26,7 +26,7 @@ For Fabric targets with Mod Menu, repeat the click-through on each matching Mod 
 2. Confirm the FPS Tune details pane shows a wrapped long-form overview with clear sections for behavior, boundaries, setup, and the intentional visual trade-off.
 3. Confirm the main screen groups the master switch and profile under Performance, and rain/snow plus performance overlay under Visual options. At supported GUI scales, check that precipitation, profile, and graph glyphs render beside normally readable labels (no tofu boxes in the text).
 4. Open Advanced settings and confirm the grouped particle and Adaptive controls reflect `config/fpstune.properties`; confirm nearby controls dim when nearby priority is off, and target/min/max controls dim when Adaptive is off. Confirm the target selector shows Auto or a numeric target, and the Back action is centered beneath the two-column controls.
-5. Change values, return with Back, close the main screen with Cancel or Escape, and confirm the file and runtime settings are unchanged.
+5. Change values, return with Back, close the main screen with Cancel, and confirm the file and runtime settings are unchanged.
 6. Change values, return with Back, close the main screen with Done, and confirm the file is updated and the new values apply without restarting the client.
 
 Cycle through each performance profile and confirm that the displayed settings take effect only after Done. Use Reset advanced settings in Advanced settings, return with Back, and confirm that particle and Adaptive defaults are visible in the draft while the master switch, weather setting, and diagnostics choice remain unchanged; confirm that nothing is saved until Done. With diagnostics enabled, enter a world and confirm that the overlay is hidden on menus, remains local, reports current-tick accepted/rejected counts, and shows `Nearby` as off when nearby priority is disabled. In a controlled particle storm, compare nearby and distant particles while changing the protection value; the total admitted count must never exceed the configured limit.

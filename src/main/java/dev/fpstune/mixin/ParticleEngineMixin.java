@@ -4,6 +4,7 @@ import dev.fpstune.FPSTuneClient;
 import dev.fpstune.ParticleAdmissionBudget;
 import dev.fpstune.ParticleAdmissionMetrics;
 import dev.fpstune.ParticleCounts;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import org.spongepowered.asm.mixin.Final;
@@ -61,7 +62,9 @@ public abstract class ParticleEngineMixin {
 		}
 		// Far-away and over-cap particles are skipped before the per-tick budget,
 		// so they neither use it up nor count as Adaptive pressure.
+		// With no camera yet (joining a world) distance is unknown, so nothing is hidden.
 		if ((snapshot.limitsDistance()
+				&& Minecraft.getInstance().getCameraEntity() != null
 				&& !FPSTuneClient.isNearbyParticle(particle, snapshot.maxDistanceSquared()))
 				|| ParticleAdmissionBudget.reachesActiveCap(
 						fpstune$liveAtTickStart + fpstune$admittedLastTick + fpstune$admittedThisTick,
