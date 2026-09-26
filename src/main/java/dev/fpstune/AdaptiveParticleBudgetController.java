@@ -354,7 +354,7 @@ public final class AdaptiveParticleBudgetController {
 	}
 
 	private static int clampTargetFps(int value) {
-		return Math.max(30, Math.min(value, 360));
+		return FPSTuneConfig.clampAdaptiveTargetFps(value);
 	}
 
 	private static int clamp(int value, int minimum, int maximum) {

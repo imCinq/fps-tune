@@ -8,7 +8,8 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 
 | Component | Responsibility |
 | --- | --- |
-| `FPSTuneClient` | Registers the client entrypoint, local toggle, configuration lifecycle, and target-specific Adaptive FPS-cap resolution. |
+| `FPSTuneClient` | Registers the client entrypoint, local toggle, configuration lifecycle, and the live configuration. Its shared helpers delegate to `FPSTuneClientSupport`. |
+| `FPSTuneClientSupport` | Holds the loader-independent client logic every `FPSTuneClient` shares: Adaptive FPS-cap resolution, the nearby-particle distance check, and applying a saved configuration. |
 | `FPSTuneConfig` | Defines the master switch, module switches, configuration version, and particle-policy defaults. |
 | `ConfigStore` | Loads, validates, and atomically persists local configuration. |
 | `FPSTuneRenderPolicy` | Applies the master switch and independent controller gates without touching Minecraft state. |
@@ -27,7 +28,7 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 
 The configuration, policy, admission-budget classes, and API-compatible Minecraft classes live in `src/main/java` and are shared by every target. Minecraft-facing code that cannot be compiled safely across mapping eras lives under `src/<minecraft-version>/java`; 1.21.1 provides the older string-category keybinding, HUD callback, and weather bridge, 1.21.11 provides its older keybinding/chat bridge and MultiBufferSource weather bridge, and 26.2/26.3 Fabric provide their newer target-specific client and weather bridges. Each NeoForge target has an isolated build project and source set; NeoForge 26.3 uses its own client lifecycle bridge with the 26.3 weather-render signature. Each Fabric target owns `fabric.mod.json`; each NeoForge target owns `META-INF/neoforge.mods.toml`; every target owns its `fpstune.mixins.json`.
 
-Adaptive frame-time sampling and FPS-cap resolution stay in the target-specific `FPSTuneHud`/`FPSTuneClient` bridges because the HUD callbacks, drawing types, and client option mappings differ between supported Minecraft targets. The common adaptive controller receives only monotonic frame intervals, the resolved target, and pressure data; it never depends on Minecraft internals. A future patch that changes the HUD API should therefore require a narrow target-bridge update and target build, not a new renderer mixin.
+Adaptive frame-time sampling stays in the target-specific `FPSTuneHud` bridges because the HUD callbacks and drawing types differ between supported Minecraft targets. FPS-cap resolution is identical on every current target, so it lives in the shared `FPSTuneClientSupport`; if a future target's client options diverge, that target's `FPSTuneClient` should stop delegating and resolve the cap itself. The common adaptive controller receives only monotonic frame intervals, the resolved target, and pressure data; it never depends on Minecraft internals. A future patch that changes the HUD API should therefore require a narrow target-bridge update and target build, not a new renderer mixin.
 
 `gradle/versions/<minecraft-version>.properties` is the build profile source of truth. The selected `mc_target` chooses the Minecraft dependency, loader, Fabric API, Java release level, Loom plugin, source directory, resource directory, and artifact suffix. A release therefore contains separate JARs; a player must install the JAR matching their Minecraft version.
 

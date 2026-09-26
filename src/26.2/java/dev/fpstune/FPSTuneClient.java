@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -59,64 +58,21 @@ public final class FPSTuneClient implements ClientModInitializer {
 		return config;
 	}
 
-	/**
-	 * Resolves the Adaptive target from the configured client FPS limit when
-	 * Auto is selected. The numeric setting remains the fallback when the client limit is
-	 * unavailable.
-	 */
 	public static int effectiveAdaptiveTargetFps(FPSTuneConfig currentConfig) {
-		if (currentConfig == null) {
-			return 120;
-		}
-		int fallback = Math.max(30, Math.min(currentConfig.adaptiveTargetFps, 360));
-		if (!currentConfig.adaptiveTargetAuto) {
-			return fallback;
-		}
-
-		Minecraft client = Minecraft.getInstance();
-		int configuredLimit = client.options.framerateLimit().get();
-		return configuredLimit > 0
-				? Math.max(30, Math.min(configuredLimit, 360))
-				: fallback;
+		return FPSTuneClientSupport.effectiveAdaptiveTargetFps(currentConfig);
 	}
 
 	public static boolean isNearbyParticle(Particle particle) {
-		if (particle == null || config == null || !config.prioritizeNearbyParticles || config.nearbyParticleDistance <= 0) {
-			return false;
-		}
-		double radius = config.nearbyParticleDistance;
-		return isNearbyParticle(particle, radius * radius);
+		return FPSTuneClientSupport.isNearbyParticle(config, particle);
 	}
 
 	public static boolean isNearbyParticle(Particle particle, double radiusSquared) {
-		if (particle == null || radiusSquared <= 0.0) {
-			return false;
-		}
-		Minecraft client = Minecraft.getInstance();
-		// Measure from what the player is looking through, which differs in spectator view.
-		Entity viewer = client.getCameraEntity();
-		if (viewer == null) {
-			return false;
-		}
-
-		// Compute the existing bounding-box center directly to avoid allocating a Vec3.
-		var bounds = particle.getBoundingBox();
-		double centerX = (bounds.minX + bounds.maxX) * 0.5;
-		double centerY = (bounds.minY + bounds.maxY) * 0.5;
-		double centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
-		double deltaX = viewer.getX() - centerX;
-		double deltaY = viewer.getY() - centerY;
-		double deltaZ = viewer.getZ() - centerZ;
-		return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ <= radiusSquared;
+		return FPSTuneClientSupport.isNearbyParticle(particle, radiusSquared);
 	}
 
 	public static void applyConfig(Path runDirectory, FPSTuneConfig updatedConfig) {
-		if (updatedConfig == null) {
-			return;
+		if (updatedConfig != null) {
+			config = FPSTuneClientSupport.commitConfig(runDirectory, updatedConfig);
 		}
-		updatedConfig.clamp();
-		config = updatedConfig;
-		AdaptiveParticleBudgetController.reset(config);
-		ConfigStore.save(runDirectory, config);
 	}
 }

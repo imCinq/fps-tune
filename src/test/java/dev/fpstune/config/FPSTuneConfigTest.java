@@ -169,4 +169,13 @@ final class FPSTuneConfigTest {
 		assertEquals(0, config.adaptiveMinParticlesPerTick);
 		assertEquals(10_000, config.adaptiveMaxParticlesPerTick);
 	}
+
+	@Test
+	void adaptiveTargetFpsClampSharesTheConfigBounds() {
+		assertEquals(30, FPSTuneConfig.clampAdaptiveTargetFps(0));
+		assertEquals(30, FPSTuneConfig.clampAdaptiveTargetFps(30));
+		assertEquals(144, FPSTuneConfig.clampAdaptiveTargetFps(144));
+		assertEquals(360, FPSTuneConfig.clampAdaptiveTargetFps(360));
+		assertEquals(360, FPSTuneConfig.clampAdaptiveTargetFps(Integer.MAX_VALUE));
+	}
 }
