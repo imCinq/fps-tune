@@ -12,7 +12,7 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | Current v1.3.0: 26.3 Fabric, 1.21.11 Fabric and NeoForge. Historical v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. NeoForge 26.3 remains a beta preview and is deferred until its loader is stable. Separate JAR per target. |
+| Minecraft | Current v1.4.0: 26.3 Fabric, 1.21.11 Fabric and NeoForge. Historical v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. NeoForge 26.3 remains a beta preview and is deferred until its loader is stable. Separate JAR per target. |
 | Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 1.21.11: 21.11.45+; NeoForge 26.2: 26.2.0.77+; NeoForge 26.3 preview baseline: 26.3.0.7-beta (excluded from stable releases). |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 and 26.3 |
@@ -114,7 +114,7 @@ That is an approximately 53% higher instantaneous FPS reading in the enabled cap
 
 ## Build and test
 
-Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; hosted CI builds all eight repository target profiles (four Fabric and four isolated NeoForge builds), runs tests and audits, and uploads artifacts. The stable v1.3.0 release contains three targets; hosted CI continues to validate all eight repository build profiles. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
+Use GitHub Actions for the complete verification checklist. Open a pull request or trigger `.github/workflows/ci.yml` with `workflow_dispatch`; hosted CI builds all eight repository target profiles (four Fabric and four isolated NeoForge builds), runs tests and audits, and uploads artifacts. The stable v1.4.0 release contains three targets; hosted CI continues to validate all eight repository build profiles. Do not install or run Java, JDKs, Gradle, the Gradle Wrapper, or project dependencies on the owner's device. Release artifacts are produced by the hosted release workflow.
 
 ## Updating FPS Tune
 
@@ -130,11 +130,11 @@ The root `v1.2.5` release contains five primary artifacts: `fps-tune-mc1.21.1-1.
 
 Fabric 26.3 is published as the separate, non-draft target-specific GitHub release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3), which includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration, not a required dependency; the hosted client smoke matrix covers both Mod Menu present and absent. Do not install it alongside another FPS Tune target JAR.
 
-## Planned v1.4.0 targets
+## v1.4.0 targets
 
-The v1.4.0 release candidate targets the same three platforms as v1.3.0 and is not published yet.
+The stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.4.0) release, published 2026-09-26, contains exactly three primary JARs, their sources JARs, and `SHA256SUMS.txt`. It covers the same three platforms as v1.3.0.
 
-| Minecraft | Loader | Planned artifact |
+| Minecraft | Loader | Artifact |
 | --- | --- | --- |
 | 26.3 | Fabric | fps-tune-mc26.3-1.4.0.jar |
 | 1.21.11 | Fabric | fps-tune-mc1.21.11-1.4.0.jar |
@@ -142,7 +142,7 @@ The v1.4.0 release candidate targets the same three platforms as v1.3.0 and is n
 
 ## v1.3.0 targets
 
-The stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release, published 2026-09-25, contains exactly three primary JARs, their sources JARs, and `SHA256SUMS.txt`. Minecraft 1.21.1 and 26.2 remain available from the historical v1.2.5 releases.
+The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release, published 2026-09-25, contains exactly three primary JARs, their sources JARs, and `SHA256SUMS.txt`. Minecraft 1.21.1 and 26.2 remain available from the historical v1.2.5 releases.
 
 | Minecraft | Loader | Artifact |
 | --- | --- | --- |

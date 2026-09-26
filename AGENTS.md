@@ -1,6 +1,6 @@
 # FPS Tune
 
-FPS Tune is a focused, client-side Fabric and NeoForge performance mod. The current stable v1.3.0 release covers Minecraft 26.3 Fabric and 1.21.11 Fabric/NeoForge; historical v1.2.x artifacts cover 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric. NeoForge 26.3 remains a beta preview in implementation and CI, deferred from stable releases until the loader reaches stable; Quilt 26.3 is also deferred, and 1.21.1/26.2 are excluded. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
+FPS Tune is a focused, client-side Fabric and NeoForge performance mod. The current stable v1.4.0 release covers Minecraft 26.3 Fabric and 1.21.11 Fabric/NeoForge; historical v1.2.x artifacts cover 1.21.1 Fabric and NeoForge, 1.21.11 Fabric, 26.2 Fabric and NeoForge, and 26.3 Fabric. NeoForge 26.3 remains a beta preview in implementation and CI, deferred from stable releases until the loader reaches stable; Quilt 26.3 is also deferred, and 1.21.1/26.2 are excluded. Its runtime behavior is intentionally bounded: it applies opt-in controls to optional local rendering workloads so unusually dense visual scenes produce fewer frame-time spikes. The current controllers cover particle admission and weather rendering.
 
 ## Remote-only development
 

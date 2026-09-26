@@ -43,9 +43,9 @@ Fabric 26.3 is published as a separate, non-draft target-specific release becaus
 
 The target requires Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration and is not required; the hosted client smoke workflow covers both Mod Menu present and absent. The 26.3 release workflow stages a draft before the exact tagged assets are reviewed and published. There is no NeoForge 26.3 artifact. The repository also publishes `v1.2.5-mc1.21.1` as a target-specific 1.21.1 compatibility release; it does not add another supported target or change the mod version.
 
-## Planned GitHub Release v1.4.0
+## GitHub Release v1.4.0
 
-The v1.4.0 release candidate uses the same tagged `.github/workflows/release.yml` process and the same three targets as v1.3.0, with these primary JARs:
+The current stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.4.0) release was published on 2026-09-26 from the tagged `.github/workflows/release.yml` process. It covers the same three targets as v1.3.0 and contains exactly these three primary JARs:
 
 | Minecraft | Loader | Primary file |
 | --- | --- | --- |
@@ -53,11 +53,11 @@ The v1.4.0 release candidate uses the same tagged `.github/workflows/release.yml
 | 1.21.11 | Fabric | fps-tune-mc1.21.11-1.4.0.jar |
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
 
-The `v1.4.0` tag creates a draft, non-latest release. Before publishing it, a maintainer must complete the manual checks: settings screens and every tab on Mod Menu and the NeoForge Mods screen at a small window and GUI scale 4, Lighter and Hidden weather with rain sounds on 1.21.11 and 26.3, the particle cap and far-away limit, and the F6 message.
+The `v1.4.0` tag created a draft, non-latest release. Before it was published, the maintainer completed the manual checks: settings screens and every tab on Mod Menu and the NeoForge Mods screen at a small window and GUI scale 4, Lighter and Hidden weather with rain sounds on 1.21.11 and 26.3, the particle cap and far-away limit, and the F6 message.
 
 ## GitHub Release v1.3.0
 
-The current stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release was published on 2026-09-25 and contains exactly these three primary JARs:
+The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release was published on 2026-09-25 and contains exactly these three primary JARs:
 
 | Minecraft | Loader | Primary file |
 | --- | --- | --- |
@@ -69,14 +69,14 @@ The tagged `.github/workflows/release.yml` builds those three targets, checks pa
 
 NeoForge 26.3 remains a beta preview using Java 25, ModDevGradle 2.0.147, and the NeoForge 26.3.0.7-beta build baseline; the preview was also manually tested on 26.3.0.8-beta. Its implementation, build, and startup smoke remain in the project, but its release artifact is deferred until the NeoForge loader reaches stable.
 
-Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0. Reuse only the verified bytes from the tagged build for every destination.
+Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0 and v1.4.0. Reuse only the verified bytes from the tagged build for every destination.
 
 ## Modrinth and CurseForge upload plan
 
 Create one platform file/version for each exact target. Mark the matching loader and Minecraft version only, mark the matching loader dependency as required, and keep Mod Menu optional for Fabric. On NeoForge, use the native Mods screen and do not list Fabric API as a dependency. Upload only the tested primary JAR; keep source JARs and checksums as GitHub release support files.
 
-- Modrinth: use the three exact target files from `v1.3.0` with target-specific version identifiers such as `1.3.0+mc26.3-fabric`, `1.3.0+mc1.21.11-fabric`, and `1.3.0+mc1.21.11-neoforge`. Keep the historical 1.21.1 and 26.2 files from `v1.2.5`, identified as `1.2.5+mc1.21.1-fabric`, `1.2.5+mc26.2-neoforge`, and so on.
-- CurseForge: tag 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge separately for v1.3.0, and keep the historical 1.21.1 and 26.2 v1.2.5 files; upload only the corresponding exact file.
+- Modrinth: use the three exact target files from `v1.4.0` with target-specific version identifiers such as `1.4.0+mc26.3-fabric`, `1.4.0+mc1.21.11-fabric`, and `1.4.0+mc1.21.11-neoforge`. Keep the historical 1.21.1 and 26.2 files from `v1.2.5`, identified as `1.2.5+mc1.21.1-fabric`, `1.2.5+mc26.2-neoforge`, and so on.
+- CurseForge: tag 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge separately for v1.4.0, and keep the historical 1.21.1 and 26.2 v1.2.5 files; upload only the corresponding exact file.
 - Never claim universal FPS gains or server approval. Explain the intentional visual trade-off and client-only boundary.
 
 Do not automate Modrinth or CurseForge publishing until the owner explicitly approves the platform account, project ID, and required repository secrets. Never commit publishing tokens.
