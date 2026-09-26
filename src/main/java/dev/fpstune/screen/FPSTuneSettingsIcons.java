@@ -24,6 +24,22 @@ final class FPSTuneSettingsIcons {
 		return withIcon("\uE002", 0x85DDA5, label);
 	}
 
+	static Component power(Component label) {
+		return withIcon("\uE003", 0xF2C66D, label);
+	}
+
+	static Component particles(Component label) {
+		return withIcon("\uE004", 0xF5A3C7, label);
+	}
+
+	static Component display(Component label) {
+		return withIcon("\uE005", 0x85DDA5, label);
+	}
+
+	static Component advanced(Component label) {
+		return withIcon("\uE006", 0xC8C8C8, label);
+	}
+
 	private static Component withIcon(String glyph, int color, Component label) {
 		return Component.empty()
 				.append(Component.literal(glyph)

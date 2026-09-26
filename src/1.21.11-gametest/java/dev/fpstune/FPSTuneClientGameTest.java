@@ -52,7 +52,10 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 
 			context.setScreen(() -> new FPSTuneConfigScreen(null));
 			context.takeScreenshot("fpstune-1.21.11-settings");
-			context.clickScreenButton("button.fpstune.advanced");
+			context.clickScreenButton(FPSTuneConfigScreen.advancedButtonLabel().getString());
+			context.takeScreenshot("fpstune-1.21.11-advanced");
+			context.clickScreenButton("button.fpstune.show_more");
+			context.takeScreenshot("fpstune-1.21.11-advanced-more");
 			context.clickScreenButton("gui.back");
 			context.clickScreenButton("gui.cancel");
 		context.runOnClient(client -> FPSTuneClient.applyConfig(client.gameDirectory.toPath(), new FPSTuneConfig()));
