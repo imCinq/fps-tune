@@ -7,7 +7,6 @@ import dev.fpstune.screen.FPSTuneConfigScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -75,9 +74,11 @@ public final class FPSTuneClient {
             AdaptiveParticleBudgetController.reset(config);
             ConfigStore.save(Minecraft.getInstance().gameDirectory.toPath(), config);
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().gui.getChat().addMessage(Component.literal(
-                        "FPS Tune render controls " + (config.enabled ? "enabled" : "disabled")
-                ));
+                FPSTuneToggleFeedback.send(
+                        config,
+                        message -> Minecraft.getInstance().player.displayClientMessage(message, true),
+                        message -> Minecraft.getInstance().player.displayClientMessage(message, false)
+                );
             }
         }
     }

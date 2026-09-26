@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +48,12 @@ public final class FPSTuneClient implements ClientModInitializer {
 			config.enabled = !config.enabled;
 			AdaptiveParticleBudgetController.reset(config);
 			ConfigStore.save(client.gameDirectory.toPath(), config);
-			if (client.gui != null) {
-				client.gui.getChat().addMessage(Component.literal(
-						"FPS Tune render controls " + (config.enabled ? "enabled" : "disabled")
-				));
+			if (client.player != null) {
+				FPSTuneToggleFeedback.send(
+						config,
+						message -> client.player.displayClientMessage(message, true),
+						message -> client.player.displayClientMessage(message, false)
+				);
 			}
 		}
 	}

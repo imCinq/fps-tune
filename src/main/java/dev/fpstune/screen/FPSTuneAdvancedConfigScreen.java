@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
@@ -212,8 +213,24 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		).pos(layout.left(), layout.rowY(0)).maxWidth(layout.width()).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
 				(checkbox, value) -> draftConfig.diagnosticsHudEnabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.diagnostics_hud.tooltip"))).build());
-		tab.add(helpText(layout, 1, "tab.fpstune.display.help"));
-		tab.add(resetButton(layout, 3, () -> draftConfig.diagnosticsHudEnabled = false));
+		CycleButton<FPSTuneConfig.ToggleFeedback> feedback = tab.add(CycleButton.<FPSTuneConfig.ToggleFeedback>builder(
+				value -> Component.translatable("option.fpstune.toggle_feedback." + value.name().toLowerCase(Locale.ROOT)),
+				draftConfig.toggleFeedback
+		).withValues(FPSTuneConfig.ToggleFeedback.values()).create(
+				layout.left(),
+				layout.rowY(1),
+				layout.width(),
+				20,
+				FPSTuneSettingsIcons.message(Component.translatable("option.fpstune.toggle_feedback")),
+				(button, value) -> draftConfig.toggleFeedback = value
+		));
+		feedback.setTooltip(Tooltip.create(Component.translatable("option.fpstune.toggle_feedback.tooltip")));
+		tab.add(helpText(layout, 2, "tab.fpstune.display.help"));
+		tab.add(resetButton(layout, 4, () -> {
+			FPSTuneConfig defaults = new FPSTuneConfig();
+			draftConfig.diagnosticsHudEnabled = defaults.diagnosticsHudEnabled;
+			draftConfig.toggleFeedback = defaults.toggleFeedback;
+		}));
 		return tab;
 	}
 
