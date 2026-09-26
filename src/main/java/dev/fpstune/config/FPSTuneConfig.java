@@ -2,6 +2,8 @@ package dev.fpstune.config;
 
 public final class FPSTuneConfig {
 	public static final int CURRENT_CONFIG_VERSION = 5;
+	public static final int MIN_ADAPTIVE_TARGET_FPS = 30;
+	public static final int MAX_ADAPTIVE_TARGET_FPS = 360;
 
 	public enum WeatherMode {
 		VANILLA,
@@ -102,7 +104,7 @@ public final class FPSTuneConfig {
 		maxParticlesPerTick = Math.max(0, Math.min(maxParticlesPerTick, 10_000));
 		nearbyParticleReserve = Math.max(0, Math.min(nearbyParticleReserve, 10_000));
 		nearbyParticleDistance = Math.max(0, Math.min(nearbyParticleDistance, 64));
-		adaptiveTargetFps = Math.max(30, Math.min(adaptiveTargetFps, 360));
+		adaptiveTargetFps = clampAdaptiveTargetFps(adaptiveTargetFps);
 		adaptiveMinParticlesPerTick = Math.max(0, Math.min(adaptiveMinParticlesPerTick, 10_000));
 		adaptiveMaxParticlesPerTick = Math.max(0, Math.min(adaptiveMaxParticlesPerTick, 10_000));
 		if (adaptiveMinParticlesPerTick > adaptiveMaxParticlesPerTick) {
@@ -116,5 +118,9 @@ public final class FPSTuneConfig {
 		if (toggleFeedback == null) {
 			toggleFeedback = ToggleFeedback.ACTION_BAR;
 		}
+	}
+
+	public static int clampAdaptiveTargetFps(int value) {
+		return Math.max(MIN_ADAPTIVE_TARGET_FPS, Math.min(value, MAX_ADAPTIVE_TARGET_FPS));
 	}
 }
