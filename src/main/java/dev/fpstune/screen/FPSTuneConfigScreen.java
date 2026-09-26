@@ -80,7 +80,7 @@ public final class FPSTuneConfigScreen extends Screen {
 		profileButton = addRenderableWidget(CycleButton.<PerformanceProfile>builder(
 				FPSTuneConfigScreen::formatProfile,
 				currentProfile
-		).withValues(PROFILE_OPTIONS).create(
+		).withValues(cycleOptions(currentProfile)).create(
 				left,
 				layout.profileY(),
 				contentWidth,
@@ -176,6 +176,11 @@ public final class FPSTuneConfigScreen extends Screen {
 
 	private void refreshProfile() {
 		PerformanceProfile profile = profileFor(draftConfig);
+		if ((profile == PerformanceProfile.CUSTOM) != (profileButton.getValue() == PerformanceProfile.CUSTOM)) {
+			// Custom joins or leaves the button's list, so rebuild it.
+			rebuildWidgets();
+			return;
+		}
 		profileButton.setValue(profile);
 		profileHelp.setMessage(Component.translatable(profile.helpKey()));
 	}
@@ -198,7 +203,18 @@ public final class FPSTuneConfigScreen extends Screen {
 		config.clamp();
 	}
 
-	static PerformanceProfile profileFor(FPSTuneConfig config) {
+	/**
+	 * Custom is only listed while the settings really are custom. Choosing it keeps
+	 * the draft unchanged, so offering it otherwise would snap back to the matching
+	 * profile and stop the button from cycling.
+	 */
+	static List<PerformanceProfile> cycleOptions(PerformanceProfile current) {
+		return current == PerformanceProfile.CUSTOM
+				? PROFILE_OPTIONS
+				: PROFILE_OPTIONS.stream().filter(profile -> profile != PerformanceProfile.CUSTOM).toList();
+	}
+
+		static PerformanceProfile profileFor(FPSTuneConfig config) {
 		for (PerformanceProfile profile : PROFILE_OPTIONS) {
 			if (profile != PerformanceProfile.CUSTOM && profile.matches(config)) {
 				return profile;
