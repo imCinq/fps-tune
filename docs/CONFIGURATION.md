@@ -18,7 +18,12 @@ FPS Tune is disabled by default. Its settings control only local client renderin
 | `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback when the client limit is unavailable, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lower bound for the Adaptive-mode budget, clamped to `0..10000`. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Upper bound for the Adaptive-mode budget, clamped to `0..10000`. |
-| `weatherRenderingEnabled` | `true` | Keeps the vanilla weather render pass enabled while FPS Tune is active. |
+| `activeParticleCapEnabled` | `false` | Limits how many particles can be alive at once. Stored from `configVersion=5`; the controller arrives in v1.4.0. |
+| `maxActiveParticles` | `4000` | Live-particle limit when the cap is on, clamped to `256..16384`. |
+| `distantParticleLimitEnabled` | `false` | Skips new particles far from the player. Stored from `configVersion=5`; the controller arrives in v1.4.0. |
+| `particleMaxDistance` | `48` | Distance in blocks beyond which new particles are skipped when the limit is on, clamped to `16..128`. |
+| `weatherMode` | `VANILLA` | `VANILLA`, `REDUCED` or `OFF`. `OFF` suppresses local rain and snow rendering while FPS Tune is active; `REDUCED` currently renders like `VANILLA`. |
+| `toggleFeedback` | `ACTION_BAR` | Where the `F6` toggle message appears: `ACTION_BAR`, `CHAT` or `NONE`. |
 
 The particle budget is clamped to `0..10000`. A value of `0` admits no new particles during a client tick; it does not remove existing particles. A value of `10000` is the highest accepted setting and is not an unlimited mode. The configured nearby reserve is clamped to `0..10000`, and its effective value is capped at half the current fixed or Adaptive budget using `min(configured reserve, floor(current budget / 2))`. At the default 300-particle budget, a configured reserve of 100 remains 100; at a 100-particle budget, it becomes 50. The nearby distance is clamped to `0..64` blocks. A zero reserve or a disabled nearby-priority switch restores the ordinary total-budget behavior. Adaptive minimum and maximum budgets use the same particle range, and the maximum is raised to the minimum when a malformed file reverses their order.
 
@@ -47,7 +52,7 @@ config/fpstune.properties
 A saved file has this shape:
 
 ```properties
-configVersion=4
+configVersion=5
 enabled=false
 particleAdmissionEnabled=true
 maxParticlesPerTick=300
@@ -60,10 +65,15 @@ adaptiveTargetAuto=true
 adaptiveTargetFps=120
 adaptiveMinParticlesPerTick=100
 adaptiveMaxParticlesPerTick=2000
-weatherRenderingEnabled=true
+activeParticleCapEnabled=false
+maxActiveParticles=4000
+distantParticleLimitEnabled=false
+particleMaxDistance=48
+weatherMode=VANILLA
+toggleFeedback=ACTION_BAR
 ```
 
-The file is created when settings are saved. Writes use a temporary file and an atomic move when the filesystem supports it. A malformed or unreadable file falls back to safe defaults and must not prevent Minecraft from launching. Invalid boolean and integer values fall back to their previous defaults; particle budgets outside the allowed range are clamped.
+The file is created when settings are saved. Writes use a temporary file and an atomic move when the filesystem supports it. A malformed or unreadable file falls back to safe defaults and must not prevent Minecraft from launching. Invalid boolean, integer and choice values fall back to their previous defaults; particle budgets outside the allowed range are clamped.
 
 ## What the settings change
 
@@ -77,7 +87,11 @@ When `diagnosticsHudEnabled=true`, the HUD shows whether FPS Tune is enabled, th
 
 When `adaptiveParticleBudgetEnabled=true`, the controller starts at the fixed `maxParticlesPerTick` value clamped into the adaptive range. It tracks recent in-world render intervals and lightweight particle-pressure signals locally. A smoothed frame time more than 10% above the target lowers the budget only after 15 consecutive observations with particle pressure: at least 75% of the current budget was attempted, or the total budget was rejected. If the smoothed frame time exceeds 2x the target while pressure is present for 3 consecutive observations, Adaptive performs one bounded 25% emergency reduction. Slow frames with little particle pressure hold the budget. A smoothed frame time below 85% of the target for 60 consecutive observations raises it by about 10%. A 30-frame cooldown follows an adjustment. The value always stays between the configured adaptive minimum and maximum. Intervals longer than 250 ms are ignored so opening a menu or switching away from the client does not cause a sudden budget collapse. Pressure tracking remains active for Adaptive mode even when detailed diagnostics are disabled. Auto follows Minecraft's configured FPS limit on each render sample; changing the limit resets only the timing baseline and preserves the current particle budget. The numeric target is retained as the fallback when that client limit is unavailable.
 
-When `enabled=true` and `weatherRenderingEnabled=false`, FPS Tune suppresses the local precipitation streaks and the landing splash particles they spawn. Rain and snow still exist in the world, weather simulation continues, and weather sounds continue to play.
+When `enabled=true` and `weatherMode=OFF`, FPS Tune suppresses the local precipitation streaks and the landing splash particles they spawn. Rain and snow still exist in the world, weather simulation continues, and weather sounds continue to play.
+
+## Version 5 migration
+
+Files from `configVersion` 4 or older are upgraded when loaded: `weatherRenderingEnabled=false` becomes `weatherMode=OFF`, and any other value becomes `weatherMode=VANILLA`. The new particle limits start off. The old key is not written again. Older FPS Tune versions treat a version 5 file as unknown and fall back to safe defaults for everything except the master switch and particle budget.
 
 ## Renamed-build migration
 

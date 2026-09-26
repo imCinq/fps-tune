@@ -102,8 +102,8 @@ public final class FPSTuneConfigScreen extends Screen {
 		addRenderableWidget(Checkbox.builder(
 				FPSTuneSettingsIcons.precipitation(Component.translatable("option.fpstune.weather_rendering")),
 				font
-		).pos(left, layout.weatherY()).maxWidth(contentWidth).selected(draftConfig.weatherRenderingEnabled).onValueChange(
-				(checkbox, value) -> draftConfig.weatherRenderingEnabled = value
+		).pos(left, layout.weatherY()).maxWidth(contentWidth).selected(draftConfig.weatherRendered()).onValueChange(
+				(checkbox, value) -> draftConfig.weatherMode = value ? FPSTuneConfig.WeatherMode.VANILLA : FPSTuneConfig.WeatherMode.OFF
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.weather_rendering.tooltip"))).build());
 
 		addRenderableWidget(Checkbox.builder(

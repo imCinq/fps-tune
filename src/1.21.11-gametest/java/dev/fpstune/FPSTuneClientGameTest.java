@@ -29,7 +29,7 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 						"client particle engine tick must reset admission metrics");
 
 				config = config.copy();
-				config.weatherRenderingEnabled = false;
+				config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 				FPSTuneClient.applyConfig(client.gameDirectory.toPath(), config);
 					WeatherEffectRenderer weather = new WeatherEffectRenderer();
 					Method render = weatherRenderMethod();

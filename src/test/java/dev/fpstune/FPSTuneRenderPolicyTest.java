@@ -17,7 +17,7 @@ final class FPSTuneRenderPolicyTest {
 	void disabledMasterSwitchIsAlwaysAVanillaPassThrough() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = false;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 		config.particleAdmissionEnabled = true;
 
 		assertTrue(FPSTuneRenderPolicy.shouldRenderWeather(config));
@@ -28,7 +28,7 @@ final class FPSTuneRenderPolicyTest {
 	void weatherControllerCanBeDisabledIndependently() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		assertFalse(FPSTuneRenderPolicy.shouldRenderWeather(config));
 	}
@@ -38,7 +38,7 @@ final class FPSTuneRenderPolicyTest {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.particleAdmissionEnabled = true;
-		config.weatherRenderingEnabled = true;
+		config.weatherMode = FPSTuneConfig.WeatherMode.VANILLA;
 
 		assertTrue(FPSTuneRenderPolicy.shouldLimitParticles(config));
 		assertTrue(FPSTuneRenderPolicy.shouldRenderWeather(config));
@@ -49,13 +49,13 @@ final class FPSTuneRenderPolicyTest {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.particleAdmissionEnabled = true;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		assertTrue(FPSTuneRenderPolicy.shouldLimitParticles(config));
 		assertFalse(FPSTuneRenderPolicy.shouldRenderWeather(config));
 
 		config.particleAdmissionEnabled = false;
-		config.weatherRenderingEnabled = true;
+		config.weatherMode = FPSTuneConfig.WeatherMode.VANILLA;
 
 		assertFalse(FPSTuneRenderPolicy.shouldLimitParticles(config));
 		assertTrue(FPSTuneRenderPolicy.shouldRenderWeather(config));

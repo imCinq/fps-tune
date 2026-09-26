@@ -14,6 +14,6 @@ public final class FPSTuneRenderPolicy {
 	}
 
 	public static boolean shouldRenderWeather(FPSTuneConfig config) {
-		return config == null || !config.enabled || config.weatherRenderingEnabled;
+		return config == null || !config.enabled || config.weatherRendered();
 	}
 }

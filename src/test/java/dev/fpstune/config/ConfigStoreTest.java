@@ -30,7 +30,7 @@ final class ConfigStoreTest {
 		assertFalse(config.adaptiveTargetAuto);
 		assertEquals(2_000, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
-		assertTrue(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, config.weatherMode);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ final class ConfigStoreTest {
 		original.adaptiveTargetFps = 144;
 		original.adaptiveMinParticlesPerTick = 80;
 		original.adaptiveMaxParticlesPerTick = 1_800;
-		original.weatherRenderingEnabled = false;
+		original.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		ConfigStore.save(runDirectory, original);
 		FPSTuneConfig reloaded = ConfigStore.load(runDirectory);
@@ -65,13 +65,13 @@ final class ConfigStoreTest {
 		assertEquals(144, reloaded.adaptiveTargetFps);
 		assertEquals(80, reloaded.adaptiveMinParticlesPerTick);
 		assertEquals(1_800, reloaded.adaptiveMaxParticlesPerTick);
-		assertFalse(reloaded.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.OFF, reloaded.weatherMode);
 
 		Properties persisted = new Properties();
 		try (var input = Files.newInputStream(runDirectory.resolve("config").resolve("fpstune.properties"))) {
 			persisted.load(input);
 		}
-		assertEquals("4", persisted.getProperty("configVersion"));
+		assertEquals("5", persisted.getProperty("configVersion"));
 		assertEquals("false", persisted.getProperty("prioritizeNearbyParticles"));
 		assertEquals("180", persisted.getProperty("nearbyParticleReserve"));
 		assertEquals("24", persisted.getProperty("nearbyParticleDistance"));
@@ -81,6 +81,8 @@ final class ConfigStoreTest {
 		assertEquals("144", persisted.getProperty("adaptiveTargetFps"));
 		assertEquals("80", persisted.getProperty("adaptiveMinParticlesPerTick"));
 		assertEquals("1800", persisted.getProperty("adaptiveMaxParticlesPerTick"));
+		assertEquals("OFF", persisted.getProperty("weatherMode"));
+		assertEquals(null, persisted.getProperty("weatherRenderingEnabled"));
 		assertFalse(Files.exists(runDirectory.resolve("config").resolve("fpstune.properties.tmp")));
 	}
 
@@ -105,7 +107,7 @@ final class ConfigStoreTest {
 		assertEquals(120, config.adaptiveTargetFps);
 		assertEquals(100, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
-		assertTrue(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, config.weatherMode);
 	}
 
 	@Test
@@ -128,7 +130,7 @@ final class ConfigStoreTest {
 		assertEquals(120, config.adaptiveTargetFps);
 		assertEquals(100, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
-		assertFalse(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.OFF, config.weatherMode);
 		assertTrue(Files.exists(configDirectory.resolve("coretune.properties")));
 		assertTrue(Files.exists(configDirectory.resolve("fpstune.properties")));
 
@@ -148,7 +150,8 @@ final class ConfigStoreTest {
 		assertEquals("120", migrated.getProperty("adaptiveTargetFps"));
 		assertEquals("100", migrated.getProperty("adaptiveMinParticlesPerTick"));
 		assertEquals("2000", migrated.getProperty("adaptiveMaxParticlesPerTick"));
-		assertEquals("false", migrated.getProperty("weatherRenderingEnabled"));
+		assertEquals("OFF", migrated.getProperty("weatherMode"));
+		assertEquals(null, migrated.getProperty("weatherRenderingEnabled"));
 	}
 
 	@Test
@@ -169,12 +172,70 @@ final class ConfigStoreTest {
 		Path configDirectory = runDirectory.resolve("config");
 		Files.createDirectories(configDirectory);
 		Files.writeString(configDirectory.resolve("fpstune.properties"),
-				"configVersion=5\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\nweatherRenderingEnabled=false\n");
+				"configVersion=6\nenabled=true\nparticleAdmissionEnabled=false\nprioritizeNearbyParticles=false\n"
+						+ "weatherMode=OFF\nactiveParticleCapEnabled=true\ndistantParticleLimitEnabled=true\n");
 
 		FPSTuneConfig config = ConfigStore.load(runDirectory);
 
 		assertTrue(config.enabled);
 		assertTrue(config.particleAdmissionEnabled);
-		assertTrue(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, config.weatherMode);
+		assertFalse(config.activeParticleCapEnabled);
+		assertFalse(config.distantParticleLimitEnabled);
+	}
+
+	@Test
+	void versionFourWeatherSwitchMigratesToWeatherModeWithNewControlsOff(@TempDir Path runDirectory) throws Exception {
+		Path configDirectory = runDirectory.resolve("config");
+		Files.createDirectories(configDirectory);
+		Files.writeString(configDirectory.resolve("fpstune.properties"),
+				"configVersion=4\nenabled=true\nweatherRenderingEnabled=false\n"
+						+ "activeParticleCapEnabled=true\ndistantParticleLimitEnabled=true\nweatherMode=REDUCED\n");
+
+		FPSTuneConfig config = ConfigStore.load(runDirectory);
+
+		assertTrue(config.enabled);
+		assertEquals(FPSTuneConfig.WeatherMode.OFF, config.weatherMode);
+		assertFalse(config.activeParticleCapEnabled);
+		assertFalse(config.distantParticleLimitEnabled);
+		assertEquals(FPSTuneConfig.ToggleFeedback.ACTION_BAR, config.toggleFeedback);
+	}
+
+	@Test
+	void versionFiveSettingsRoundTrip(@TempDir Path runDirectory) {
+		FPSTuneConfig original = new FPSTuneConfig();
+		original.activeParticleCapEnabled = true;
+		original.maxActiveParticles = 2_500;
+		original.distantParticleLimitEnabled = true;
+		original.particleMaxDistance = 32;
+		original.weatherMode = FPSTuneConfig.WeatherMode.REDUCED;
+		original.toggleFeedback = FPSTuneConfig.ToggleFeedback.CHAT;
+
+		ConfigStore.save(runDirectory, original);
+		FPSTuneConfig reloaded = ConfigStore.load(runDirectory);
+
+		assertTrue(reloaded.activeParticleCapEnabled);
+		assertEquals(2_500, reloaded.maxActiveParticles);
+		assertTrue(reloaded.distantParticleLimitEnabled);
+		assertEquals(32, reloaded.particleMaxDistance);
+		assertEquals(FPSTuneConfig.WeatherMode.REDUCED, reloaded.weatherMode);
+		assertEquals(FPSTuneConfig.ToggleFeedback.CHAT, reloaded.toggleFeedback);
+	}
+
+	@Test
+	void invalidVersionFiveValuesFallBackOrClamp(@TempDir Path runDirectory) throws Exception {
+		Path configDirectory = runDirectory.resolve("config");
+		Files.createDirectories(configDirectory);
+		Files.writeString(configDirectory.resolve("fpstune.properties"),
+				"configVersion=5\nweatherMode=sometimes\ntoggleFeedback=loud\n"
+						+ "maxActiveParticles=99999999\nparticleMaxDistance=1\nactiveParticleCapEnabled=maybe\n");
+
+		FPSTuneConfig config = ConfigStore.load(runDirectory);
+
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, config.weatherMode);
+		assertEquals(FPSTuneConfig.ToggleFeedback.ACTION_BAR, config.toggleFeedback);
+		assertEquals(16_384, config.maxActiveParticles);
+		assertEquals(16, config.particleMaxDistance);
+		assertFalse(config.activeParticleCapEnabled);
 	}
 }

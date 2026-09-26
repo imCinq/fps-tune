@@ -16,7 +16,7 @@ final class FPSTuneDiagnosticsTest {
 		config.maxParticlesPerTick = 4;
 		config.prioritizeNearbyParticles = true;
 		config.nearbyParticleReserve = 2;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 		config.diagnosticsHudEnabled = true;
 
 		assertTrue(FPSTuneDiagnostics.shouldRender(config));
@@ -60,7 +60,7 @@ final class FPSTuneDiagnosticsTest {
 	void diagnosticsRemainExplicitWhenControlsAreDisabled() {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.diagnosticsHudEnabled = true;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		assertTrue(FPSTuneDiagnostics.shouldRender(config));
 		assertArrayEquals(

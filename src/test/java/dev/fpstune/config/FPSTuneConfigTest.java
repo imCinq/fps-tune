@@ -23,7 +23,12 @@ final class FPSTuneConfigTest {
 		assertEquals(120, config.adaptiveTargetFps);
 		assertEquals(100, config.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, config.adaptiveMaxParticlesPerTick);
-		assertTrue(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, config.weatherMode);
+		assertFalse(config.activeParticleCapEnabled);
+		assertEquals(4_000, config.maxActiveParticles);
+		assertFalse(config.distantParticleLimitEnabled);
+		assertEquals(48, config.particleMaxDistance);
+		assertEquals(FPSTuneConfig.ToggleFeedback.ACTION_BAR, config.toggleFeedback);
 	}
 
 	@Test
@@ -41,7 +46,7 @@ final class FPSTuneConfigTest {
 		original.adaptiveTargetFps = 144;
 		original.adaptiveMinParticlesPerTick = 80;
 		original.adaptiveMaxParticlesPerTick = 1_800;
-		original.weatherRenderingEnabled = false;
+		original.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		FPSTuneConfig copy = original.copy();
 		copy.enabled = false;
@@ -56,7 +61,7 @@ final class FPSTuneConfigTest {
 		copy.adaptiveTargetFps = 90;
 		copy.adaptiveMinParticlesPerTick = 50;
 		copy.adaptiveMaxParticlesPerTick = 600;
-		copy.weatherRenderingEnabled = true;
+		copy.weatherMode = FPSTuneConfig.WeatherMode.VANILLA;
 
 		assertTrue(original.enabled);
 		assertFalse(original.particleAdmissionEnabled);
@@ -70,7 +75,7 @@ final class FPSTuneConfigTest {
 		assertEquals(144, original.adaptiveTargetFps);
 		assertEquals(80, original.adaptiveMinParticlesPerTick);
 		assertEquals(1_800, original.adaptiveMaxParticlesPerTick);
-		assertFalse(original.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.OFF, original.weatherMode);
 		assertFalse(copy.enabled);
 		assertTrue(copy.particleAdmissionEnabled);
 		assertEquals(100, copy.maxParticlesPerTick);
@@ -83,7 +88,7 @@ final class FPSTuneConfigTest {
 		assertEquals(90, copy.adaptiveTargetFps);
 		assertEquals(50, copy.adaptiveMinParticlesPerTick);
 		assertEquals(600, copy.adaptiveMaxParticlesPerTick);
-		assertTrue(copy.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, copy.weatherMode);
 	}
 
 	@Test
@@ -91,7 +96,7 @@ final class FPSTuneConfigTest {
 		FPSTuneConfig draft = new FPSTuneConfig();
 		draft.enabled = true;
 		draft.maxParticlesPerTick = 512;
-		draft.weatherRenderingEnabled = false;
+		draft.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 
 		FPSTuneConfig source = new FPSTuneConfig();
 		source.enabled = true;
@@ -105,7 +110,7 @@ final class FPSTuneConfigTest {
 		assertEquals(10_000, draft.maxParticlesPerTick);
 		assertEquals(2_000, draft.adaptiveMinParticlesPerTick);
 		assertEquals(2_000, draft.adaptiveMaxParticlesPerTick);
-		assertTrue(draft.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.VANILLA, draft.weatherMode);
 	}
 
 	@Test
@@ -113,7 +118,7 @@ final class FPSTuneConfigTest {
 		FPSTuneConfig config = new FPSTuneConfig();
 		config.enabled = true;
 		config.diagnosticsHudEnabled = true;
-		config.weatherRenderingEnabled = false;
+		config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 		config.particleAdmissionEnabled = false;
 		config.maxParticlesPerTick = 512;
 		config.prioritizeNearbyParticles = false;
@@ -129,7 +134,7 @@ final class FPSTuneConfigTest {
 
 		assertTrue(config.enabled);
 		assertTrue(config.diagnosticsHudEnabled);
-		assertFalse(config.weatherRenderingEnabled);
+		assertEquals(FPSTuneConfig.WeatherMode.OFF, config.weatherMode);
 		assertTrue(config.particleAdmissionEnabled);
 		assertEquals(300, config.maxParticlesPerTick);
 		assertTrue(config.prioritizeNearbyParticles);

@@ -52,7 +52,7 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 				check(metrics.priorityAcceptedThisTick() == 5, "nearby particles receive reserved admissions");
 
 				config = config.copy();
-				config.weatherRenderingEnabled = false;
+				config.weatherMode = FPSTuneConfig.WeatherMode.OFF;
 				FPSTuneClient.applyConfig(client.gameDirectory.toPath(), config);
 				try (WeatherEffectRenderer weather = new WeatherEffectRenderer()) {
 					// A null render state is deliberately a sentinel: only the injected

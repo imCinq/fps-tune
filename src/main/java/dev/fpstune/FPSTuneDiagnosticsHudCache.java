@@ -101,7 +101,7 @@ public final class FPSTuneDiagnosticsHudCache {
 					adaptiveEnabled ? safeAdaptive.targetFps() : 0,
 					adaptiveEnabled ? safeAdaptive.direction() : AdaptiveParticleBudgetController.Direction.FIXED,
 					adaptiveEnabled && config.adaptiveTargetAuto,
-					controlsEnabled && !config.weatherRenderingEnabled
+					controlsEnabled && !config.weatherRendered()
 			);
 		}
 	}
