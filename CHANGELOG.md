@@ -9,6 +9,7 @@
 - 🌦️ **Rain and snow: Normal / Lighter / Hidden.** Lighter draws precipitation in a smaller circle around you and skips half the landing splashes. Your old on/off setting carries over.
 - ⌨️ **F6 message:** a colored ON/OFF with a one-line summary of what changes, shown above the hotbar by default. It can also go to chat or be turned off.
 - 🔊 Fixed hiding rain and snow on **1.21.11** so rain sounds keep playing, as they already did on 26.3.
+- 🎨 Every setting now has its own icon, so the settings pages look consistent.
 - 🔁 Profile button cycles through every profile again; Custom only appears when your settings are custom.
 - ⎋ Escape on the main settings screen now saves, like vanilla option screens; Cancel still discards.
 - 👁️ Far-away particle distance is measured from the camera view, so spectating a mob or player works as expected.

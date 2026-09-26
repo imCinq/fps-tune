@@ -142,7 +142,7 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		));
 
 		adaptiveBudgetWidget = tab.add(Checkbox.builder(
-				Component.translatable("option.fpstune.adaptive_budget"),
+				FPSTuneSettingsIcons.adaptive(Component.translatable("option.fpstune.adaptive_budget")),
 				font
 		).pos(layout.right(), layout.rowY(0)).maxWidth(layout.columnWidth()).selected(draftConfig.adaptiveParticleBudgetEnabled).onValueChange(
 				(checkbox, value) -> {
@@ -155,7 +155,7 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		int buttonRow = 1;
 		if (showMore) {
 			nearbyPriorityWidget = tab.add(Checkbox.builder(
-					Component.translatable("option.fpstune.nearby_priority"),
+					FPSTuneSettingsIcons.nearby(Component.translatable("option.fpstune.nearby_priority")),
 					font
 			).pos(layout.left(), layout.rowY(4)).maxWidth(layout.columnWidth()).selected(draftConfig.prioritizeNearbyParticles).onValueChange(
 					(checkbox, value) -> {
@@ -302,7 +302,12 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		Component label = Component.translatable(key);
 		return switch (key) {
 			case "option.fpstune.max_active" -> FPSTuneSettingsIcons.particles(label);
-			case "option.fpstune.max_distance" -> FPSTuneSettingsIcons.distance(label);
+			case "option.fpstune.max_distance", "option.fpstune.nearby_distance" -> FPSTuneSettingsIcons.distance(label);
+			case "option.fpstune.max_particles" -> FPSTuneSettingsIcons.particleLimit(label);
+			case "option.fpstune.nearby_reserve" -> FPSTuneSettingsIcons.nearbyReserve(label);
+			case "option.fpstune.adaptive_target" -> FPSTuneSettingsIcons.targetFps(label);
+			case "option.fpstune.adaptive_minimum" -> FPSTuneSettingsIcons.minimum(label);
+			case "option.fpstune.adaptive_maximum" -> FPSTuneSettingsIcons.maximum(label);
 			default -> label;
 		};
 	}
