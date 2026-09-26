@@ -130,6 +130,16 @@ The root `v1.2.5` release contains five primary artifacts: `fps-tune-mc1.21.1-1.
 
 Fabric 26.3 is published as the separate, non-draft target-specific GitHub release [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3), which includes `fps-tune-mc26.3-1.2.5.jar`. Use it only with Java 25, Fabric Loader 0.19.5+, and Fabric API `0.160.6+26.3`. Mod Menu `21.0.0-beta.1` is an optional beta integration, not a required dependency; the hosted client smoke matrix covers both Mod Menu present and absent. Do not install it alongside another FPS Tune target JAR.
 
+## Planned v1.4.0 targets
+
+The v1.4.0 release candidate targets the same three platforms as v1.3.0 and is not published yet.
+
+| Minecraft | Loader | Planned artifact |
+| --- | --- | --- |
+| 26.3 | Fabric | fps-tune-mc26.3-1.4.0.jar |
+| 1.21.11 | Fabric | fps-tune-mc1.21.11-1.4.0.jar |
+| 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
+
 ## v1.3.0 targets
 
 The stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release, published 2026-09-25, contains exactly three primary JARs, their sources JARs, and `SHA256SUMS.txt`. Minecraft 1.21.1 and 26.2 remain available from the historical v1.2.5 releases.
