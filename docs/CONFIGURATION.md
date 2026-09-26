@@ -33,9 +33,9 @@ With Mod Menu installed:
 
 1. Open the Mods screen.
 2. Select FPS Tune and choose Configure.
-3. On the main screen, choose whether to enable FPS Tune, select a performance profile, and optionally show rain/snow or the performance overlay.
-4. Open Advanced settings only if you need individual particle or Adaptive-budget controls; dependent options dim when their parent switch is off.
-5. Choose Done on the main screen to apply and save the draft settings. Reset advanced settings only resets particle and Adaptive fields; it preserves the master switch, weather setting, and diagnostics choice in the draft.
+3. On the main screen, choose whether to enable FPS Tune, pick a profile (the line under it explains the choice), and use the quick switches for particles, rain and snow, and the performance overlay.
+4. Open Advanced settings for the Particles, Weather and Display tabs. Dependent options dim when their parent switch is off, and Show more reveals nearby-particle protection and automatic-adjustment limits. Changing any value that a profile controls switches the profile to Custom.
+5. Each tab's Reset this tab button restores only that tab's defaults in the draft. Choose Done on the main screen to apply and save.
 
 Back or Escape from Advanced settings returns to the main screen with the draft changes. Cancel or Escape from the main screen discards the entire draft and leaves the active configuration unchanged. Mod Menu is optional; FPS Tune runs without it.
 

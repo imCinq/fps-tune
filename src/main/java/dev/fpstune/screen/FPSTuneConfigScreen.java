@@ -13,6 +13,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.Locale;
 
 public final class FPSTuneConfigScreen extends Screen {
 	private static final List<PerformanceProfile> PROFILE_OPTIONS = List.of(
@@ -22,8 +23,16 @@ public final class FPSTuneConfigScreen extends Screen {
 			PerformanceProfile.CUSTOM
 	);
 
+	private static final List<FPSTuneConfig.WeatherMode> WEATHER_OPTIONS = List.of(
+			FPSTuneConfig.WeatherMode.VANILLA,
+			FPSTuneConfig.WeatherMode.OFF
+	);
+
 	private final Screen parent;
 	private final FPSTuneConfig draftConfig;
+	private MultiLineTextWidget description;
+	private CycleButton<PerformanceProfile> profileButton;
+	private MultiLineTextWidget profileHelp;
 
 	public FPSTuneConfigScreen(Screen parent) {
 		super(Component.translatable("screen.fpstune.title"));
@@ -35,43 +44,37 @@ public final class FPSTuneConfigScreen extends Screen {
 
 	@Override
 	protected void init() {
-		FPSTuneConfigLayout.BasicLayout layout = FPSTuneConfigLayout.calculateBasic(width, height);
-		int contentWidth = layout.contentWidth();
+		FPSTuneSettingsLayout.Main layout = FPSTuneSettingsLayout.main(width, height);
 		int left = layout.left();
+		int contentWidth = layout.width();
 
 		addRenderableOnly(new StringWidget(
 				(width - font.width(getTitle())) / 2,
-				4,
+				6,
 				font.width(getTitle()),
 				12,
 				getTitle(),
 				font
 		));
-		addRenderableOnly(new MultiLineTextWidget(
+		description = addRenderableOnly(new MultiLineTextWidget(
 				left,
-				FPSTuneConfigLayout.descriptionY(),
-				Component.translatable("screen.fpstune.description"),
+				20,
+				descriptionText(),
 				font
 		).setMaxWidth(contentWidth).setCentered(true));
 
 		Checkbox enabled = addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.enabled"),
+				FPSTuneSettingsIcons.power(Component.translatable("option.fpstune.enabled")),
 				font
 		).pos(left, layout.enabledY()).maxWidth(contentWidth).selected(draftConfig.enabled).onValueChange(
-				(checkbox, value) -> draftConfig.enabled = value
+				(checkbox, value) -> {
+					draftConfig.enabled = value;
+					description.setMessage(descriptionText());
+				}
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.enabled.tooltip"))).build());
 
-		addRenderableOnly(new StringWidget(
-				left,
-				layout.performanceHeadingY(),
-				contentWidth,
-				12,
-				Component.translatable("section.fpstune.performance"),
-				font
-		));
-
 		PerformanceProfile currentProfile = profileFor(draftConfig);
-		addRenderableWidget(CycleButton.<PerformanceProfile>builder(
+		profileButton = addRenderableWidget(CycleButton.<PerformanceProfile>builder(
 				FPSTuneConfigScreen::formatProfile,
 				currentProfile
 		).withValues(PROFILE_OPTIONS).create(
@@ -80,54 +83,106 @@ public final class FPSTuneConfigScreen extends Screen {
 				contentWidth,
 				20,
 				FPSTuneSettingsIcons.profile(Component.translatable("option.fpstune.profile")),
-				(button, value) -> applyProfile(draftConfig, value)
+				(button, value) -> {
+					applyProfile(draftConfig, value);
+					// A profile can change the quick switches too, so redraw them from the draft.
+					rebuildWidgets();
+					setFocused(profileButton);
+				}
 		));
-
-		addRenderableOnly(new MultiLineTextWidget(
+		profileHelp = addRenderableOnly(new MultiLineTextWidget(
 				left,
 				layout.profileHelpY(),
-				Component.translatable("option.fpstune.profile.help"),
+				Component.translatable(currentProfile.helpKey()),
 				font
 		).setMaxWidth(contentWidth).setCentered(true));
 
-		addRenderableOnly(new StringWidget(
-				left,
-				layout.visualsHeadingY(),
-				contentWidth,
-				12,
-				Component.translatable("section.fpstune.visuals"),
-				font
-		));
-
 		addRenderableWidget(Checkbox.builder(
-				FPSTuneSettingsIcons.precipitation(Component.translatable("option.fpstune.weather_rendering")),
+				FPSTuneSettingsIcons.particles(Component.translatable("option.fpstune.particle_admission")),
 				font
-		).pos(left, layout.weatherY()).maxWidth(contentWidth).selected(draftConfig.weatherRendered()).onValueChange(
-				(checkbox, value) -> draftConfig.weatherMode = value ? FPSTuneConfig.WeatherMode.VANILLA : FPSTuneConfig.WeatherMode.OFF
-		).tooltip(Tooltip.create(Component.translatable("option.fpstune.weather_rendering.tooltip"))).build());
+		).pos(left, layout.particlesY()).maxWidth(contentWidth).selected(draftConfig.particleAdmissionEnabled).onValueChange(
+				(checkbox, value) -> {
+					draftConfig.particleAdmissionEnabled = value;
+					refreshProfile();
+				}
+		).tooltip(Tooltip.create(Component.translatable("option.fpstune.particle_admission.tooltip"))).build());
+
+		addRenderableWidget(weatherButton(draftConfig, left, layout.weatherY(), contentWidth));
 
 		addRenderableWidget(Checkbox.builder(
 				FPSTuneSettingsIcons.overlay(Component.translatable("option.fpstune.diagnostics_hud")),
 				font
-		).pos(left, layout.diagnosticsY()).maxWidth(contentWidth).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
+		).pos(left, layout.overlayY()).maxWidth(contentWidth).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
 				(checkbox, value) -> draftConfig.diagnosticsHudEnabled = value
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.diagnostics_hud.tooltip"))).build());
 
 		addRenderableWidget(Button.builder(
-				Component.translatable("button.fpstune.advanced"),
+				advancedButtonLabel(),
 				button -> openAdvanced()
 		).bounds(left, layout.advancedY(), contentWidth, 20)
 				.tooltip(Tooltip.create(Component.translatable("button.fpstune.advanced.tooltip")))
 				.build());
 
 		addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> closeWithoutSaving())
-				.bounds(left, layout.buttonY(), layout.actionButtonWidth(), 20)
+				.bounds(layout.cancelX(), layout.buttonY(), layout.buttonWidth(), 20)
+				.tooltip(Tooltip.create(Component.translatable("button.fpstune.cancel.tooltip")))
 				.build());
 		addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> saveAndClose())
-				.bounds(layout.doneButtonX(), layout.buttonY(), layout.actionButtonWidth(), 20)
+				.bounds(layout.doneX(), layout.buttonY(), layout.buttonWidth(), 20)
 				.build());
 
 		setInitialFocus(enabled);
+	}
+
+	/**
+	 * Rain and snow choice shared by the main screen and the Weather tab. Lighter
+	 * joins the list once the reduced weather renderer exists.
+	 */
+	static CycleButton<FPSTuneConfig.WeatherMode> weatherButton(FPSTuneConfig config, int x, int y, int width) {
+		List<FPSTuneConfig.WeatherMode> values = WEATHER_OPTIONS.contains(config.weatherMode)
+				? WEATHER_OPTIONS
+				: List.of(FPSTuneConfig.WeatherMode.values());
+		CycleButton<FPSTuneConfig.WeatherMode> button = CycleButton.<FPSTuneConfig.WeatherMode>builder(
+				mode -> Component.translatable(weatherKey(mode)),
+				config.weatherMode
+		).withValues(values).create(
+				x,
+				y,
+				width,
+				20,
+				FPSTuneSettingsIcons.precipitation(Component.translatable("option.fpstune.weather")),
+				(cycleButton, value) -> {
+					config.weatherMode = value;
+					cycleButton.setTooltip(weatherTooltip(value));
+				}
+		);
+		button.setTooltip(weatherTooltip(config.weatherMode));
+		return button;
+	}
+
+	private static String weatherKey(FPSTuneConfig.WeatherMode mode) {
+		return "option.fpstune.weather." + mode.name().toLowerCase(Locale.ROOT);
+	}
+
+	private static Tooltip weatherTooltip(FPSTuneConfig.WeatherMode mode) {
+		return Tooltip.create(Component.translatable(weatherKey(mode) + ".tooltip"));
+	}
+
+	private Component descriptionText() {
+		return Component.translatable(draftConfig.enabled
+				? "screen.fpstune.description"
+				: "screen.fpstune.description.off");
+	}
+
+	private void refreshProfile() {
+		PerformanceProfile profile = profileFor(draftConfig);
+		profileButton.setValue(profile);
+		profileHelp.setMessage(Component.translatable(profile.helpKey()));
+	}
+
+	/** Exposed so client smoke tests can find the button by its visible text. */
+	public static Component advancedButtonLabel() {
+		return FPSTuneSettingsIcons.advanced(Component.translatable("button.fpstune.advanced"));
 	}
 
 	private void openAdvanced() {
@@ -269,6 +324,10 @@ public final class FPSTuneConfigScreen extends Screen {
 			this.adaptiveTargetFps = adaptiveTargetFps;
 			this.adaptiveMinParticlesPerTick = adaptiveMinParticlesPerTick;
 			this.adaptiveMaxParticlesPerTick = adaptiveMaxParticlesPerTick;
+		}
+
+		String helpKey() {
+			return translationKey + ".help";
 		}
 
 		private boolean matches(FPSTuneConfig config) {

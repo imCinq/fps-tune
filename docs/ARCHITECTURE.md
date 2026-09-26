@@ -18,8 +18,9 @@ FPS Tune is a client-only Fabric and NeoForge mod. The runtime path is intention
 | `ParticleEngineMixin` | Connects the particle controller to the client particle engine at the version-checked injection points. |
 | `LevelRendererMixin` / `WeatherEffectRendererMixin` | Connects the weather controller to the version-specific precipitation boundary: `LevelRenderer.renderSnowAndRain` on 1.21.1, `WeatherEffectRenderer.render` on 1.21.11/26.2, and the `WeatherEffectRenderer.render(WeatherRenderState, RenderPass, RenderPipeline)` method on 26.3, without suppressing world-border geometry. |
 | `ModMenuIntegration` | Exposes the optional in-game configuration entrypoint without adding runtime behavior outside the client. |
-| `FPSTuneConfigScreen` | Groups the master switch and profiles under Performance, with rain/snow and overlay controls under Visual options; edits a copied configuration and persists it only after an explicit Done action. |
-| `FPSTuneAdvancedConfigScreen` | Provides optional individual particle and automatic-adjustment controls without crowding the main settings screen. |
+| `FPSTuneConfigScreen` | Main settings screen: master switch, performance profile with a one-line explanation, quick switches for particles, rain and snow and the overlay, and Advanced settings. Edits a copied configuration and persists it only after an explicit Done action. |
+| `FPSTuneAdvancedConfigScreen` | Advanced settings in vanilla tabs (Particles, Weather, Display). Each tab has a Reset button; fine-tuning rows stay behind Show more unless the player already changed them. `FPSTuneTabBars` in each target source set bridges the tab-bar API, which changed between 1.21.11 and 26.2. |
+| `FPSTuneSettingsLayout` | Scroll-free geometry for both screens, unit tested down to a 320x240 GUI. `FPSTuneConfigLayout` remains only for the 1.21.1 screens. |
 | `FPSTuneHud` | Renders the optional local diagnostics overlay through the target version's Fabric HUD API or NeoForge GUI-layer API. |
 
 ## Versioned build layout
@@ -47,7 +48,7 @@ Configuration lives in `config/fpstune.properties`. `ConfigStore` writes `config
 
 ## Optional Mod Menu integration
 
-Mod Menu is an optional client-side integration. The target metadata also provides the long-form, plain-language overview shown in the selected mod's details pane, with explicit sections for behavior, boundaries, setup, and the visual trade-off. Its entrypoint opens `FPSTuneConfigScreen`, which groups the master switch and plain-language performance profile under Performance, then places the independent rain/snow and performance-overlay toggles under Visual options. Small bitmap glyphs reinforce the profile, precipitation, and overlay controls while their text labels remain explicit. `FPSTuneAdvancedConfigScreen` exposes the individual particle and Adaptive controls only when requested, and dims controls whose parent feature is disabled. Both screens use native widgets, keep edits in a copied draft, and do not introduce networking, telemetry, automation, gameplay behavior, or server interaction.
+Mod Menu is an optional client-side integration. The target metadata also provides the long-form, plain-language overview shown in the selected mod's details pane, with explicit sections for behavior, boundaries, setup, and the visual trade-off. Its entrypoint opens `FPSTuneConfigScreen`, which shows the master switch, the performance profile with a one-line explanation of the selected profile, and quick switches for particles, rain and snow, and the overlay. Small tinted bitmap glyphs mark the main controls and tabs while their text labels remain explicit. `FPSTuneAdvancedConfigScreen` groups the remaining controls into Particles, Weather and Display tabs using vanilla's tab bar, dims controls whose parent feature is off, and keeps rarely changed values behind Show more. Both screens use native widgets, keep edits in a copied draft, and do not introduce networking, telemetry, automation, gameplay behavior, or server interaction.
 
 ## Mixin boundary
 

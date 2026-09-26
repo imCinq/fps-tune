@@ -50,9 +50,18 @@ public final class FPSTuneClientGameTest implements FabricClientGameTest {
 
 			});
 
+			// Screenshots show a fresh, enabled setup rather than the stress-test values above.
+			context.runOnClient(client -> {
+				FPSTuneConfig screenshotConfig = new FPSTuneConfig();
+				screenshotConfig.enabled = true;
+				FPSTuneClient.applyConfig(client.gameDirectory.toPath(), screenshotConfig);
+			});
 			context.setScreen(() -> new FPSTuneConfigScreen(null));
 			context.takeScreenshot("fpstune-1.21.11-settings");
-			context.clickScreenButton("button.fpstune.advanced");
+			context.clickScreenButton(FPSTuneConfigScreen.advancedButtonLabel().getString());
+			context.takeScreenshot("fpstune-1.21.11-advanced");
+			context.clickScreenButton("button.fpstune.show_more");
+			context.takeScreenshot("fpstune-1.21.11-advanced-more");
 			context.clickScreenButton("gui.back");
 			context.clickScreenButton("gui.cancel");
 		context.runOnClient(client -> FPSTuneClient.applyConfig(client.gameDirectory.toPath(), new FPSTuneConfig()));

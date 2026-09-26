@@ -1,18 +1,25 @@
 package dev.fpstune.screen;
 
 import dev.fpstune.config.FPSTuneConfig;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
-import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.tabs.GridLayoutTab;
+import net.minecraft.client.gui.components.tabs.Tab;
+import net.minecraft.client.gui.components.tabs.TabManager;
+import net.minecraft.client.gui.components.tabs.TabNavigationBar;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.IntConsumer;
 
 public final class FPSTuneAdvancedConfigScreen extends Screen {
 	private static final List<Integer> PARTICLE_LIMIT_PRESETS = List.of(0, 100, 300, 600, 1_200, 10_000);
@@ -24,12 +31,16 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 
 	private final FPSTuneConfigScreen parent;
 	private final FPSTuneConfig draftConfig;
+	private boolean showMore;
+	private int selectedTab;
+	private TabManager tabManager;
+	private List<Tab> tabs = List.of();
 	private Checkbox particleAdmissionWidget;
 	private CycleButton<Integer> maxParticlesWidget;
+	private Checkbox adaptiveBudgetWidget;
 	private Checkbox nearbyPriorityWidget;
 	private CycleButton<Integer> nearbyReserveWidget;
 	private CycleButton<Integer> nearbyRangeWidget;
-	private Checkbox adaptiveBudgetWidget;
 	private CycleButton<Integer> targetFpsWidget;
 	private CycleButton<Integer> minimumLimitWidget;
 	private CycleButton<Integer> maximumLimitWidget;
@@ -38,189 +49,247 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		super(Component.translatable("screen.fpstune.advanced.title"));
 		this.parent = parent;
 		this.draftConfig = draftConfig;
+		// Open the fine-tuning rows straight away if the player already changed one of them.
+		this.showMore = hasCustomizedFineTuning(draftConfig);
 	}
 
 	@Override
 	protected void init() {
-		FPSTuneConfigLayout.AdvancedLayout layout = FPSTuneConfigLayout.calculateAdvanced(width, height);
-		int left = layout.left();
-		int right = layout.right();
-		int columnWidth = layout.columnWidth();
+		if (tabManager != null) {
+			selectedTab = Math.max(0, tabs.indexOf(tabManager.getCurrentTab()));
+		}
 
-		addRenderableOnly(new StringWidget(
-				(width - font.width(getTitle())) / 2,
-				4,
-				font.width(getTitle()),
-				12,
-				getTitle(),
-				font
-		));
-		addRenderableOnly(new MultiLineTextWidget(
-				left,
-				FPSTuneConfigLayout.descriptionY(),
-				Component.translatable("screen.fpstune.advanced.description"),
-				font
-		).setMaxWidth(layout.contentWidth()).setCentered(true));
+		FPSTuneSettingsLayout.Advanced layout = FPSTuneSettingsLayout.advanced(width, height);
+		tabManager = new TabManager(this::addRenderableWidget, this::removeWidget);
+		tabs = List.of(particlesTab(layout), weatherTab(layout), displayTab(layout));
+		TabNavigationBar tabBar = FPSTuneTabBars.create(tabManager, width, tabs.toArray(new Tab[0]));
+		addRenderableWidget(tabBar);
 
-		addRenderableOnly(new StringWidget(
-				left,
-				layout.top(),
-				columnWidth,
-				layout.headingHeight(),
-				Component.translatable("section.fpstune.particle_controls"),
-				font
-		));
-		addRenderableOnly(new StringWidget(
-				right,
-				layout.top(),
-				columnWidth,
-				layout.headingHeight(),
-				Component.translatable("section.fpstune.automatic_controls"),
-				font
-		));
+		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, button -> returnToMain())
+				.bounds(layout.backX(), layout.backY(), layout.backWidth(), 20)
+				.build());
 
-		particleAdmissionWidget = addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.particle_admission"),
+		tabManager.setTabArea(new ScreenRectangle(
+				0,
+				FPSTuneSettingsLayout.TAB_BAR_HEIGHT,
+				width,
+				Math.max(0, layout.backY() - FPSTuneSettingsLayout.TAB_BAR_HEIGHT)
+		));
+		tabBar.selectTab(Math.min(selectedTab, tabs.size() - 1), false);
+		updateWidgetStates();
+	}
+
+	private Tab particlesTab(FPSTuneSettingsLayout.Advanced layout) {
+		SettingsTab tab = new SettingsTab(FPSTuneSettingsIcons.particles(Component.translatable("tab.fpstune.particles")));
+
+		particleAdmissionWidget = tab.add(Checkbox.builder(
+				FPSTuneSettingsIcons.particles(Component.translatable("option.fpstune.particle_admission")),
 				font
-		).pos(left, layout.firstControlY()).maxWidth(columnWidth).selected(draftConfig.particleAdmissionEnabled).onValueChange(
+		).pos(layout.left(), layout.rowY(0)).maxWidth(layout.columnWidth()).selected(draftConfig.particleAdmissionEnabled).onValueChange(
 				(checkbox, value) -> {
 					draftConfig.particleAdmissionEnabled = value;
 					updateWidgetStates();
 				}
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.particle_admission.tooltip"))).build());
 
-		maxParticlesWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatParticleLimit,
-				draftConfig.maxParticlesPerTick
-		).withValues(withCurrentValue(PARTICLE_LIMIT_PRESETS, draftConfig.maxParticlesPerTick)).create(
-				left,
-				layout.secondControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.max_particles"),
-				(button, value) -> draftConfig.maxParticlesPerTick = value
+		maxParticlesWidget = tab.add(cycle(
+				layout, 0, 1,
+				PARTICLE_LIMIT_PRESETS,
+				draftConfig.maxParticlesPerTick,
+				"option.fpstune.max_particles",
+				value -> Component.translatable("option.fpstune.max_particles.value", value),
+				value -> draftConfig.maxParticlesPerTick = value
 		));
 
-		nearbyPriorityWidget = addRenderableWidget(Checkbox.builder(
-				Component.translatable("option.fpstune.nearby_priority"),
-				font
-		).pos(left, layout.thirdControlY()).maxWidth(columnWidth).selected(draftConfig.prioritizeNearbyParticles).onValueChange(
-				(checkbox, value) -> {
-					draftConfig.prioritizeNearbyParticles = value;
-					updateWidgetStates();
-				}
-		).tooltip(Tooltip.create(Component.translatable("option.fpstune.nearby_priority.tooltip"))).build());
-
-		nearbyReserveWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatNearbyProtection,
-				draftConfig.nearbyParticleReserve
-		).withValues(withCurrentValue(NEARBY_PROTECTION_PRESETS, draftConfig.nearbyParticleReserve)).create(
-				left,
-				layout.fourthControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.nearby_reserve"),
-				(button, value) -> draftConfig.nearbyParticleReserve = value
-		));
-
-		nearbyRangeWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatNearbyRange,
-				draftConfig.nearbyParticleDistance
-		).withValues(withCurrentValue(NEARBY_RANGE_PRESETS, draftConfig.nearbyParticleDistance)).create(
-				left,
-				layout.fifthControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.nearby_distance"),
-				(button, value) -> draftConfig.nearbyParticleDistance = value
-		));
-
-		adaptiveBudgetWidget = addRenderableWidget(Checkbox.builder(
+		adaptiveBudgetWidget = tab.add(Checkbox.builder(
 				Component.translatable("option.fpstune.adaptive_budget"),
 				font
-		).pos(right, layout.firstControlY()).maxWidth(columnWidth).selected(draftConfig.adaptiveParticleBudgetEnabled).onValueChange(
+		).pos(layout.right(), layout.rowY(0)).maxWidth(layout.columnWidth()).selected(draftConfig.adaptiveParticleBudgetEnabled).onValueChange(
 				(checkbox, value) -> {
 					draftConfig.adaptiveParticleBudgetEnabled = value;
 					updateWidgetStates();
 				}
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.adaptive_budget.tooltip"))).build());
 
-		int targetPreset = draftConfig.adaptiveTargetAuto ? 0 : draftConfig.adaptiveTargetFps;
-		targetFpsWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatTargetFps,
-				targetPreset
-		).withValues(withCurrentValue(TARGET_FPS_PRESETS, targetPreset)).create(
-				right,
-				layout.secondControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.adaptive_target"),
-				(button, value) -> {
-					if (value == 0) {
-						draftConfig.adaptiveTargetAuto = true;
-					} else {
-						draftConfig.adaptiveTargetAuto = false;
-						draftConfig.adaptiveTargetFps = value;
+		int buttonRow = 2;
+		if (showMore) {
+			nearbyPriorityWidget = tab.add(Checkbox.builder(
+					Component.translatable("option.fpstune.nearby_priority"),
+					font
+			).pos(layout.left(), layout.rowY(2)).maxWidth(layout.columnWidth()).selected(draftConfig.prioritizeNearbyParticles).onValueChange(
+					(checkbox, value) -> {
+						draftConfig.prioritizeNearbyParticles = value;
+						updateWidgetStates();
 					}
+			).tooltip(Tooltip.create(Component.translatable("option.fpstune.nearby_priority.tooltip"))).build());
+			nearbyReserveWidget = tab.add(cycle(
+					layout, 0, 3,
+					NEARBY_PROTECTION_PRESETS,
+					draftConfig.nearbyParticleReserve,
+					"option.fpstune.nearby_reserve",
+					value -> Component.translatable("option.fpstune.nearby_reserve.value", value),
+					value -> draftConfig.nearbyParticleReserve = value
+			));
+			nearbyRangeWidget = tab.add(cycle(
+					layout, 0, 4,
+					NEARBY_RANGE_PRESETS,
+					draftConfig.nearbyParticleDistance,
+					"option.fpstune.nearby_distance",
+					value -> Component.translatable("option.fpstune.nearby_distance.value", value),
+					value -> draftConfig.nearbyParticleDistance = value
+			));
+
+			int targetPreset = draftConfig.adaptiveTargetAuto ? 0 : draftConfig.adaptiveTargetFps;
+			targetFpsWidget = tab.add(cycle(
+					layout, 1, 1,
+					TARGET_FPS_PRESETS,
+					targetPreset,
+					"option.fpstune.adaptive_target",
+					value -> value == 0
+							? Component.translatable("option.fpstune.adaptive_target.auto")
+							: Component.translatable("option.fpstune.adaptive_target.value", value),
+					value -> {
+						if (value == 0) {
+							draftConfig.adaptiveTargetAuto = true;
+						} else {
+							draftConfig.adaptiveTargetAuto = false;
+							draftConfig.adaptiveTargetFps = value;
+						}
+					}
+			));
+			minimumLimitWidget = tab.add(cycle(
+					layout, 1, 2,
+					MINIMUM_LIMIT_PRESETS,
+					draftConfig.adaptiveMinParticlesPerTick,
+					"option.fpstune.adaptive_minimum",
+					value -> Component.translatable("option.fpstune.adaptive_minimum.value", value),
+					value -> draftConfig.adaptiveMinParticlesPerTick = value
+			));
+			maximumLimitWidget = tab.add(cycle(
+					layout, 1, 3,
+					MAXIMUM_LIMIT_PRESETS,
+					draftConfig.adaptiveMaxParticlesPerTick,
+					"option.fpstune.adaptive_maximum",
+					value -> Component.translatable("option.fpstune.adaptive_maximum.value", value),
+					value -> draftConfig.adaptiveMaxParticlesPerTick = value
+			));
+			buttonRow = 5;
+		} else {
+			nearbyPriorityWidget = null;
+			nearbyReserveWidget = null;
+			nearbyRangeWidget = null;
+			targetFpsWidget = null;
+			minimumLimitWidget = null;
+			maximumLimitWidget = null;
+		}
+
+		tab.add(Button.builder(
+				Component.translatable(showMore ? "button.fpstune.show_less" : "button.fpstune.show_more"),
+				button -> {
+					showMore = !showMore;
+					rebuildWidgets();
 				}
-		));
-
-		minimumLimitWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatMinimumLimit,
-				draftConfig.adaptiveMinParticlesPerTick
-		).withValues(withCurrentValue(MINIMUM_LIMIT_PRESETS, draftConfig.adaptiveMinParticlesPerTick)).create(
-				right,
-				layout.thirdControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.adaptive_minimum"),
-				(button, value) -> draftConfig.adaptiveMinParticlesPerTick = value
-		));
-
-		maximumLimitWidget = addRenderableWidget(CycleButton.<Integer>builder(
-				FPSTuneAdvancedConfigScreen::formatMaximumLimit,
-				draftConfig.adaptiveMaxParticlesPerTick
-		).withValues(withCurrentValue(MAXIMUM_LIMIT_PRESETS, draftConfig.adaptiveMaxParticlesPerTick)).create(
-				right,
-				layout.fourthControlY(),
-				columnWidth,
-				20,
-				Component.translatable("option.fpstune.adaptive_maximum"),
-				(button, value) -> draftConfig.adaptiveMaxParticlesPerTick = value
-		));
-
-		addRenderableWidget(Button.builder(
-				Component.translatable("button.fpstune.reset"),
-				button -> resetDefaults()
-		).bounds(left, layout.resetY(), layout.resetButtonWidth(), 20)
-				.tooltip(Tooltip.create(Component.translatable("button.fpstune.reset.tooltip")))
+		).bounds(layout.left(), layout.rowY(buttonRow), layout.columnWidth(), 20)
+				.tooltip(Tooltip.create(Component.translatable("button.fpstune.show_more.tooltip")))
 				.build());
+		tab.add(resetButton(layout, buttonRow, draftConfig::resetAdvancedSettings));
+		return tab;
+	}
 
-		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, button -> returnToMain())
-				.bounds(layout.backButtonX(), layout.buttonY(), FPSTuneConfigLayout.BUTTON_WIDTH, 20)
-				.build());
+	private Tab weatherTab(FPSTuneSettingsLayout.Advanced layout) {
+		SettingsTab tab = new SettingsTab(FPSTuneSettingsIcons.precipitation(Component.translatable("tab.fpstune.weather")));
+		tab.add(FPSTuneConfigScreen.weatherButton(draftConfig, layout.left(), layout.rowY(0), layout.width()));
+		tab.add(helpText(layout, 1, "tab.fpstune.weather.help"));
+		tab.add(resetButton(layout, 3, () -> draftConfig.weatherMode = FPSTuneConfig.WeatherMode.VANILLA));
+		return tab;
+	}
 
-		updateWidgetStates();
-		setInitialFocus(particleAdmissionWidget);
+	private Tab displayTab(FPSTuneSettingsLayout.Advanced layout) {
+		SettingsTab tab = new SettingsTab(FPSTuneSettingsIcons.display(Component.translatable("tab.fpstune.display")));
+		tab.add(Checkbox.builder(
+				FPSTuneSettingsIcons.overlay(Component.translatable("option.fpstune.diagnostics_hud")),
+				font
+		).pos(layout.left(), layout.rowY(0)).maxWidth(layout.width()).selected(draftConfig.diagnosticsHudEnabled).onValueChange(
+				(checkbox, value) -> draftConfig.diagnosticsHudEnabled = value
+		).tooltip(Tooltip.create(Component.translatable("option.fpstune.diagnostics_hud.tooltip"))).build());
+		tab.add(helpText(layout, 1, "tab.fpstune.display.help"));
+		tab.add(resetButton(layout, 3, () -> draftConfig.diagnosticsHudEnabled = false));
+		return tab;
+	}
+
+	private CycleButton<Integer> cycle(
+			FPSTuneSettingsLayout.Advanced layout,
+			int column,
+			int row,
+			List<Integer> presets,
+			int currentValue,
+			String key,
+			Function<Integer, Component> formatter,
+			IntConsumer onChange
+	) {
+		CycleButton<Integer> button = CycleButton.<Integer>builder(formatter, currentValue)
+				.withValues(withCurrentValue(presets, currentValue))
+				.create(
+						layout.columnX(column),
+						layout.rowY(row),
+						layout.columnWidth(),
+						20,
+						Component.translatable(key),
+						(cycleButton, value) -> onChange.accept(value)
+				);
+		button.setTooltip(Tooltip.create(Component.translatable(key + ".tooltip")));
+		return button;
+	}
+
+	private MultiLineTextWidget helpText(FPSTuneSettingsLayout.Advanced layout, int row, String key) {
+		MultiLineTextWidget text = new MultiLineTextWidget(Component.translatable(key), font)
+				.setMaxWidth(layout.width());
+		text.setX(layout.left());
+		text.setY(layout.rowY(row) + 4);
+		return text;
+	}
+
+	private Button resetButton(FPSTuneSettingsLayout.Advanced layout, int row, Runnable reset) {
+		return Button.builder(
+				Component.translatable("button.fpstune.reset_tab"),
+				button -> {
+					reset.run();
+					rebuildWidgets();
+				}
+		).bounds(layout.right(), layout.rowY(row), layout.columnWidth(), 20)
+				.tooltip(Tooltip.create(Component.translatable("button.fpstune.reset_tab.tooltip")))
+				.build();
 	}
 
 	private void updateWidgetStates() {
 		boolean admissionEnabled = draftConfig.particleAdmissionEnabled;
-		boolean nearbyEnabled = admissionEnabled && draftConfig.prioritizeNearbyParticles;
 		boolean adaptiveEnabled = admissionEnabled && draftConfig.adaptiveParticleBudgetEnabled;
 		maxParticlesWidget.active = admissionEnabled;
-		nearbyPriorityWidget.active = admissionEnabled;
-		nearbyReserveWidget.active = nearbyEnabled;
-		nearbyRangeWidget.active = nearbyEnabled;
 		adaptiveBudgetWidget.active = admissionEnabled;
-		targetFpsWidget.active = adaptiveEnabled;
-		minimumLimitWidget.active = adaptiveEnabled;
-		maximumLimitWidget.active = adaptiveEnabled;
+		if (showMore) {
+			boolean nearbyEnabled = admissionEnabled && draftConfig.prioritizeNearbyParticles;
+			nearbyPriorityWidget.active = admissionEnabled;
+			nearbyReserveWidget.active = nearbyEnabled;
+			nearbyRangeWidget.active = nearbyEnabled;
+			targetFpsWidget.active = adaptiveEnabled;
+			minimumLimitWidget.active = adaptiveEnabled;
+			maximumLimitWidget.active = adaptiveEnabled;
+		}
 	}
 
-	private void resetDefaults() {
-		draftConfig.resetAdvancedSettings();
-		rebuildWidgets();
+	static boolean hasCustomizedFineTuning(FPSTuneConfig config) {
+		// Profiles own these values, so only hand-made changes count.
+		if (FPSTuneConfigScreen.profileFor(config) != FPSTuneConfigScreen.PerformanceProfile.CUSTOM) {
+			return false;
+		}
+		FPSTuneConfig defaults = new FPSTuneConfig();
+		return config.prioritizeNearbyParticles != defaults.prioritizeNearbyParticles
+				|| config.nearbyParticleReserve != defaults.nearbyParticleReserve
+				|| config.nearbyParticleDistance != defaults.nearbyParticleDistance
+				|| config.adaptiveTargetAuto != defaults.adaptiveTargetAuto
+				|| (!config.adaptiveTargetAuto && config.adaptiveTargetFps != defaults.adaptiveTargetFps)
+				|| config.adaptiveMinParticlesPerTick != defaults.adaptiveMinParticlesPerTick
+				|| config.adaptiveMaxParticlesPerTick != defaults.adaptiveMaxParticlesPerTick;
 	}
 
 	private void returnToMain() {
@@ -242,29 +311,25 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		return values;
 	}
 
-	private static Component formatParticleLimit(Integer limit) {
-		return Component.translatable("option.fpstune.max_particles.value", limit);
-	}
+	/**
+	 * A tab whose widgets are placed by {@link FPSTuneSettingsLayout}. The grid only
+	 * records membership so the tab manager can add and remove the widgets.
+	 */
+	private static final class SettingsTab extends GridLayoutTab {
+		private int children;
 
-	private static Component formatNearbyProtection(Integer protection) {
-		return Component.translatable("option.fpstune.nearby_reserve.value", protection);
-	}
+		SettingsTab(Component title) {
+			super(title);
+		}
 
-	private static Component formatNearbyRange(Integer range) {
-		return Component.translatable("option.fpstune.nearby_distance.value", range);
-	}
+		<T extends AbstractWidget> T add(T widget) {
+			layout.addChild(widget, children++, 0);
+			return widget;
+		}
 
-	private static Component formatTargetFps(Integer targetFps) {
-		return targetFps == 0
-				? Component.translatable("option.fpstune.adaptive_target.auto")
-				: Component.translatable("option.fpstune.adaptive_target.value", targetFps);
-	}
-
-	private static Component formatMinimumLimit(Integer minimum) {
-		return Component.translatable("option.fpstune.adaptive_minimum.value", minimum);
-	}
-
-	private static Component formatMaximumLimit(Integer maximum) {
-		return Component.translatable("option.fpstune.adaptive_maximum.value", maximum);
+		@Override
+		public void doLayout(ScreenRectangle area) {
+			// Positions are fixed when the widgets are created on each init.
+		}
 	}
 }
