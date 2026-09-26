@@ -8,7 +8,7 @@ import dev.fpstune.config.FPSTuneConfig;
 public final class ParticleAdmissionBudget {
 	private static final int PRIORITY_RESERVE_PERCENT = 50;
 	private static final RuntimeSnapshot NO_LIMIT_SNAPSHOT =
-			new RuntimeSnapshot(false, false, 0, 0, false, 0.0, false, false);
+			new RuntimeSnapshot(false, false, 0, 0, false, 0.0, false, false, 0, 0.0);
 
 	private ParticleAdmissionBudget() {
 	}
@@ -43,8 +43,24 @@ public final class ParticleAdmissionBudget {
 				prioritizeNearbyParticles,
 				nearbyRadiusSquared,
 				adaptiveEnabled,
-				config.diagnosticsHudEnabled
+				config.diagnosticsHudEnabled,
+				config.activeParticleCapEnabled ? Math.max(0, config.maxActiveParticles) : 0,
+				config.distantParticleLimitEnabled
+						? (double) config.particleMaxDistance * config.particleMaxDistance
+						: 0.0
 		);
+	}
+
+	/**
+	 * The live count is an estimate: particles alive when the tick began, plus
+	 * everything admitted since the previous tick began (still queued or newly
+	 * added). It can only overcount, so the cap errs towards fewer particles.
+	 */
+	public static boolean reachesActiveCap(int estimatedLiveParticles, RuntimeSnapshot snapshot) {
+		return snapshot != null
+				&& snapshot.limitsParticles()
+				&& snapshot.activeParticleCap() > 0
+				&& estimatedLiveParticles >= snapshot.activeParticleCap();
 	}
 
 	/**
@@ -202,10 +218,16 @@ public final class ParticleAdmissionBudget {
 			boolean prioritizeNearbyParticles,
 			double nearbyRadiusSquared,
 			boolean adaptiveEnabled,
-			boolean detailedMetricsEnabled
+			boolean detailedMetricsEnabled,
+			int activeParticleCap,
+			double maxDistanceSquared
 	) {
 		public boolean limitsParticles() {
 			return masterEnabled && particleAdmissionEnabled;
+		}
+
+		public boolean limitsDistance() {
+			return limitsParticles() && maxDistanceSquared > 0.0;
 		}
 
 		public boolean pressureTrackingEnabled() {

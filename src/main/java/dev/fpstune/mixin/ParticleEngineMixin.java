@@ -3,16 +3,25 @@ package dev.fpstune.mixin;
 import dev.fpstune.FPSTuneClient;
 import dev.fpstune.ParticleAdmissionBudget;
 import dev.fpstune.ParticleAdmissionMetrics;
+import dev.fpstune.ParticleCounts;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
+
 @Mixin(ParticleEngine.class)
 public abstract class ParticleEngineMixin {
+	// Render type to particle group (1.21.11+) or queue (1.21.1); ParticleCounts reads either.
+	@Shadow
+	@Final
+	private Map<?, ?> particles;
 	@Unique
 	private int fpstune$acceptedThisTick;
 	@Unique
@@ -21,6 +30,12 @@ public abstract class ParticleEngineMixin {
 	private boolean fpstune$priorityForCurrentAdmission;
 	@Unique
 	private ParticleAdmissionBudget.RuntimeSnapshot fpstune$runtimeSnapshot;
+	@Unique
+	private int fpstune$liveAtTickStart;
+	@Unique
+	private int fpstune$admittedLastTick;
+	@Unique
+	private int fpstune$admittedThisTick;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void fpstune$resetBudget(CallbackInfo callbackInfo) {
@@ -28,6 +43,10 @@ public abstract class ParticleEngineMixin {
 		fpstune$priorityAcceptedThisTick = 0;
 		fpstune$priorityForCurrentAdmission = false;
 		fpstune$runtimeSnapshot = ParticleAdmissionBudget.snapshot(FPSTuneClient.config());
+		// Particles admitted before this tick are still queued, so they stay in the live estimate.
+		fpstune$admittedLastTick = fpstune$admittedThisTick;
+		fpstune$admittedThisTick = 0;
+		fpstune$liveAtTickStart = fpstune$runtimeSnapshot.activeParticleCap() > 0 ? fpstune$countLiveParticles() : 0;
 		ParticleAdmissionMetrics.beginTick(
 				fpstune$runtimeSnapshot.pressureTrackingEnabled(),
 				fpstune$runtimeSnapshot.totalBudget()
@@ -38,6 +57,20 @@ public abstract class ParticleEngineMixin {
 	private void fpstune$limitAdmission(Particle particle, CallbackInfo callbackInfo) {
 		ParticleAdmissionBudget.RuntimeSnapshot snapshot = fpstune$getRuntimeSnapshot();
 		if (!snapshot.limitsParticles()) {
+			return;
+		}
+		// Far-away and over-cap particles are skipped before the per-tick budget,
+		// so they neither use it up nor count as Adaptive pressure.
+		if ((snapshot.limitsDistance()
+				&& !FPSTuneClient.isNearbyParticle(particle, snapshot.maxDistanceSquared()))
+				|| ParticleAdmissionBudget.reachesActiveCap(
+						fpstune$liveAtTickStart + fpstune$admittedLastTick + fpstune$admittedThisTick,
+						snapshot
+				)) {
+			if (snapshot.detailedMetricsEnabled()) {
+				ParticleAdmissionMetrics.recordRejected(false);
+			}
+			callbackInfo.cancel();
 			return;
 		}
 		// Records every admission attempt, including particles vanilla's own
@@ -87,6 +120,7 @@ public abstract class ParticleEngineMixin {
 		}
 
 		boolean priority = fpstune$priorityForCurrentAdmission;
+		fpstune$admittedThisTick++;
 		// This runs only at vanilla's queue.add calls, after admission checks.
 		fpstune$acceptedThisTick = ParticleAdmissionBudget.recordAccepted(
 				fpstune$acceptedThisTick,
@@ -100,6 +134,15 @@ public abstract class ParticleEngineMixin {
 		if (snapshot.detailedMetricsEnabled()) {
 			ParticleAdmissionMetrics.recordAccepted(priority);
 		}
+	}
+
+	@Unique
+	private int fpstune$countLiveParticles() {
+		int live = 0;
+		for (Object group : particles.values()) {
+			live += ParticleCounts.size(group);
+		}
+		return live;
 	}
 
 	@Unique

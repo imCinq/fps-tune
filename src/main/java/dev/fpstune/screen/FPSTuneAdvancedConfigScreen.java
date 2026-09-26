@@ -29,6 +29,9 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 	private static final List<Integer> TARGET_FPS_PRESETS = List.of(0, 60, 90, 120, 144, 165, 240);
 	private static final List<Integer> MINIMUM_LIMIT_PRESETS = List.of(0, 50, 100, 200, 300);
 	private static final List<Integer> MAXIMUM_LIMIT_PRESETS = List.of(300, 600, 1_000, 2_000, 4_000, 10_000);
+	// Zero means off for the live cap and the distance limit.
+	private static final List<Integer> ACTIVE_CAP_PRESETS = List.of(0, 1_000, 2_000, 4_000, 8_000);
+	private static final List<Integer> DISTANCE_PRESETS = List.of(0, 24, 32, 48, 64, 96);
 
 	private final FPSTuneConfigScreen parent;
 	private final FPSTuneConfig draftConfig;
@@ -38,6 +41,8 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 	private List<Tab> tabs = List.of();
 	private Checkbox particleAdmissionWidget;
 	private CycleButton<Integer> maxParticlesWidget;
+	private CycleButton<Integer> activeCapWidget;
+	private CycleButton<Integer> distanceWidget;
 	private Checkbox adaptiveBudgetWidget;
 	private Checkbox nearbyPriorityWidget;
 	private CycleButton<Integer> nearbyReserveWidget;
@@ -102,6 +107,40 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 				value -> draftConfig.maxParticlesPerTick = value
 		));
 
+		int activeCap = draftConfig.activeParticleCapEnabled ? draftConfig.maxActiveParticles : 0;
+		activeCapWidget = tab.add(cycle(
+				layout, 0, 2,
+				ACTIVE_CAP_PRESETS,
+				activeCap,
+				"option.fpstune.max_active",
+				value -> value == 0
+						? Component.translatable("option.fpstune.off")
+						: Component.translatable("option.fpstune.max_active.value", value),
+				value -> {
+					draftConfig.activeParticleCapEnabled = value > 0;
+					if (value > 0) {
+						draftConfig.maxActiveParticles = value;
+					}
+				}
+		));
+
+		int distance = draftConfig.distantParticleLimitEnabled ? draftConfig.particleMaxDistance : 0;
+		distanceWidget = tab.add(cycle(
+				layout, 0, 3,
+				DISTANCE_PRESETS,
+				distance,
+				"option.fpstune.max_distance",
+				value -> value == 0
+						? Component.translatable("option.fpstune.off")
+						: Component.translatable("option.fpstune.max_distance.value", value),
+				value -> {
+					draftConfig.distantParticleLimitEnabled = value > 0;
+					if (value > 0) {
+						draftConfig.particleMaxDistance = value;
+					}
+				}
+		));
+
 		adaptiveBudgetWidget = tab.add(Checkbox.builder(
 				Component.translatable("option.fpstune.adaptive_budget"),
 				font
@@ -112,19 +151,20 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 				}
 		).tooltip(Tooltip.create(Component.translatable("option.fpstune.adaptive_budget.tooltip"))).build());
 
-		int buttonRow = 2;
+		// Show more and Reset sit under the right column, below whatever it shows.
+		int buttonRow = 1;
 		if (showMore) {
 			nearbyPriorityWidget = tab.add(Checkbox.builder(
 					Component.translatable("option.fpstune.nearby_priority"),
 					font
-			).pos(layout.left(), layout.rowY(2)).maxWidth(layout.columnWidth()).selected(draftConfig.prioritizeNearbyParticles).onValueChange(
+			).pos(layout.left(), layout.rowY(4)).maxWidth(layout.columnWidth()).selected(draftConfig.prioritizeNearbyParticles).onValueChange(
 					(checkbox, value) -> {
 						draftConfig.prioritizeNearbyParticles = value;
 						updateWidgetStates();
 					}
 			).tooltip(Tooltip.create(Component.translatable("option.fpstune.nearby_priority.tooltip"))).build());
 			nearbyReserveWidget = tab.add(cycle(
-					layout, 0, 3,
+					layout, 0, 5,
 					NEARBY_PROTECTION_PRESETS,
 					draftConfig.nearbyParticleReserve,
 					"option.fpstune.nearby_reserve",
@@ -132,7 +172,7 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 					value -> draftConfig.nearbyParticleReserve = value
 			));
 			nearbyRangeWidget = tab.add(cycle(
-					layout, 0, 4,
+					layout, 0, 6,
 					NEARBY_RANGE_PRESETS,
 					draftConfig.nearbyParticleDistance,
 					"option.fpstune.nearby_distance",
@@ -190,10 +230,10 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 					showMore = !showMore;
 					rebuildWidgets();
 				}
-		).bounds(layout.left(), layout.rowY(buttonRow), layout.columnWidth(), 20)
+		).bounds(layout.right(), layout.rowY(buttonRow), layout.columnWidth(), 20)
 				.tooltip(Tooltip.create(Component.translatable("button.fpstune.show_more.tooltip")))
 				.build());
-		tab.add(resetButton(layout, buttonRow, draftConfig::resetAdvancedSettings));
+		tab.add(resetButton(layout, buttonRow + 1, draftConfig::resetAdvancedSettings));
 		return tab;
 	}
 
@@ -251,14 +291,23 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 						layout.rowY(row),
 						layout.columnWidth(),
 						20,
-						Component.translatable(key),
+						label(key),
 						(cycleButton, value) -> onChange.accept(value)
 				);
 		button.setTooltip(Tooltip.create(Component.translatable(key + ".tooltip")));
 		return button;
 	}
 
-	private MultiLineTextWidget helpText(FPSTuneSettingsLayout.Advanced layout, int row, String key) {
+	private static Component label(String key) {
+		Component label = Component.translatable(key);
+		return switch (key) {
+			case "option.fpstune.max_active" -> FPSTuneSettingsIcons.particles(label);
+			case "option.fpstune.max_distance" -> FPSTuneSettingsIcons.distance(label);
+			default -> label;
+		};
+	}
+
+		private MultiLineTextWidget helpText(FPSTuneSettingsLayout.Advanced layout, int row, String key) {
 		MultiLineTextWidget text = new MultiLineTextWidget(Component.translatable(key), font)
 				.setMaxWidth(layout.width());
 		text.setX(layout.left());
@@ -282,6 +331,8 @@ public final class FPSTuneAdvancedConfigScreen extends Screen {
 		boolean admissionEnabled = draftConfig.particleAdmissionEnabled;
 		boolean adaptiveEnabled = admissionEnabled && draftConfig.adaptiveParticleBudgetEnabled;
 		maxParticlesWidget.active = admissionEnabled;
+		activeCapWidget.active = admissionEnabled;
+		distanceWidget.active = admissionEnabled;
 		adaptiveBudgetWidget.active = admissionEnabled;
 		if (showMore) {
 			boolean nearbyEnabled = admissionEnabled && draftConfig.prioritizeNearbyParticles;

@@ -14,11 +14,13 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public final class FPSTuneConfigScreen extends Screen {
 	private static final List<PerformanceProfile> PROFILE_OPTIONS = List.of(
 			PerformanceProfile.BALANCED,
 			PerformanceProfile.SMOOTHER_FRAMES,
+			PerformanceProfile.MAXIMUM_FPS,
 			PerformanceProfile.MORE_PARTICLES,
 			PerformanceProfile.CUSTOM
 	);
@@ -194,16 +196,7 @@ public final class FPSTuneConfigScreen extends Screen {
 			return;
 		}
 
-		config.particleAdmissionEnabled = profile.particleAdmissionEnabled;
-		config.maxParticlesPerTick = profile.maxParticlesPerTick;
-		config.prioritizeNearbyParticles = profile.prioritizeNearbyParticles;
-		config.nearbyParticleReserve = profile.nearbyParticleReserve;
-		config.nearbyParticleDistance = profile.nearbyParticleDistance;
-		config.adaptiveParticleBudgetEnabled = profile.adaptiveParticleBudgetEnabled;
-		config.adaptiveTargetAuto = profile.adaptiveTargetAuto;
-		config.adaptiveTargetFps = profile.adaptiveTargetFps;
-		config.adaptiveMinParticlesPerTick = profile.adaptiveMinParticlesPerTick;
-		config.adaptiveMaxParticlesPerTick = profile.adaptiveMaxParticlesPerTick;
+		profile.applyTo(config);
 		config.clamp();
 	}
 
@@ -235,112 +228,75 @@ public final class FPSTuneConfigScreen extends Screen {
 	}
 
 	enum PerformanceProfile {
-		BALANCED(
-				"option.fpstune.profile.balanced",
-				true,
-				300,
-				true,
-				100,
-				16,
-				false,
-				true,
-				120,
-				100,
-				2_000
-		),
-		SMOOTHER_FRAMES(
-				"option.fpstune.profile.smoother_frames",
-				true,
-				150,
-				true,
-				100,
-				16,
-				true,
-				true,
-				120,
-				100,
-				300
-		),
-		MORE_PARTICLES(
-				"option.fpstune.profile.more_particles",
-				true,
-				600,
-				true,
-				100,
-				16,
-				false,
-				true,
-				120,
-				100,
-				2_000
-		),
-		CUSTOM(
-				"option.fpstune.profile.custom",
-				false,
-				0,
-				false,
-				0,
-				0,
-				false,
-				true,
-				120,
-				0,
-				0
-		);
+		BALANCED("option.fpstune.profile.balanced", config -> {
+		}),
+		SMOOTHER_FRAMES("option.fpstune.profile.smoother_frames", config -> {
+			config.maxParticlesPerTick = 150;
+			config.adaptiveParticleBudgetEnabled = true;
+			config.adaptiveMaxParticlesPerTick = 300;
+		}),
+		MAXIMUM_FPS("option.fpstune.profile.maximum_fps", config -> {
+			config.maxParticlesPerTick = 100;
+			config.nearbyParticleReserve = 50;
+			config.activeParticleCapEnabled = true;
+			config.maxActiveParticles = 2_000;
+			config.distantParticleLimitEnabled = true;
+			config.particleMaxDistance = 32;
+		}),
+		MORE_PARTICLES("option.fpstune.profile.more_particles", config -> config.maxParticlesPerTick = 600),
+		CUSTOM("option.fpstune.profile.custom", null);
 
 		private final String translationKey;
-		private final boolean particleAdmissionEnabled;
-		private final int maxParticlesPerTick;
-		private final boolean prioritizeNearbyParticles;
-		private final int nearbyParticleReserve;
-		private final int nearbyParticleDistance;
-		private final boolean adaptiveParticleBudgetEnabled;
-		private final boolean adaptiveTargetAuto;
-		private final int adaptiveTargetFps;
-		private final int adaptiveMinParticlesPerTick;
-		private final int adaptiveMaxParticlesPerTick;
+		// The particle settings this profile owns, starting from the defaults. Null for Custom.
+		private final FPSTuneConfig values;
 
-		PerformanceProfile(
-				String translationKey,
-				boolean particleAdmissionEnabled,
-				int maxParticlesPerTick,
-				boolean prioritizeNearbyParticles,
-				int nearbyParticleReserve,
-				int nearbyParticleDistance,
-				boolean adaptiveParticleBudgetEnabled,
-				boolean adaptiveTargetAuto,
-				int adaptiveTargetFps,
-				int adaptiveMinParticlesPerTick,
-				int adaptiveMaxParticlesPerTick
-		) {
+		PerformanceProfile(String translationKey, Consumer<FPSTuneConfig> settings) {
 			this.translationKey = translationKey;
-			this.particleAdmissionEnabled = particleAdmissionEnabled;
-			this.maxParticlesPerTick = maxParticlesPerTick;
-			this.prioritizeNearbyParticles = prioritizeNearbyParticles;
-			this.nearbyParticleReserve = nearbyParticleReserve;
-			this.nearbyParticleDistance = nearbyParticleDistance;
-			this.adaptiveParticleBudgetEnabled = adaptiveParticleBudgetEnabled;
-			this.adaptiveTargetAuto = adaptiveTargetAuto;
-			this.adaptiveTargetFps = adaptiveTargetFps;
-			this.adaptiveMinParticlesPerTick = adaptiveMinParticlesPerTick;
-			this.adaptiveMaxParticlesPerTick = adaptiveMaxParticlesPerTick;
+			if (settings == null) {
+				this.values = null;
+			} else {
+				this.values = new FPSTuneConfig();
+				settings.accept(this.values);
+			}
 		}
 
 		String helpKey() {
 			return translationKey + ".help";
 		}
 
+		private void applyTo(FPSTuneConfig config) {
+			config.particleAdmissionEnabled = values.particleAdmissionEnabled;
+			config.maxParticlesPerTick = values.maxParticlesPerTick;
+			config.prioritizeNearbyParticles = values.prioritizeNearbyParticles;
+			config.nearbyParticleReserve = values.nearbyParticleReserve;
+			config.nearbyParticleDistance = values.nearbyParticleDistance;
+			config.adaptiveParticleBudgetEnabled = values.adaptiveParticleBudgetEnabled;
+			config.adaptiveTargetAuto = values.adaptiveTargetAuto;
+			config.adaptiveTargetFps = values.adaptiveTargetFps;
+			config.adaptiveMinParticlesPerTick = values.adaptiveMinParticlesPerTick;
+			config.adaptiveMaxParticlesPerTick = values.adaptiveMaxParticlesPerTick;
+			config.activeParticleCapEnabled = values.activeParticleCapEnabled;
+			config.maxActiveParticles = values.maxActiveParticles;
+			config.distantParticleLimitEnabled = values.distantParticleLimitEnabled;
+			config.particleMaxDistance = values.particleMaxDistance;
+		}
+
 		private boolean matches(FPSTuneConfig config) {
-			return config.particleAdmissionEnabled == particleAdmissionEnabled
-					&& config.maxParticlesPerTick == maxParticlesPerTick
-					&& config.prioritizeNearbyParticles == prioritizeNearbyParticles
-					&& config.nearbyParticleReserve == nearbyParticleReserve
-					&& config.nearbyParticleDistance == nearbyParticleDistance
-					&& config.adaptiveParticleBudgetEnabled == adaptiveParticleBudgetEnabled
-					&& (!adaptiveParticleBudgetEnabled || config.adaptiveTargetAuto == adaptiveTargetAuto)
-					&& (!adaptiveParticleBudgetEnabled || config.adaptiveTargetFps == adaptiveTargetFps)
-					&& config.adaptiveMinParticlesPerTick == adaptiveMinParticlesPerTick
-					&& config.adaptiveMaxParticlesPerTick == adaptiveMaxParticlesPerTick;
+			return values != null
+					&& config.particleAdmissionEnabled == values.particleAdmissionEnabled
+					&& config.maxParticlesPerTick == values.maxParticlesPerTick
+					&& config.prioritizeNearbyParticles == values.prioritizeNearbyParticles
+					&& config.nearbyParticleReserve == values.nearbyParticleReserve
+					&& config.nearbyParticleDistance == values.nearbyParticleDistance
+					&& config.adaptiveParticleBudgetEnabled == values.adaptiveParticleBudgetEnabled
+					&& (!values.adaptiveParticleBudgetEnabled || config.adaptiveTargetAuto == values.adaptiveTargetAuto)
+					&& (!values.adaptiveParticleBudgetEnabled || config.adaptiveTargetFps == values.adaptiveTargetFps)
+					&& config.adaptiveMinParticlesPerTick == values.adaptiveMinParticlesPerTick
+					&& config.adaptiveMaxParticlesPerTick == values.adaptiveMaxParticlesPerTick
+					&& config.activeParticleCapEnabled == values.activeParticleCapEnabled
+					&& (!values.activeParticleCapEnabled || config.maxActiveParticles == values.maxActiveParticles)
+					&& config.distantParticleLimitEnabled == values.distantParticleLimitEnabled
+					&& (!values.distantParticleLimitEnabled || config.particleMaxDistance == values.particleMaxDistance);
 		}
 	}
 }

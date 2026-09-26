@@ -87,5 +87,14 @@
   "message.fpstune.summary.particles_auto": "Particles adjust to your FPS",
   "message.fpstune.summary.weather_reduced": "Lighter rain and snow",
   "message.fpstune.summary.weather_off": "Rain and snow hidden",
-  "message.fpstune.summary.nothing": "Nothing selected in settings"
+  "message.fpstune.summary.nothing": "Nothing selected in settings",
+  "option.fpstune.profile.maximum_fps": "Maximum FPS",
+  "option.fpstune.profile.maximum_fps.help": "Biggest boost. Far-away particles are skipped and busy scenes look thinner.",
+  "option.fpstune.max_active": "Max particles on screen",
+  "option.fpstune.max_active.value": "%s particles",
+  "option.fpstune.max_active.tooltip": "Once this many particles are showing, new ones are skipped until some fade. Helps with long-lasting smoke and big farms. Particles already on screen are never removed.",
+  "option.fpstune.max_distance": "Hide far-away particles",
+  "option.fpstune.max_distance.value": "Beyond %s blocks",
+  "option.fpstune.max_distance.tooltip": "New particles farther from you than this aren't created. You mostly lose distant smoke and sparks you'd barely see.",
+  "option.fpstune.off": "Off"
 }

@@ -16,7 +16,7 @@ final class FPSTuneSettingsLayout {
 	static final int TAB_BAR_HEIGHT = 24;
 	static final int MINIMUM_GUI_WIDTH = 320;
 	static final int MINIMUM_GUI_HEIGHT = 240;
-	static final int ADVANCED_ROWS = 6;
+	static final int ADVANCED_ROWS = 7;
 
 	private static final int MAIN_WIDTH = 310;
 	private static final int ADVANCED_WIDTH = 420;
