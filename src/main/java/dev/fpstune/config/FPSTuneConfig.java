@@ -1,7 +1,19 @@
 package dev.fpstune.config;
 
 public final class FPSTuneConfig {
-	public static final int CURRENT_CONFIG_VERSION = 4;
+	public static final int CURRENT_CONFIG_VERSION = 5;
+
+	public enum WeatherMode {
+		VANILLA,
+		REDUCED,
+		OFF
+	}
+
+	public enum ToggleFeedback {
+		ACTION_BAR,
+		CHAT,
+		NONE
+	}
 
 	// The master switch is opt-in by default: a server should never be tested with
 	// a custom client render controller enabled before its rules and staff guidance
@@ -19,7 +31,17 @@ public final class FPSTuneConfig {
 	public int adaptiveTargetFps = 120;
 	public int adaptiveMinParticlesPerTick = 100;
 	public int adaptiveMaxParticlesPerTick = 2_000;
-	public boolean weatherRenderingEnabled = true;
+	// Live-particle cap and distance limit are separate opt-ins inside the particle controls.
+	public boolean activeParticleCapEnabled = false;
+	public int maxActiveParticles = 4_000;
+	public boolean distantParticleLimitEnabled = false;
+	public int particleMaxDistance = 48;
+	public WeatherMode weatherMode = WeatherMode.VANILLA;
+	public ToggleFeedback toggleFeedback = ToggleFeedback.ACTION_BAR;
+
+	public boolean weatherRendered() {
+		return weatherMode != WeatherMode.OFF;
+	}
 
 	public FPSTuneConfig copy() {
 		FPSTuneConfig copy = new FPSTuneConfig();
@@ -43,7 +65,12 @@ public final class FPSTuneConfig {
 		adaptiveTargetFps = source.adaptiveTargetFps;
 		adaptiveMinParticlesPerTick = source.adaptiveMinParticlesPerTick;
 		adaptiveMaxParticlesPerTick = source.adaptiveMaxParticlesPerTick;
-		weatherRenderingEnabled = source.weatherRenderingEnabled;
+		activeParticleCapEnabled = source.activeParticleCapEnabled;
+		maxActiveParticles = source.maxActiveParticles;
+		distantParticleLimitEnabled = source.distantParticleLimitEnabled;
+		particleMaxDistance = source.particleMaxDistance;
+		weatherMode = source.weatherMode;
+		toggleFeedback = source.toggleFeedback;
 		clamp();
 		return this;
 	}
@@ -64,6 +91,10 @@ public final class FPSTuneConfig {
 		adaptiveTargetFps = defaults.adaptiveTargetFps;
 		adaptiveMinParticlesPerTick = defaults.adaptiveMinParticlesPerTick;
 		adaptiveMaxParticlesPerTick = defaults.adaptiveMaxParticlesPerTick;
+		activeParticleCapEnabled = defaults.activeParticleCapEnabled;
+		maxActiveParticles = defaults.maxActiveParticles;
+		distantParticleLimitEnabled = defaults.distantParticleLimitEnabled;
+		particleMaxDistance = defaults.particleMaxDistance;
 		clamp();
 	}
 
@@ -76,6 +107,14 @@ public final class FPSTuneConfig {
 		adaptiveMaxParticlesPerTick = Math.max(0, Math.min(adaptiveMaxParticlesPerTick, 10_000));
 		if (adaptiveMinParticlesPerTick > adaptiveMaxParticlesPerTick) {
 			adaptiveMaxParticlesPerTick = adaptiveMinParticlesPerTick;
+		}
+		maxActiveParticles = Math.max(256, Math.min(maxActiveParticles, 16_384));
+		particleMaxDistance = Math.max(16, Math.min(particleMaxDistance, 128));
+		if (weatherMode == null) {
+			weatherMode = WeatherMode.VANILLA;
+		}
+		if (toggleFeedback == null) {
+			toggleFeedback = ToggleFeedback.ACTION_BAR;
 		}
 	}
 }

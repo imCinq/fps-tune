@@ -58,7 +58,7 @@ public final class FPSTuneDiagnostics {
 								+ safeAdaptive.maximumBudget() + " @ " + targetState + ", "
 								+ safeAdaptive.direction().label() + ")"
 						: displayedBudget + " fixed";
-		String weatherState = controlsEnabled && !config.weatherRenderingEnabled
+		String weatherState = controlsEnabled && !config.weatherRendered()
 				? "suppressed"
 				: "vanilla";
 

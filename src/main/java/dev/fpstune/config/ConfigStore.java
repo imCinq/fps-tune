@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 import java.util.Properties;
 
 public final class ConfigStore {
@@ -43,7 +44,7 @@ public final class ConfigStore {
 					// Unknown versions must not activate newly introduced controller behavior.
 					config.adaptiveTargetAuto = false;
 				}
-if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION) {
+				if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION) {
 					config.particleAdmissionEnabled = getBoolean(
 							properties,
 							"particleAdmissionEnabled",
@@ -99,11 +100,45 @@ if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION)
 							"adaptiveMaxParticlesPerTick",
 							config.adaptiveMaxParticlesPerTick
 					);
-					config.weatherRenderingEnabled = getBoolean(
-							properties,
-							"weatherRenderingEnabled",
-							config.weatherRenderingEnabled
-					);
+					if (configVersion >= 5) {
+						config.weatherMode = getEnum(
+								properties,
+								"weatherMode",
+								FPSTuneConfig.WeatherMode.class,
+								config.weatherMode
+						);
+						config.toggleFeedback = getEnum(
+								properties,
+								"toggleFeedback",
+								FPSTuneConfig.ToggleFeedback.class,
+								config.toggleFeedback
+						);
+						config.activeParticleCapEnabled = getBoolean(
+								properties,
+								"activeParticleCapEnabled",
+								config.activeParticleCapEnabled
+						);
+						config.maxActiveParticles = getInt(
+								properties,
+								"maxActiveParticles",
+								config.maxActiveParticles
+						);
+						config.distantParticleLimitEnabled = getBoolean(
+								properties,
+								"distantParticleLimitEnabled",
+								config.distantParticleLimitEnabled
+						);
+						config.particleMaxDistance = getInt(
+								properties,
+								"particleMaxDistance",
+								config.particleMaxDistance
+						);
+					} else {
+						// v1.3 and older stored weather as an on/off switch.
+						config.weatherMode = getBoolean(properties, "weatherRenderingEnabled", true)
+								? FPSTuneConfig.WeatherMode.VANILLA
+								: FPSTuneConfig.WeatherMode.OFF;
+					}
 				}
 			}
 			loaded = true;
@@ -136,7 +171,12 @@ if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION)
 		properties.setProperty("adaptiveTargetFps", Integer.toString(config.adaptiveTargetFps));
 		properties.setProperty("adaptiveMinParticlesPerTick", Integer.toString(config.adaptiveMinParticlesPerTick));
 		properties.setProperty("adaptiveMaxParticlesPerTick", Integer.toString(config.adaptiveMaxParticlesPerTick));
-		properties.setProperty("weatherRenderingEnabled", Boolean.toString(config.weatherRenderingEnabled));
+		properties.setProperty("activeParticleCapEnabled", Boolean.toString(config.activeParticleCapEnabled));
+		properties.setProperty("maxActiveParticles", Integer.toString(config.maxActiveParticles));
+		properties.setProperty("distantParticleLimitEnabled", Boolean.toString(config.distantParticleLimitEnabled));
+		properties.setProperty("particleMaxDistance", Integer.toString(config.particleMaxDistance));
+		properties.setProperty("weatherMode", config.weatherMode.name());
+		properties.setProperty("toggleFeedback", config.toggleFeedback.name());
 
 		try {
 			Files.createDirectories(directory);
@@ -176,6 +216,18 @@ if (configVersion >= 0 && configVersion <= FPSTuneConfig.CURRENT_CONFIG_VERSION)
 			return false;
 		}
 		return fallback;
+	}
+
+	private static <E extends Enum<E>> E getEnum(Properties properties, String key, Class<E> type, E fallback) {
+		String value = properties.getProperty(key);
+		if (value == null) {
+			return fallback;
+		}
+		try {
+			return Enum.valueOf(type, value.trim().toUpperCase(Locale.ROOT));
+		} catch (IllegalArgumentException ignored) {
+			return fallback;
+		}
 	}
 
 	private static int getInt(Properties properties, String key, int fallback) {

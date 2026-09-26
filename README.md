@@ -77,7 +77,7 @@ The complete setting reference, defaults, file format, migration behavior, and U
 | `adaptiveTargetFps` | `120` | Manual Adaptive target and fallback, clamped to `30..360`. |
 | `adaptiveMinParticlesPerTick` | `100` | Lowest Adaptive-mode particle budget. |
 | `adaptiveMaxParticlesPerTick` | `2000` | Highest Adaptive-mode particle budget. |
-| `weatherRenderingEnabled` | `true` | Keeps the vanilla weather render pass enabled. |
+| `weatherMode` | `VANILLA` | `VANILLA` keeps vanilla rain and snow; `OFF` hides them. |
 
 Mod Menu is optional. The FPS Tune details pane provides a long-form, plain-language overview of what it changes, what it leaves untouched, how to get started, and the intentional visual trade-off. The Configure screen uses performance profiles and keeps only the most useful visual options in view; individual particle and Adaptive controls are available under Advanced settings, with unrelated controls dimmed when their parent feature is off. Done on the main screen saves settings; Back returns from Advanced settings, while Cancel and Escape on the main screen discard edits. `F6` toggles only the master switch and saves immediately.
 
