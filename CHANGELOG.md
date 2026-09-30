@@ -1,5 +1,11 @@
 # Changelog
 
+## FPS Tune v1.4.0 NeoForge 26.3 preparation
+
+- 🧩 Updated the **Minecraft 26.3 NeoForge preview** build baseline to `26.3.0.39-beta`.
+- 🧪 Retained hosted build, test, audit, packaging, and client-startup coverage for release preparation.
+- 📦 Public stable distribution remains deferred until NeoForge 26.3 reaches stable and the exact release JAR passes the required in-game checks.
+
 ## FPS Tune v1.4.0 - 2026-09-26
 
 - ⚙️ **New settings page.** The main screen now has a profile with a one-line explanation, and quick switches for particles, rain and snow, and the overlay. Advanced settings are in vanilla-style **Particles / Weather / Display** tabs, each with a Reset button, and rarely used values sit behind *Show more*. Clearer wording and icons throughout.

@@ -22,7 +22,7 @@ Dependabot may open update pull requests, but it must not auto-merge them.
 Update Minecraft compatibility in a dedicated branch and pull request:
 
 1. Add or update the matching profile in `gradle/versions/` with Minecraft, loader, API or NeoForge, build plugin, Java, mappings, and artifact settings documented as compatible by their official projects.
-2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for each target. Each target has its own isolated project, including `neoforge-26.3` with NeoForge `26.3.0.7-beta`, ModDevGradle `2.0.147`, and Java 25.
+2. Select remapping Loom for Fabric 1.21.1/1.21.11, non-remapping Loom for Fabric 26.2/26.3, or an isolated ModDevGradle NeoForge project for each target. Each target has its own isolated project, including `neoforge-26.3` with NeoForge `26.3.0.39-beta`, ModDevGradle `2.0.147`, and Java 25.
 3. Regenerate mappings in a GitHub-hosted build for the selected target.
 4. Compile in the hosted workflow before changing mixins so mapping or signature failures are visible.
 5. Inspect the affected client render bytecode, including `ParticleEngine.add`, `ParticleEngine.tick`, and `WeatherEffectRenderer.render` inside `LevelRenderer.addWeatherPass` for 1.21.11/26.2/26.3 or `LevelRenderer.renderSnowAndRain` for 1.21.1 when applicable.

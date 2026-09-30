@@ -13,7 +13,7 @@ This document separates hosted-build verification from graphical compatibility. 
 | 26.2 | Fabric Loader 0.19.3+ | 25+ | Fabric API 0.158.0+26.2 | Optional Mod Menu 20.0.0-beta.4 |
 | 26.2 | NeoForge 26.2.0.77+ | 25+ | NeoForge loader | Native NeoForge Mods screen |
 | 26.3 | Fabric Loader 0.19.5+ | 25+ | Fabric API 0.160.6+26.3 | Optional Mod Menu 21.0.0-beta.1 |
-| 26.3 | NeoForge 26.3.0.7-beta+ (beta preview) | 25+ | NeoForge loader | Native NeoForge Mods screen |
+| 26.3 | NeoForge 26.3.0.39-beta+ (beta preview) | 25+ | NeoForge loader | Native NeoForge Mods screen |
 
 NeoForge 26.3 remains a beta preview and is excluded from stable v1.3.0; its isolated build and hosted startup smoke stay active for a later stable release. Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS Tune target JARs together.
 
@@ -31,6 +31,8 @@ NeoForge 26.3 remains a beta preview and is excluded from stable v1.3.0; its iso
 | 26.3 NeoForge | `gradle/versions/26.3-neoforge.properties` and `neoforge-26.3` | `fps-tune-neoforge-26.3-<version>.jar` |
 
 ## Verification status
+
+The v1.4.0 NeoForge 26.3 preparation candidate uses `26.3.0.39-beta`. The historical results below apply to earlier candidates; they do not verify this updated loader. Hosted checks and exact-JAR graphical validation must be recorded for the new candidate before distribution.
 
 | Combination | Status | Notes |
 | --- | --- | --- |
