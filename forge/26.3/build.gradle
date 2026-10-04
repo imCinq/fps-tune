@@ -1,0 +1,107 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '7.0.40'
+    id 'idea'
+}
+
+def targetProfile = new Properties()
+rootProject.file('gradle/versions/26.3-forge.properties').withInputStream { targetProfile.load(it) }
+def targetProperty = { String name -> targetProfile.getProperty(name) }
+def javaLevel = targetProperty('java_version').toInteger()
+def metadataProperties = [
+        mod_id                 : 'fpstune',
+        mod_name               : 'FPS Tune',
+        mod_version             : rootProject.property('mod_version').toString(),
+        mod_license             : 'MIT',
+        minecraft_version      : targetProperty('minecraft_version'),
+        minecraft_version_range: targetProperty('minecraft_version_range'),
+        forge_version          : targetProperty('forge_version')
+]
+
+version = rootProject.property('mod_version')
+group = rootProject.property('maven_group')
+
+base {
+    archivesName = 'fps-tune-forge-26.3'
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                    rootProject.file('src/main/java'),
+                    rootProject.file('src/26.3-forge/java')
+            ]
+            exclude 'dev/fpstune/integration/ModMenuIntegration.java'
+        }
+        resources {
+            srcDirs = [
+                    rootProject.file('src/main/resources'),
+                    rootProject.file('src/26.3-forge/resources')
+            ]
+        }
+    }
+    test {
+        java {
+            srcDirs = [rootProject.file('src/test/java')]
+            // The shared UI test directly loads Minecraft Screen; Fabric target builds cover it,
+            // while Forge's isolated test classpath intentionally remains loader-neutral.
+            exclude 'dev/fpstune/screen/FPSTuneConfigScreenTest.java'
+        }
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(javaLevel)
+    withSourcesJar()
+}
+
+minecraft {
+    runs {
+        register('client') {
+            workingDir = layout.projectDirectory.dir('run')
+            args '--mixin.config=fpstune.mixins.json'
+            systemProperty 'forge.enabledGameTestNamespaces', 'fpstune'
+        }
+    }
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${targetProperty('minecraft_version')}-${targetProperty('forge_version')}")
+    testImplementation platform("org.junit:junit-bom:${rootProject.property('junit_version')}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('processResources') {
+    inputs.properties(metadataProperties)
+    filesMatching('META-INF/mods.toml') {
+        expand(metadataProperties)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = javaLevel
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes['MixinConfigs'] = 'fpstune.mixins.json'
+    }
+    from(rootProject.file('LICENSE')) {
+        rename { 'LICENSE_fps-tune' }
+    }
+}

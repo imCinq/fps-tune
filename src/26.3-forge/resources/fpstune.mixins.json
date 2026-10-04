@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.fpstune.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ParticleEngineMixin",
+    "ClientLevelWeatherParticlesMixin",
+    "WeatherEffectRendererMixin"
+  ]
+}

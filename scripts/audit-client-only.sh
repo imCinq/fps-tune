@@ -10,6 +10,9 @@ case "$target" in
 	26.3-neoforge)
 		resource_directory="src/26.3-neoforge/resources"
 		;;
+	26.3-forge)
+		resource_directory="src/26.3-forge/resources"
+		;;
 	1.21.1-neoforge)
 		resource_directory="src/1.21.1-neoforge/resources"
 		;;
@@ -36,6 +39,8 @@ esac
 
 if [[ "$target" == *-neoforge ]]; then
 	metadata_file="$resource_directory/META-INF/neoforge.mods.toml"
+elif [[ "$target" == *-forge ]]; then
+	metadata_file="$resource_directory/META-INF/mods.toml"
 else
 	metadata_file="$resource_directory/fabric.mod.json"
 fi
@@ -54,6 +59,13 @@ if [[ "$target" == *-neoforge ]]; then
 	grep -Fq 'versionRange="${minecraft_version_range}"' "$metadata_file"
 	grep -Fq 'logoFile="assets/fpstune/icon.png"' "$metadata_file"
 	grep -Fq 'config="fpstune.mixins.json"' "$metadata_file"
+elif [[ "$target" == *-forge ]]; then
+	grep -Fq 'modId="fpstune"' "$metadata_file"
+	grep -Fq 'clientSideOnly=true' "$metadata_file"
+	grep -Fq 'displayURL="https://github.com/imCinq/fps-tune"' "$metadata_file"
+	grep -Fq 'issueTrackerURL="https://github.com/imCinq/fps-tune/issues"' "$metadata_file"
+	grep -Fq 'versionRange="${minecraft_version_range}"' "$metadata_file"
+	grep -Fq 'logoFile="assets/fpstune/icon.png"' "$metadata_file"
 else
 	jq -e --arg target "$target" '.environment == "client" and .depends.minecraft == $target' "$metadata_file" >/dev/null
 	jq -e '(.contact.homepage | type) == "string" and (.contact.homepage | startswith("https://")) and (.contact.issues | type) == "string" and (.contact.issues | startswith("https://")) and (.contact.sources | type) == "string" and (.contact.sources | startswith("https://"))' "$metadata_file" >/dev/null
