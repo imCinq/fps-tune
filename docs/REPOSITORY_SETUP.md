@@ -41,9 +41,9 @@ For the Minecraft 1.21.1 patch release, keep `mod_version` at `1.1.1` and create
 
 ## v1.3.0 release targets
 
-The published stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release contains exactly three targets: Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 remains a beta preview and is deferred until its loader reaches stable. Quilt 26.3 is also deferred; existing 1.21.1 and 26.2 artifacts remain historical downloads outside the v1.3.0 matrix.
+The published stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.3.0) release contains exactly three targets: Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 was not part of v1.3.0; it joined the v1.4.0 release on 2026-10-04. Quilt 26.3 is also deferred; existing 1.21.1 and 26.2 artifacts remain historical downloads outside the v1.3.0 matrix.
 
-The repository retains implementation, isolated build, and hosted startup-smoke coverage for NeoForge 26.3, but that beta preview is not a v1.3.0 release target. Since 2026-10-04 it is a v1.4.0 release target built against `26.3.0.45-beta`. The unified release workflow packages the three stable targets and stages a draft only when an authorized version tag is pushed.
+Since 2026-10-04 NeoForge 26.3 is a v1.4.0 release target built against the beta loader `26.3.0.45-beta`, with isolated build and hosted startup-smoke coverage. The unified release workflow packages all four targets and stages a draft only when an authorized version tag is pushed.
 
 ## Fabric 26.3 target-specific release
 
