@@ -139,6 +139,9 @@ jobs:
       - name: Install client smoke dependencies
         run: sudo apt-get update && sudo apt-get install --yes xvfb libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
 
+      - name: Prepare Forge workspace
+        run: ./gradlew :forge-26.3:classes --no-daemon
+
       - name: Start Forge client and verify mod registration
         env:
           LIBGL_ALWAYS_SOFTWARE: 'true'
