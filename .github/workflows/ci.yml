@@ -213,6 +213,91 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  build-forge-26-3:
+    name: Build and test (26.3 Forge)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 25
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Build and test
+        run: ./gradlew :forge-26.3:clean :forge-26.3:build --no-daemon
+
+      - name: Inspect Minecraft 26.3 Forge mixin targets
+        run: |
+          mkdir -p "${{ runner.temp }}/compatibility-evidence-26.3-forge"
+          find "$HOME/.gradle/caches" .gradle forge/26.3/build -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class' && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/renderer/WeatherEffectRenderer.class'; then
+              basename "$candidate" > ${{ runner.temp }}/compatibility-evidence-26.3-forge/minecraft-jar.txt
+              sha256sum "$candidate" | cut -d " " -f 1 > ${{ runner.temp }}/compatibility-evidence-26.3-forge/minecraft-jar.sha256
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > ${{ runner.temp }}/compatibility-evidence-26.3-forge/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > ${{ runner.temp }}/compatibility-evidence-26.3-forge/WeatherEffectRenderer.txt
+              break
+            fi
+          done
+          test -s ${{ runner.temp }}/compatibility-evidence-26.3-forge/ParticleEngine.txt
+          test -s ${{ runner.temp }}/compatibility-evidence-26.3-forge/WeatherEffectRenderer.txt
+          grep -Fq 'RenderPass' ${{ runner.temp }}/compatibility-evidence-26.3-forge/WeatherEffectRenderer.txt
+          grep -Fq 'RenderPipeline' ${{ runner.temp }}/compatibility-evidence-26.3-forge/WeatherEffectRenderer.txt
+
+      - name: Upload Minecraft 26.3 Forge compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: minecraft-26.3-forge-compatibility-evidence
+          path: ${{ runner.temp }}/compatibility-evidence-26.3-forge/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Verify packaged Forge metadata
+        run: |
+          artifact=$(find forge/26.3/build/libs -type f -name "fps-tune-forge-26.3-*.jar" ! -name "*-sources.jar" -print -quit)
+          test -n "$artifact"
+          expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          test -n "$expected_version"
+          unzip -p "$artifact" META-INF/mods.toml | grep -Fq "version=\"$expected_version\""
+          unzip -p "$artifact" META-INF/mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
+          unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
+          unzip -p "$artifact" META-INF/MANIFEST.MF | tr -d '\r' | grep -Fq "MixinConfigs: fpstune.mixins.json"
+          ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
+          ! unzip -l "$artifact" | grep -Fq "META-INF/neoforge.mods.toml"
+
+      - name: Audit client-only boundaries
+        run: ./scripts/audit-client-only.sh 26.3-forge
+
+      - name: Audit repository privacy
+        run: ./scripts/audit-repository.sh
+
+      - name: Prepare verified artifacts
+        run: |
+          mkdir -p ci-artifacts
+          cp forge/26.3/build/libs/fps-tune-forge-26.3-*.jar ci-artifacts/
+          cd ci-artifacts
+          sha256sum *.jar > SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fps-tune-minecraft-26.3-forge
+          path: ci-artifacts/
+          if-no-files-found: error
+          retention-days: 14
+
   build-neoforge:
     name: Build and test (26.2 NeoForge)
     runs-on: ubuntu-latest
