@@ -68,7 +68,7 @@ The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v
 
 The tagged `.github/workflows/release.yml` builds those three targets, checks packaged loader metadata and resources, runs the target audits, and stages exactly three runtime JARs, three source JARs, and SHA-256 checksums. On a tag it creates a **draft, non-latest GitHub Release**; an authorized maintainer must review and publish the draft manually. Release assets are individual JARs and a checksum file, not a ZIP download.
 
-NeoForge 26.3 uses Java 25, ModDevGradle 2.0.147, and NeoForge 26.3.0.48-beta. A follow-up release will rebuild it against the first stable NeoForge 26.3. From now on `.github/workflows/release.yml` builds and verifies it with the other three targets.
+NeoForge 26.3 uses Java 25, ModDevGradle 2.0.147, and NeoForge 26.3.0.45-beta. A follow-up release will rebuild it against the first stable NeoForge 26.3. From now on `.github/workflows/release.yml` builds and verifies it with the other three targets.
 
 Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0 and v1.4.0. Reuse only the verified bytes from the tagged build for every destination.
 
