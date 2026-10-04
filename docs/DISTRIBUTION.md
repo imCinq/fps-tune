@@ -55,7 +55,7 @@ The current stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1
 | 26.3 | NeoForge | fps-tune-neoforge-26.3-1.4.0.jar |
 | 26.3 | Forge | fps-tune-forge-26.3-1.4.0.jar |
 
-The Forge 26.3 JAR is added to the published release from a hosted CI build of `main`, the same way as NeoForge 26.3. It is a one-off target with no promise of future Forge builds.
+The Forge 26.3 JAR was added to the published release on 2026-10-04 from the hosted CI build of PR #71, after a manual client test. It is a one-off target with no promise of future Forge builds.
 
 The `v1.4.0` tag created a draft, non-latest release. Before it was published, the maintainer completed the manual checks: settings screens and every tab on Mod Menu and the NeoForge Mods screen at a small window and GUI scale 4, Lighter and Hidden weather with rain sounds on 1.21.11 and 26.3, the particle cap and far-away limit, and the F6 message.
 
