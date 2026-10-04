@@ -178,6 +178,7 @@ jobs:
             unzip -p "$jar" META-INF/MANIFEST.MF | tr -d '\r' | grep -Fq "MixinConfigs: fpstune.mixins.json"
             unzip -p "$jar" assets/fpstune/icon.png >/dev/null
             unzip -p "$jar" fpstune.mixins.json >/dev/null
+            unzip -p "$jar" pack.mcmeta | jq -e '.pack.min_format and .pack.max_format' >/dev/null
             if unzip -l "$jar" | grep -Eq "fabric.mod.json|META-INF/neoforge.mods.toml"; then
               echo "Forge artifact contains Fabric or NeoForge metadata: $jar" >&2
               exit 1

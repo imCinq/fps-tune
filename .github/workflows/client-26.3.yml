@@ -156,7 +156,7 @@ jobs:
             exit "$status"
           fi
           grep -Fq "FPS Tune Forge client integration registered." "$RUNNER_TEMP/forge-26.3-client.log"
-          if grep -E "Mixin apply failed|NoSuchMethodError|MixinApplyError|InjectionError|Unsupported mixin|compatibility level" "$RUNNER_TEMP/forge-26.3-client.log"; then
+          if grep -E "Mixin apply failed|NoSuchMethodError|MixinApplyError|InjectionError|Unsupported mixin|compatibility level|Missing metadata in pack mod:fpstune" "$RUNNER_TEMP/forge-26.3-client.log"; then
             cat "$RUNNER_TEMP/forge-26.3-client.log"
             exit 1
           fi

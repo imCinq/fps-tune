@@ -274,6 +274,7 @@ jobs:
           unzip -p "$artifact" META-INF/mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
           unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
           unzip -p "$artifact" META-INF/MANIFEST.MF | tr -d '\r' | grep -Fq "MixinConfigs: fpstune.mixins.json"
+          unzip -p "$artifact" pack.mcmeta | jq -e '.pack.min_format and .pack.max_format' >/dev/null
           ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
           ! unzip -l "$artifact" | grep -Fq "META-INF/neoforge.mods.toml"
 
