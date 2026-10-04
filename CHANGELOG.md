@@ -2,6 +2,7 @@
 
 ## FPS Tune v1.4.0 - 2026-09-26
 
+- 🧩 **Added 2026-10-04: Minecraft 26.3 NeoForge.** Same features as the other v1.4.0 JARs. Built for NeoForge 26.3.0.48-beta or newer; the NeoForge 26.3 loader is still in beta, so a follow-up update will target its stable release.
 - ⚙️ **New settings page.** The main screen now has a profile with a one-line explanation, and quick switches for particles, rain and snow, and the overlay. Advanced settings are in vanilla-style **Particles / Weather / Display** tabs, each with a Reset button, and rarely used values sit behind *Show more*. Clearer wording and icons throughout.
 - 🎯 **Max particles on screen** (off by default): new particles are skipped once this many are showing. Particles already on screen are never removed.
 - 🔭 **Hide far-away particles** (off by default): new particles beyond the chosen distance are skipped.
