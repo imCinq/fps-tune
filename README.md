@@ -12,8 +12,8 @@ It is designed to protect the floor of the frame-time graph during particle stor
 
 | Item | Value |
 | --- | --- |
-| Minecraft | Current v1.4.0: 26.3 Fabric, 1.21.11 Fabric and NeoForge. Historical v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. NeoForge 26.3 remains a beta preview and is deferred until its loader is stable. Separate JAR per target. |
-| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 1.21.11: 21.11.45+; NeoForge 26.2: 26.2.0.77+; NeoForge 26.3 preview baseline: 26.3.0.7-beta (excluded from stable releases). |
+| Minecraft | Current v1.4.0: 26.3 Fabric and NeoForge, 1.21.11 Fabric and NeoForge. Historical v1.2.5: 1.21.1 Fabric/NeoForge, 1.21.11 Fabric, 26.2 Fabric/NeoForge, and 26.3 Fabric. Separate JAR per target. |
+| Loader | Fabric 1.21.1: 0.16.14+; Fabric 1.21.11: 0.18.6+; Fabric 26.2: 0.19.3+; Fabric 26.3: 0.19.5+; NeoForge 1.21.1: 21.1.250+; NeoForge 1.21.11: 21.11.45+; NeoForge 26.2: 26.2.0.77+; NeoForge 26.3: 26.3.0.45-beta+ (loader still in beta). |
 | Environment | Client only |
 | Java | 21+ for 1.21.1 and 1.21.11; 25+ for 26.2 and 26.3 |
 | Required dependency | Matching Fabric API for Fabric targets; NeoForge loader for NeoForge targets |
@@ -132,13 +132,14 @@ Fabric 26.3 is published as the separate, non-draft target-specific GitHub relea
 
 ## v1.4.0 targets
 
-The stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.4.0) release, published 2026-09-26, contains exactly three primary JARs, their sources JARs, and `SHA256SUMS.txt`. It covers the same three platforms as v1.3.0.
+The stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1.4.0) release, published 2026-09-26, contains four primary JARs, their sources JARs, and `SHA256SUMS.txt`. The NeoForge 26.3 JAR was added on 2026-10-04.
 
 | Minecraft | Loader | Artifact |
 | --- | --- | --- |
 | 26.3 | Fabric | fps-tune-mc26.3-1.4.0.jar |
 | 1.21.11 | Fabric | fps-tune-mc1.21.11-1.4.0.jar |
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
+| 26.3 | NeoForge | fps-tune-neoforge-26.3-1.4.0.jar |
 
 ## v1.3.0 targets
 
@@ -150,4 +151,4 @@ The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v
 | 1.21.11 | Fabric | fps-tune-mc1.21.11-1.3.0.jar |
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.3.0.jar |
 
-NeoForge 26.3 remains a Java 25 beta preview built against 26.3.0.7-beta. It stays in implementation and CI validation, but its release artifact is deferred until the NeoForge loader reaches stable.
+NeoForge 26.3 needs Java 25 and NeoForge 26.3.0.45-beta or newer. The NeoForge 26.3 loader is still in beta; a follow-up release will be built against its first stable version.

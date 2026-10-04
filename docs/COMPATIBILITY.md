@@ -13,9 +13,9 @@ This document separates hosted-build verification from graphical compatibility. 
 | 26.2 | Fabric Loader 0.19.3+ | 25+ | Fabric API 0.158.0+26.2 | Optional Mod Menu 20.0.0-beta.4 |
 | 26.2 | NeoForge 26.2.0.77+ | 25+ | NeoForge loader | Native NeoForge Mods screen |
 | 26.3 | Fabric Loader 0.19.5+ | 25+ | Fabric API 0.160.6+26.3 | Optional Mod Menu 21.0.0-beta.1 |
-| 26.3 | NeoForge 26.3.0.7-beta+ (beta preview) | 25+ | NeoForge loader | Native NeoForge Mods screen |
+| 26.3 | NeoForge 26.3.0.45-beta+ (loader in beta) | 25+ | NeoForge loader | Native NeoForge Mods screen |
 
-NeoForge 26.3 remains a beta preview and is excluded from stable v1.3.0; its isolated build and hosted startup smoke stay active for a later stable release. Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS Tune target JARs together.
+NeoForge 26.3 was added to v1.4.0 on 2026-10-04, built against `26.3.0.45-beta` while the loader is still in beta; a follow-up release will rebuild it against the first stable NeoForge 26.3. Use exactly one matching FPS Tune JAR per instance. Do not install multiple FPS Tune target JARs together.
 
 ## Artifact profiles
 

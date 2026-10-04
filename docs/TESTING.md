@@ -39,7 +39,7 @@ If bytecode structure changes, stop and redesign the injection rather than forci
 
 ## v1.3.0 release verification
 
-The stable v1.3.0 release set is Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 remains a beta preview with hosted build and startup-smoke coverage, but its JAR is deferred until the NeoForge loader reaches stable. Quilt 26.3 is deferred; 1.21.1 and 26.2 remain historical artifacts and are excluded from v1.3.0.
+The stable v1.3.0 release set is Minecraft 26.3 Fabric, 1.21.11 Fabric, and 1.21.11 NeoForge. NeoForge 26.3 was added to v1.4.0 on 2026-10-04 (built against the beta loader 26.3.0.45-beta) and is part of the release workflow from then on. Quilt 26.3 is deferred; 1.21.1 and 26.2 remain historical artifacts and are excluded from v1.3.0.
 
 Before creating the stable v1.3.0 tag, run hosted builds, tests, audits, packaging/metadata checks, and target-specific bytecode evidence. Run client smoke verification on the exact packaged JAR for each of the three release targets, including the redesigned settings screen, F6, particle/weather controls, overlay behavior, menu/disconnect/shutdown stability, and the appropriate optional Mod Menu or native NeoForge Mods-screen path. Visually review layout and glyphs in-game. The release assembly must verify exactly three runtime JARs and three source JARs plus SHA-256 checksums.
 

@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build-and-stage:
-    name: Build and verify the three stable release targets
+    name: Build and verify the four stable release targets
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -61,11 +61,13 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
-      - name: Build and audit stable Fabric 26.3
+      - name: Build and audit the stable 26.3 targets
         run: |
           set -euo pipefail
           ./gradlew :clean :build --no-daemon -Pmc_target=26.3
           ./scripts/audit-client-only.sh 26.3
+          ./gradlew :neoforge-26.3:clean :neoforge-26.3:build --no-daemon
+          ./scripts/audit-client-only.sh 26.3-neoforge
           project_version=$(sed -n 's/^mod_version=//p' gradle.properties)
           mkdir -p release
           cp "build/libs/fps-tune-mc26.3-$project_version.jar" release/
@@ -101,8 +103,10 @@ jobs:
           fabric_1_21_11_sources="release/fps-tune-mc1.21.11-$project_version-sources.jar"
           neoforge_1_21_11="neoforge/1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version.jar"
           neoforge_1_21_11_sources="neoforge/1.21.11/build/libs/fps-tune-neoforge-1.21.11-$project_version-sources.jar"
+          neoforge_26_3="neoforge/26.3/build/libs/fps-tune-neoforge-26.3-$project_version.jar"
+          neoforge_26_3_sources="neoforge/26.3/build/libs/fps-tune-neoforge-26.3-$project_version-sources.jar"
 
-          for file in "$fabric_26_3" "$fabric_26_3_sources" "$fabric_1_21_11" "$fabric_1_21_11_sources" "$neoforge_1_21_11" "$neoforge_1_21_11_sources"; do
+          for file in "$fabric_26_3" "$fabric_26_3_sources" "$fabric_1_21_11" "$fabric_1_21_11_sources" "$neoforge_1_21_11" "$neoforge_1_21_11_sources" "$neoforge_26_3" "$neoforge_26_3_sources"; do
             if [[ ! -f "$file" ]]; then
               echo "Required release input is missing: $file" >&2
               exit 1
@@ -162,10 +166,12 @@ jobs:
           verify_fabric "release/$(basename "$fabric_26_3")" "26.3" "25"
           verify_fabric "release/$(basename "$fabric_1_21_11")" "1.21.11" "21"
           verify_neoforge "release/$(basename "$neoforge_1_21_11")" "1.21.11" "21.11.45"
+          neoforge_26_3_loader=$(sed -n 's/^neoforge_version=//p' gradle/versions/26.3-neoforge.properties)
+          verify_neoforge "release/$(basename "$neoforge_26_3")" "26.3" "$neoforge_26_3_loader"
 
           jar_count=$(find release -maxdepth 1 -type f -name '*.jar' | wc -l | tr -d '[:space:]')
-          if [[ "$jar_count" != "6" ]]; then
-            echo "Expected six JAR files (three runtime and three sources); found $jar_count" >&2
+          if [[ "$jar_count" != "8" ]]; then
+            echo "Expected eight JAR files (four runtime and four sources); found $jar_count" >&2
             find release -maxdepth 1 -type f -print >&2
             exit 1
           fi
