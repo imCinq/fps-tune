@@ -54,6 +54,7 @@ The current stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
 | 26.3 | NeoForge | fps-tune-neoforge-26.3-1.4.0.jar |
 | 26.3 | Forge | fps-tune-forge-26.3-1.4.0.jar |
+| 26.1.2 | NeoForge | fps-tune-neoforge-26.1.2-1.4.0.jar |
 
 The Forge 26.3 JAR was added to the published release on 2026-10-04 from the hosted CI build of PR #71, after a manual client test. It is a one-off target with no promise of future Forge builds.
 
@@ -73,7 +74,7 @@ The tagged `.github/workflows/release.yml` builds those three targets, checks pa
 
 NeoForge 26.3 uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.3.0.45-beta. A follow-up release will rebuild it against the first stable NeoForge 26.3. From now on `.github/workflows/release.yml` builds and verifies it with the other targets.
 
-Forge 26.3 uses Java 25, ForgeGradle 7.0.40, and Forge 66.0.9 in the isolated `forge/26.3` project (`:forge-26.3`). The release workflow builds and verifies it with the other four targets (ten JARs). Forge's bundled Mixin 0.8.7 runs the config at `JAVA_21` compatibility; the hosted startup smoke confirms all three mixins apply.
+Forge 26.3 uses Java 25, ForgeGradle 7.0.40, and Forge 66.0.9 in the isolated `forge/26.3` project (`:forge-26.3`). The release workflow builds and verifies all six targets (twelve JARs), including the 26.1.2 NeoForge addition. Forge's bundled Mixin 0.8.7 runs the config at `JAVA_21` compatibility; the hosted startup smoke confirms all three mixins apply.
 
 Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0 and v1.4.0. Reuse only the verified bytes from the tagged build for every destination.
 

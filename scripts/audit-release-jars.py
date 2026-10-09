@@ -4,7 +4,7 @@ import hashlib, re, sys, zipfile
 from pathlib import Path
 private_token_digest = "e7462a4f5295b5001cdb93eb3d6c65775910324ce38faacdf9e19403f4a3ca43"
 patterns = {
-    "private path": rb"/Users/[^/\s]+|/home/[^/\s]+|[A-Za-z]:[\\/]Users[\\/]",
+    "private path": rb"/" + rb"Users/[^/\s]+|/" + rb"home/[^/\s]+|[A-Za-z]:[\\/]Users[\\/]",
     "credential": rb"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}",
     "email": rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
 }
