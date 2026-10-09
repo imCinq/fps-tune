@@ -56,6 +56,14 @@ sourceSets {
     }
 }
 
+sourceSets {
+    packagedSmoke {
+        java.setSrcDirs([])
+        resources.setSrcDirs([])
+    }
+}
+configurations.packagedSmokeRuntimeClasspath.extendsFrom(configurations.runtimeClasspath)
+
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaLevel)
     withSourcesJar()
@@ -67,6 +75,13 @@ neoForge {
     runs {
         client {
             client()
+            if (providers.gradleProperty("packaged_smoke").isPresent()) {
+                sourceSet = sourceSets.packagedSmoke
+                loadedMods = []
+                gameDirectory = project.file("run-packaged")
+                systemProperty "mixin.debug.verbose", "true"
+                systemProperty "mixin.debug.countInjections", "true"
+            }
             systemProperty 'neoforge.enabledGameTestNamespaces', 'fpstune'
         }
     }
