@@ -62,4 +62,4 @@ Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertio
 
 ## NeoForge 26.1.2 target
 
-The isolated `:neoforge-26.1.2` project uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.1.2.115. Its profile and source set live under `gradle/versions/26.1.2-neoforge.properties` and `src/26.1.2-neoforge`. The dedicated hosted workflow builds, runs shared tests, audits client-only boundaries and packaging, and launches the client under Xvfb. Startup coverage does not replace gameplay and visual settings checks.
+The isolated `:neoforge-26.1.2` project uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.1.2.114. Its profile and source set live under `gradle/versions/26.1.2-neoforge.properties` and `src/26.1.2-neoforge`. The dedicated hosted workflow builds, runs shared tests, audits client-only boundaries and packaging, and launches the client under Xvfb. Startup coverage does not replace gameplay and visual settings checks.
