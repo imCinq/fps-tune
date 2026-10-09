@@ -1,0 +1,133 @@
+name: NeoForge 26.1.2 verification
+
+on:
+  push:
+    branches: ["codex/neoforge-26.1.2"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neoforge-26.1.2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-neoforge-26-1-2:
+    name: Build and test (26.1.2 NeoForge)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 25
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Build and test
+        run: ./gradlew :neoforge-26.1.2:clean :neoforge-26.1.2:build --no-daemon
+
+      - name: Inspect target bytecode
+        run: |
+          mkdir -p compatibility-evidence
+          find "$HOME/.gradle/caches" .gradle neoforge/26.1.2/build -type f -name '*.jar' 2>/dev/null | while IFS= read -r candidate; do
+            if [[ "$candidate" == *26.1.2* ]] && jar tf "$candidate" 2>/dev/null | grep -qx 'net/minecraft/client/particle/ParticleEngine.class'; then
+              javap -classpath "$candidate" -p -s net.minecraft.client.renderer.WeatherEffectRenderer > compatibility-evidence/candidate.txt
+              if ! grep -Fq 'LevelRenderState' compatibility-evidence/candidate.txt; then continue; fi
+              echo "Inspecting $candidate"
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.particle.ParticleEngine > compatibility-evidence/ParticleEngine.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.WeatherEffectRenderer > compatibility-evidence/WeatherEffectRenderer.txt
+              javap -classpath "$candidate" -p -c -s net.minecraft.client.renderer.LevelRenderer > compatibility-evidence/LevelRenderer.txt
+              break
+            fi
+          done
+          test -s compatibility-evidence/ParticleEngine.txt
+          test -s compatibility-evidence/WeatherEffectRenderer.txt
+          grep -Fq 'java/util/Queue.add' compatibility-evidence/ParticleEngine.txt
+          grep -Fq 'LevelRenderState' compatibility-evidence/WeatherEffectRenderer.txt
+
+      - name: Verify packaged NeoForge metadata
+        run: |
+          artifact=$(find neoforge/26.1.2/build/libs -type f -name "fps-tune-neoforge-26.1.2-*.jar" ! -name "*-sources.jar" -print -quit)
+          test -n "$artifact"
+          expected_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          test -n "$expected_version"
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "version=\"$expected_version\""
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -Fq "logoFile=\"assets/fpstune/icon.png\""
+          unzip -l "$artifact" | grep -Fq "assets/fpstune/icon.png"
+          ! unzip -l "$artifact" | grep -Fq "fabric.mod.json"
+
+      - name: Audit client-only boundaries
+        run: ./scripts/audit-client-only.sh 26.1.2-neoforge
+
+      - name: Audit repository privacy
+        run: ./scripts/audit-repository.sh
+
+      - name: Install client smoke dependencies
+        run: sudo apt-get update && sudo apt-get install --yes xvfb libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
+
+      - name: Start NeoForge client and verify mod registration
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 'true'
+          SDL_VIDEODRIVER: x11
+        run: |
+          mkdir -p neoforge/26.1.2/run-packaged/mods
+          artifact=$(find neoforge/26.1.2/build/libs -name '*.jar' ! -name '*-sources.jar' -print -quit)
+          cp "$artifact" neoforge/26.1.2/run-packaged/mods/
+          sha256sum "$artifact" > compatibility-evidence/packaged-smoke.sha256
+          set +e
+          timeout --signal=TERM --kill-after=15s 180s xvfb-run -a ./gradlew :neoforge-26.1.2:runClient --no-daemon -Ppackaged_smoke > "$RUNNER_TEMP/neoforge-26.1.2-client.log" 2>&1
+          status=$?
+          set -e
+          if [[ "$status" -ne 0 && "$status" -ne 124 && "$status" -ne 143 ]]; then
+            cat "$RUNNER_TEMP/neoforge-26.1.2-client.log"
+            exit "$status"
+          fi
+          grep -Fq "fps-tune-neoforge-26.1.2-" neoforge/26.1.2/run-packaged/logs/debug.log
+          grep -Fq "FPS Tune NeoForge client integration registered." "$RUNNER_TEMP/neoforge-26.1.2-client.log"
+          if grep -E "Mixin apply failed|NoSuchMethodError|MixinApplyError|InjectionError" "$RUNNER_TEMP/neoforge-26.1.2-client.log"; then
+            cat "$RUNNER_TEMP/neoforge-26.1.2-client.log"
+            exit 1
+          fi
+
+      - name: Upload NeoForge smoke evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: client-26.1.2-neoforge
+          path: |
+            ${{ runner.temp }}/neoforge-26.1.2-client.log
+            neoforge/26.1.2/run-packaged/logs/**
+            neoforge/26.1.2/run-packaged/crash-reports/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Prepare verified artifacts
+        run: |
+          mkdir -p ci-artifacts
+          cp neoforge/26.1.2/build/libs/fps-tune-neoforge-26.1.2-*.jar ci-artifacts/
+          cd ci-artifacts
+          sha256sum *.jar > SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fps-tune-minecraft-26.1.2-neoforge
+          path: |
+            ci-artifacts/
+            compatibility-evidence/
+          if-no-files-found: error
+          retention-days: 14
+

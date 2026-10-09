@@ -86,3 +86,7 @@ Create one platform file/version for each exact target. Mark the matching loader
 - Never claim universal FPS gains or server approval. Explain the intentional visual trade-off and client-only boundary.
 
 Do not automate Modrinth or CurseForge publishing until the owner explicitly approves the platform account, project ID, and required repository secrets. Never commit publishing tokens.
+
+## NeoForge 26.1.2 candidate
+
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.115). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.

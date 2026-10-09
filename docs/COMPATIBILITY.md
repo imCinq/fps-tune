@@ -62,3 +62,7 @@ Client-only does not mean server-approved. Follow the current rules of every mul
 The isolated `26.3` build profile ships on its own release train. The current [`v1.2.5-mc26.3`](https://github.com/imCinq/fps-tune/releases/tag/v1.2.5-mc26.3) release is published as a non-draft target-specific release. The hosted CI matrix verifies compilation, tests, audits, and 26.3 mixin evidence; the separate real-client workflow covers startup and settings integration with Mod Menu present and absent. The port preserves the common particle admission, nearby reserve, Adaptive controller, local configuration, and disabled-by-default behavior. Existing targets are unchanged.
 
 The 26.3 release workflow validates the exact tagged JAR and checksums but does not itself run graphical client tests. For future 26.3 releases, repeat the weather-off, F6, settings, HUD cache, Adaptive, menu/disconnect, shutdown, and Mod Menu-present/absent checks in an approved remote client environment before publication. Mod Menu `21.0.0-beta.1` remains optional and is not required to run FPS Tune.
+
+## NeoForge 26.1.2 candidate
+
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.115). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.

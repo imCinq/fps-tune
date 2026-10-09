@@ -59,3 +59,7 @@ Keep each NeoForge project isolated from the Fabric root build. Projects include
 Use `./gradlew :clean :build -Pmc_target=26.3` only on GitHub-hosted runners. The `gradle/versions/26.3.properties` profile selects the non-remapping Loom plugin, sets `archive_suffix=-mc26.3` and `source_directory=src/26.3`, and outputs `fps-tune-mc26.3-<version>.jar`. During v1.3.0 development, `mc_target=26.3` is the default; retain explicit profiles for historical targets until the release transition is complete. NeoForge 26.3 remains a beta preview in an isolated project with hosted build, audit, and startup-smoke coverage; it is excluded from stable v1.3.0 until the loader reaches stable. Quilt is deferred from v1.3.0.
 
 Inspect `ParticleEngine.tick`, `ParticleEngine.add` and its exact queue insertion instruction, plus the precipitation renderer and callers before adapting injections. Preserve successful-admission accounting and client-thread ownership. Deprecated APIs are not automatically broken APIs: migrate a bridge only when required or separately justified. Do not suppress missing mixin hooks to make a launch pass.
+
+## NeoForge 26.1.2 target
+
+The isolated `:neoforge-26.1.2` project uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.1.2.115. Its profile and source set live under `gradle/versions/26.1.2-neoforge.properties` and `src/26.1.2-neoforge`. The dedicated hosted workflow builds, runs shared tests, audits client-only boundaries and packaging, and launches the client under Xvfb. Startup coverage does not replace gameplay and visual settings checks.
