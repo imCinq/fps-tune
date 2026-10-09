@@ -89,4 +89,4 @@ Do not automate Modrinth or CurseForge publishing until the owner explicitly app
 
 ## NeoForge 26.1.2 candidate
 
-Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.94). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.115). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.

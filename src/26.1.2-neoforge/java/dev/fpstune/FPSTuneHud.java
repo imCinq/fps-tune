@@ -34,7 +34,7 @@ public final class FPSTuneHud {
             AdaptiveParticleBudgetController.reset(config);
             return;
         }
-        if (client.gui.screen() != null) {
+        if (client.screen != null) {
             AdaptiveParticleBudgetController.pause();
             return;
         }
