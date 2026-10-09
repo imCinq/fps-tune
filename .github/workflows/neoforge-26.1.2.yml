@@ -2,7 +2,7 @@ name: NeoForge 26.1.2 verification
 
 on:
   push:
-    branches: ["codex/neoforge-26.1.2"]
+    branches: ["codex/neoforge-26.1.2", "codex/neoforge-26.1.2-loader-114"]
   pull_request:
   workflow_dispatch:
 

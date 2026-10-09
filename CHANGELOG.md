@@ -1,6 +1,7 @@
 ## FPS Tune v1.4.0 — NeoForge 26.1.2 target
 
 - Added a separate **Minecraft 26.1.2 NeoForge** build target, preserving shared configuration and rendering controls.
+- Build against NeoForge **26.1.2.114** so instances using that stable launcher-listed version can load the JAR.
 - Added hosted build, test, packaging, and client startup checks; gameplay and visual confirmation remain separate.
 
 # Changelog
