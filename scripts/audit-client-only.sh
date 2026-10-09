@@ -4,6 +4,9 @@ set -euo pipefail
 
 target="${1:-${MC_TARGET:-26.2}}"
 case "$target" in
+	26.1.2-neoforge)
+		resource_directory="src/26.1.2-neoforge/resources"
+		;;
 	26.2-neoforge)
 		resource_directory="src/26.2-neoforge/resources"
 		;;

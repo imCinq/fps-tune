@@ -155,3 +155,7 @@ The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.3.0.jar |
 
 NeoForge 26.3 needs Java 25 and NeoForge 26.3.0.45-beta or newer. The NeoForge 26.3 loader is still in beta; a follow-up release will be built against its first stable version.
+
+## NeoForge 26.1.2 candidate
+
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.94). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.
