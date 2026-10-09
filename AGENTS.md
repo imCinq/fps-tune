@@ -88,6 +88,6 @@ Hosted target commands are:
 ./gradlew :forge-26.3:clean :forge-26.3:build
 ```
 
-## NeoForge 26.1.2 candidate
+## NeoForge 26.1.2 release addition
 
-Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.114). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.114). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. The maintainer reported the .114 candidate good on 2026-10-09. Its exact binary and sources are added to v1.4.0 through the hosted promotion workflow after artifact privacy/safety checks; historical JARs and the existing tag are preserved. Publication status is verified by the promotion run and the v1.4.0 asset list.

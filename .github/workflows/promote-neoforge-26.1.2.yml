@@ -1,0 +1,77 @@
+name: Publish tested NeoForge 26.1.2 add-on
+on:
+  push:
+    branches: ["codex/release-neoforge-26.1.2"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: promote-neoforge-26.1.2
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify tested provenance and download exact artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GITHUB_REPOSITORY/actions/runs/37981447624 --jq .conclusion)" = success
+          test "$(gh api repos/$GITHUB_REPOSITORY/actions/runs/37981447624 --jq .head_sha)" = 299d0815600d266c73bc17fcff7448e59d5957f4
+          git merge-base --is-ancestor 299d0815600d266c73bc17fcff7448e59d5957f4 origin/main || git diff --exit-code 299d0815600d266c73bc17fcff7448e59d5957f4 origin/main -- src gradle/versions/26.1.2-neoforge.properties neoforge/26.1.2
+          gh run download 37981447624 -n fps-tune-minecraft-26.1.2-neoforge -D tested
+          cd tested/ci-artifacts
+          sha256sum -c SHA256SUMS.txt
+          test "$(find . -maxdepth 1 -name '*.jar' | wc -l)" = 2
+      - name: Inspect exact JAR privacy and safety
+        run: |
+          python3 scripts/audit-release-jars.py tested/ci-artifacts/*.jar
+          artifact=tested/ci-artifacts/fps-tune-neoforge-26.1.2-1.4.0.jar
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -F 'versionRange="[26.1.2.114,)"'
+          unzip -p "$artifact" META-INF/neoforge.mods.toml | grep -F 'versionRange="[26.1.2]"'
+          ./scripts/audit-client-only.sh 26.1.2-neoforge
+          ./scripts/audit-repository.sh
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Preserve published assets and add tested target
+        run: |
+          set -euo pipefail
+          gh run download 37981447624 -n fps-tune-minecraft-26.1.2-neoforge -D tested
+          mkdir release
+          gh release download v1.4.0 --pattern '*.jar' --pattern SHA256SUMS.txt --dir release
+          (cd release && sha256sum -c SHA256SUMS.txt)
+          (cd tested/ci-artifacts && sha256sum -c SHA256SUMS.txt)
+          cp tested/ci-artifacts/*.jar release/
+          (cd release && sha256sum *.jar > SHA256SUMS.txt && sha256sum -c SHA256SUMS.txt)
+          test "$(find release -maxdepth 1 -name '*.jar' | wc -l)" = 12
+          gh release upload v1.4.0 tested/ci-artifacts/*.jar
+          gh release upload v1.4.0 release/SHA256SUMS.txt --clobber
+          gh api repos/$GITHUB_REPOSITORY/releases/tags/v1.4.0 --jq .body > notes.md
+          cat >> notes.md <<'NOTES'
+
+          ### Minecraft 26.1.2 NeoForge added
+          - Added **Minecraft 26.1.2 NeoForge**, requiring NeoForge **26.1.2.114+** and Java 25.
+          - The exact JAR passed hosted builds, tests, audits, bytecode checks and packaged-client startup. The maintainer reported the .114 candidate good before publication.
+          - Binary and sources are included with updated SHA-256 checksums. Existing target JARs and the v1.4.0 tag are preserved.
+          NOTES
+          gh release edit v1.4.0 --notes-file notes.md
+          gh release download v1.4.0 --pattern 'fps-tune-neoforge-26.1.2-*.jar' --dir verified
+          cmp tested/ci-artifacts/fps-tune-neoforge-26.1.2-1.4.0.jar verified/fps-tune-neoforge-26.1.2-1.4.0.jar
+          cmp tested/ci-artifacts/fps-tune-neoforge-26.1.2-1.4.0-sources.jar verified/fps-tune-neoforge-26.1.2-1.4.0-sources.jar
+          echo 'Published downloads are byte-identical to the tested .114 artifacts.'

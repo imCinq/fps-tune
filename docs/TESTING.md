@@ -78,3 +78,7 @@ Do not infer a working graphical environment from `ubuntu-latest` or Xvfb alone:
 ## NeoForge targets
 
 Each NeoForge target must pass its isolated build task (`:neoforge-1.21.1:build`, `:neoforge-1.21.11:build`, `:neoforge-26.2:build`, or `:neoforge-26.3:build`), matching client-only audit, repository privacy audit, and packaged metadata checks. Confirm the JAR contains `META-INF/neoforge.mods.toml`, `assets/fpstune/icon.png`, and the NeoForge mixin configuration, and does not contain Fabric metadata. NeoForge 26.3 follows the same checks through its isolated build task and hosted client startup smoke; these checks do not replace visual review on the matching client.
+
+## NeoForge 26.1.2 v1.4.0 addition
+
+Hosted run [37981447624](https://github.com/imCinq/fps-tune/actions/runs/37981447624) passed the .114 target build, shared tests, packaging and source audits, patched bytecode checks, and exact packaged-JAR startup. The maintainer reported this candidate good on 2026-10-09 and authorized adding it to v1.4.0. The report is manual acceptance, not a record of individually enumerated visual cases. `promote-neoforge-26.1.2.yml` reuses those exact bytes, inspects decompressed binary/source JARs for private paths, identifiers, emails, credentials and prohibited runtime APIs, preserves existing binary assets, and compares published downloads with the tested inputs.

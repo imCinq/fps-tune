@@ -54,6 +54,7 @@ The current stable [`v1.4.0`](https://github.com/imCinq/fps-tune/releases/tag/v1
 | 1.21.11 | NeoForge | fps-tune-neoforge-1.21.11-1.4.0.jar |
 | 26.3 | NeoForge | fps-tune-neoforge-26.3-1.4.0.jar |
 | 26.3 | Forge | fps-tune-forge-26.3-1.4.0.jar |
+| 26.1.2 | NeoForge | fps-tune-neoforge-26.1.2-1.4.0.jar |
 
 The Forge 26.3 JAR was added to the published release on 2026-10-04 from the hosted CI build of PR #71, after a manual client test. It is a one-off target with no promise of future Forge builds.
 
@@ -73,7 +74,7 @@ The tagged `.github/workflows/release.yml` builds those three targets, checks pa
 
 NeoForge 26.3 uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.3.0.45-beta. A follow-up release will rebuild it against the first stable NeoForge 26.3. From now on `.github/workflows/release.yml` builds and verifies it with the other targets.
 
-Forge 26.3 uses Java 25, ForgeGradle 7.0.40, and Forge 66.0.9 in the isolated `forge/26.3` project (`:forge-26.3`). The release workflow builds and verifies it with the other four targets (ten JARs). Forge's bundled Mixin 0.8.7 runs the config at `JAVA_21` compatibility; the hosted startup smoke confirms all three mixins apply.
+Forge 26.3 uses Java 25, ForgeGradle 7.0.40, and Forge 66.0.9 in the isolated `forge/26.3` project (`:forge-26.3`). The release workflow builds and verifies all six targets (twelve JARs), including the 26.1.2 NeoForge addition. Forge's bundled Mixin 0.8.7 runs the config at `JAVA_21` compatibility; the hosted startup smoke confirms all three mixins apply.
 
 Minecraft 26.3 Quilt is deferred. Minecraft 1.21.1 and 26.2 remain historical v1.2.x downloads and are excluded from v1.3.0 and v1.4.0. Reuse only the verified bytes from the tagged build for every destination.
 
@@ -87,6 +88,6 @@ Create one platform file/version for each exact target. Mark the matching loader
 
 Do not automate Modrinth or CurseForge publishing until the owner explicitly approves the platform account, project ID, and required repository secrets. Never commit publishing tokens.
 
-## NeoForge 26.1.2 candidate
+## NeoForge 26.1.2 release addition
 
-Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.114). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. This candidate does not alter historical artifacts or existing release assets.
+Minecraft 26.1.2 has an isolated NeoForge target (`:neoforge-26.1.2`, Java 25, NeoForge 26.1.2.114). The dedicated `neoforge-26.1.2.yml` workflow produces `fps-tune-neoforge-26.1.2-1.4.0.jar`, sources, and checksums after hosted verification. Client startup coverage is separate from manual gameplay and visual verification. The maintainer reported the .114 candidate good on 2026-10-09. Its exact binary and sources are added to v1.4.0 through the hosted promotion workflow after artifact privacy/safety checks; historical JARs and the existing tag are preserved. Publication status is verified by the promotion run and the v1.4.0 asset list.
