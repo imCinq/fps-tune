@@ -72,7 +72,7 @@ The previous stable [`v1.3.0`](https://github.com/imCinq/fps-tune/releases/tag/v
 
 The tagged `.github/workflows/release.yml` builds those three targets, checks packaged loader metadata and resources, runs the target audits, and stages exactly three runtime JARs, three source JARs, and SHA-256 checksums. On a tag it creates a **draft, non-latest GitHub Release**; an authorized maintainer must review and publish the draft manually. Release assets are individual JARs and a checksum file, not a ZIP download.
 
-NeoForge 26.3 uses Java 25, ModDevGradle 2.0.148, and NeoForge 26.3.0.45-beta. A follow-up release will rebuild it against the first stable NeoForge 26.3. From now on `.github/workflows/release.yml` builds and verifies it with the other targets.
+NeoForge 26.3 uses Java 25, ModDevGradle 2.0.148, and the stable NeoForge 26.3.0.86 (the original v1.4.0 JAR was built against 26.3.0.45-beta). From now on `.github/workflows/release.yml` builds and verifies it with the other targets.
 
 Forge 26.3 uses Java 25, ForgeGradle 7.0.40, and Forge 66.0.9 in the isolated `forge/26.3` project (`:forge-26.3`). The release workflow builds and verifies all six targets (twelve JARs), including the 26.1.2 NeoForge addition. Forge's bundled Mixin 0.8.7 runs the config at `JAVA_21` compatibility; the hosted startup smoke confirms all three mixins apply.
 
